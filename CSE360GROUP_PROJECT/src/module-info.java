@@ -1,5 +1,7 @@
 module CSE360GROUP_PROJECT {
-    requires javafx.controls;
-    requires javafx.fxml;
+	requires transitive javafx.controls;
+    requires transitive javafx.graphics;
+    requires transitive javafx.fxml;
+    
     exports helpSystem;
 }
