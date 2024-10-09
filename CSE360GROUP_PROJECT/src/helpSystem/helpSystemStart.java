@@ -1017,14 +1017,21 @@ public class helpSystemStart extends Application {
             }
         });
 
-        // Layout for the admin page
+        
+        
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton);
         layout.setPadding(new Insets(20));
 
-        Scene adminScene = new Scene(layout, 400, 400);
-        primaryStage.setScene(adminScene);
+        // Create the BorderPane and set the VBox as the center
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setCenter(layout); // Add VBox to the center of the BorderPane
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
     }
     
     private void sendCode(Stage primaryStage) {
