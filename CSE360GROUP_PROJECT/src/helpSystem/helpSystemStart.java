@@ -31,7 +31,7 @@ public class helpSystemStart extends Application {
     Boolean user = false;
     Boolean admin = false;
     Boolean teacher = false;
-    Boolean multRoles = false;
+    Boolean multRoles = true;
     
     //Random String for code
     
@@ -607,9 +607,261 @@ public class helpSystemStart extends Application {
     
     private void addAccountInfo(Stage primaryStage) {
     	
+    	// Labels and buttons
+        Label welcome = new Label("Finish Account Setup");
+        Label email = new Label("Email Address: ");
+        Label firstName = new Label("First Name: ");
+        Label confFirstName = new Label("Perferred First Name: ");
+        Label middleName = new Label("Middle Name: ");
+        Label lastName = new Label("Last Name: ");
+        
+        TextField emailText = new TextField();
+        TextField firstNameText = new TextField();
+        TextField confFirstNameText = new TextField();
+        TextField middleNameText = new TextField();
+        TextField lastNameText = new TextField();
+        
+        Button conButton = new Button("Confirm");
+        Button quitButton = new Button("Quit");
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        email.setFont(new Font("Arial", 20));
+        firstName.setFont(new Font("Arial", 20));
+        confFirstName.setFont(new Font("Arial", 20));
+        middleName.setFont(new Font("Arial", 20));
+        lastName.setFont(new Font("Arial", 20));
+        
+        // Button design
+        conButton.setStyle("-fx-font-size: 2em;");
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        
+        // Con button action
+        conButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(emailText.getText().isEmpty()) {
+                	emailText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	emailText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
+                
+                if(firstNameText.getText().isEmpty()) {
+                	firstNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	firstNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
+                
+                if(confFirstNameText.getText().isEmpty()) {
+                	confFirstNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	confFirstNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
+                
+                if(middleNameText.getText().isEmpty()) {
+                	middleNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	middleNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
+                
+                if(lastNameText.getText().isEmpty()) {
+                	lastNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	lastNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
+                
+                if(!emailText.getText().isEmpty() &&
+                		!firstNameText.getText().isEmpty() &&
+                		!confFirstNameText.getText().isEmpty() &&
+                		!middleNameText.getText().isEmpty() &&
+                		!lastNameText.getText().isEmpty()) {
+                	if(multRoles == true) {
+							chooseRole(primaryStage);
+						}
+						else {
+							if (user == true) {
+								userPage(primaryStage);
+							}
+							else if(admin == true){
+								adminPage(primaryStage);
+
+							}
+							else if(teacher == true){
+								teacherPage(primaryStage);
+							}
+						}
+                }
+            }
+        });
+        
+
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Layout setup
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        
+       //Middle VBoxs
+        VBox middleOne = new VBox(firstName, middleName, email);
+        VBox.setMargin(firstName, new Insets(50, 20, 20, 40));
+        VBox.setMargin(middleName, new Insets(20, 20, 20, 40));
+        VBox.setMargin(email, new Insets(20, 20, 20, 40));
+        
+        VBox middleTwo = new VBox(firstNameText,middleNameText,emailText);
+        VBox.setMargin(firstNameText, new Insets(50, 20, 20, 40));
+        VBox.setMargin(middleNameText, new Insets(20, 20, 20, 40));
+        VBox.setMargin(emailText, new Insets(20, 20, 20, 40));
+        
+        VBox middleThree = new VBox(confFirstName, lastName);
+        VBox.setMargin(confFirstName, new Insets(50, 20, 20, 40));
+        VBox.setMargin(lastName, new Insets(20, 20, 20, 40));
+        
+        VBox middleFour = new VBox(confFirstNameText, lastNameText);
+        VBox.setMargin(confFirstNameText, new Insets(50, 20, 20, 40));
+        VBox.setMargin(lastNameText, new Insets(20, 20, 20, 40));
+        
+        //Combine VBoxs
+        HBox middlePane = new HBox(middleOne,middleTwo,middleThree,middleFour);
+        
+        // Bottom pane for login button
+        HBox bottomPane = new HBox(conButton,quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(conButton, new Insets(0, 220, 80, 280));
+        HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+        
+        // BorderPane layout
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
+        
     }
     
     private void chooseRole(Stage primaryStage) {
+    	
+    	// Labels and buttons
+        Label welcome = new Label("Finish Account Setup");
+
+        
+        Button adminButton = new Button("Admin");
+        Button studentButton = new Button("Student");
+        Button teacherButton = new Button("Teacher");
+        Button quitButton = new Button("Quit");
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        
+        // Button Design
+        adminButton.setStyle(
+            "-fx-background-radius: 50%; " +    
+            "-fx-min-width: 170px; " +          
+            "-fx-min-height: 170px; " +         
+            "-fx-max-width: 170px; " +          
+            "-fx-max-height: 170px; " +
+            "-fx-font-size: 2em;"
+        );
+        
+        // Button Design
+        studentButton.setStyle(
+            "-fx-background-radius: 50%; " +    
+            "-fx-min-width: 170px; " +          
+            "-fx-min-height: 170px; " +         
+            "-fx-max-width: 170px; " +          
+            "-fx-max-height: 170px; " +
+            "-fx-font-size: 2em;"
+        );
+        
+        // Button Design
+        teacherButton.setStyle(
+            "-fx-background-radius: 50%; " +    
+            "-fx-min-width: 170px; " +          
+            "-fx-min-height: 170px; " +         
+            "-fx-max-width: 170px; " +          
+            "-fx-max-height: 170px; " +
+            "-fx-font-size: 2em;"
+        );
+        
+        quitButton.setStyle("-fx-font-size: 2em;");
+        
+        // Quit button action
+        adminButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+            }
+        });
+        
+        // Quit button action
+        studentButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+            }
+        });
+
+        
+        // Quit button action
+        teacherButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+            }
+        });
+
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        // Middle Pane
+        HBox middlePane = new HBox(studentButton,teacherButton,adminButton);
+        HBox.setMargin(studentButton, new Insets(80, 80, 0, 130));
+        HBox.setMargin(teacherButton, new Insets(80, 80, 0, 0));
+        HBox.setMargin(adminButton, new Insets(80, 80, 0, 0));
+        
+        //Bottom pane for exit
+        HBox bottomPane = new HBox(quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(quitButton, new Insets(0, 0, 70, 0));
+        
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
     	
     }
 
