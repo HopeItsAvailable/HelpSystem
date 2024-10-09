@@ -351,6 +351,9 @@ public class helpSystemStart extends Application {
                 		passwordText.getText().trim().equals(confPasswordText.getText().trim()) &&
                 		userNameText.getText().trim().length() >= 6 && 
                 		userNameText.getText().trim().length() <= 12){
+                	
+                			Node userNode = linkedList.searchByUsername(userNameText.getText().trim());
+                			
                     
                 			if(userNameText.getText().trim().equals(adminUsername) &&
                 					passwordText.getText().trim().equals(adminPassword)&&
