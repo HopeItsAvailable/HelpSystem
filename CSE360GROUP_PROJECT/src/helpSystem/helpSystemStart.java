@@ -71,4 +71,7 @@ public class helpSystemStart extends Application {
         Scene welcomeScene = new Scene(welcomeLayout, 300, 250);
         primaryStage.setScene(welcomeScene);
     }
+    
+    
+    
 }
