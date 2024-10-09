@@ -1,5 +1,7 @@
 package helpSystem;
 
+import helpSystem.Node;
+
 public class LinkedList {
     protected Node head;
     private int size;
@@ -16,7 +18,7 @@ public class LinkedList {
     	this.head=null;
     	this.size = 0;
     }
-
+    
     // Method to add a node at the end of the list
     public void add(String username, String password) {
         Node newNode = new Node(username, password);
