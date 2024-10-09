@@ -356,7 +356,7 @@ public class helpSystemStart extends Application {
                      						}
                      						else {
                      							if (user == true) {
-                     								userPage(primaryStage);
+                     								studentPage(primaryStage);
                      							}
                      							else if(admin == true){
                      								adminPage(primaryStage);
@@ -685,7 +685,7 @@ public class helpSystemStart extends Application {
 						}
 						else {
 							if (user == true) {
-								userPage(primaryStage);
+								studentPage(primaryStage);
 							}
 							else if(admin == true){
 								adminPage(primaryStage);
@@ -803,28 +803,28 @@ public class helpSystemStart extends Application {
         
         quitButton.setStyle("-fx-font-size: 2em;");
         
-        // Quit button action
+        // Admin button action
         adminButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+            	adminPage(primaryStage);
             }
         });
         
-        // Quit button action
+        // Student button action
         studentButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+            	studentPage(primaryStage);
             }
         });
 
         
-        // Quit button action
+        // Teacher button action
         teacherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+            	teacherPage(primaryStage);
             }
         });
 
@@ -865,11 +865,91 @@ public class helpSystemStart extends Application {
     	
     }
 
-    private void userPage(Stage primaryStage) {
+    private void studentPage(Stage primaryStage) {
+    	
+    	// Labels and buttons
+        Label welcome = new Label("Welcome");
+        Label role = new Label("Role: Student");
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        role.setFont(new Font("Arial", 20));
+        
+        Button quitButton = new Button("Log Out");
+        
+        //Button design
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(role,welcome);
+        HBox.setMargin(role, new Insets(20, 0, 0, 20));
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 130));
+        
+        //Bottom pane for exit
+        HBox bottomPane = new HBox(quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(quitButton, new Insets(0, 0, 70, 0));
+        
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
 	
     }
     
     private void teacherPage(Stage primaryStage) {
+    	
+    	// Labels and buttons
+        Label welcome = new Label("Welcome");
+        Label role = new Label("Role: Teacher");
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        role.setFont(new Font("Arial", 20));
+        
+        Button quitButton = new Button("Log Out");
+        
+        //Button design
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(role,welcome);
+        HBox.setMargin(role, new Insets(20, 0, 0, 20));
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 130));
+        
+        //Bottom pane for exit
+        HBox bottomPane = new HBox(quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(quitButton, new Insets(0, 0, 70, 0));
+        
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
     	
     }
     
