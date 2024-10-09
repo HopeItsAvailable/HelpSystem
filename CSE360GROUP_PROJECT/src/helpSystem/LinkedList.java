@@ -17,6 +17,7 @@ public class LinkedList {
         if (head == null) {
             head = newNode;
             size++;
+            System.out.println(username + "ADD()");
         } 
         
         else {

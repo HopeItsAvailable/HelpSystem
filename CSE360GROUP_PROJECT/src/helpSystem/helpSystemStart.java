@@ -356,7 +356,7 @@ public class helpSystemStart extends Application {
                 					confPasswordText.getText().trim().equals(adminPassword)) {
                 				
                      					if(adminInfo == false) {
-                     						addAccountInfo(primaryStage, userName.getText().trim());
+                     						addAccountInfo(primaryStage, userNameText.getText().trim());
                      					}
                 				
                      					else {
@@ -691,10 +691,10 @@ public class helpSystemStart extends Application {
                 		!middleNameText.getText().isEmpty() &&
                 		!lastNameText.getText().isEmpty()) {
                 	
-                	System.out.println("HERE");
                 	//This uses the set methods to finalize the details of the user that is inputting these
                 	//details. At this point, user nodes only have date in their username and password fields.
                 	
+                	System.out.println(username + "HERE");
                 	linkedList.finalizeUserEmail(username, emailText.getText());
                 	linkedList.finalizeUserFirstName(username, firstNameText.getText());
                 	linkedList.finalizeUserLastName(username, lastNameText.getText());
