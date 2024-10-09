@@ -48,7 +48,7 @@ public class helpSystemStart extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-    	
+    	linkedList = new LinkedList();
     	
         primaryStage.setTitle("Help System");
         
