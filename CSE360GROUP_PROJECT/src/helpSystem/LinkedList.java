@@ -110,18 +110,17 @@ public class LinkedList {
     }
 
     // Method to display the linked list
-    public void display() {
+    public String display() {
         if (head == null) {
-            System.out.println("The list is empty.");
-            return;
+        	return "The list is empty."; 
         }
-
+        String toReturn = "";
         Node current = head;
         while (current != null) {
-            System.out.println(current);
+            toReturn += current.toString();
             current = current.next;
         }
-        System.out.println(size);
+        return toReturn;
         
     }
     

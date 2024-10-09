@@ -996,7 +996,11 @@ public class helpSystemStart extends Application {
         
         // TextArea to display user accounts
         TextArea userListDisplay = new TextArea();
-        userListDisplay.setEditable(false); // Make it read-only
+        userListDisplay.setEditable(false); 
+        userListDisplay.setStyle(
+        	    "-fx-control-inner-background: lightblue; " +  // Inner background
+        	    "-fx-background-color: lightblue; "          // Outer background
+        	);
         userListDisplay.setPrefHeight(200); // Set preferred height
         
 
@@ -1029,7 +1033,8 @@ public class helpSystemStart extends Application {
             @Override
             public void handle(ActionEvent event) {
             	
-            	linkedList.display(); // Call listUserAccounts method
+            	String userList = linkedList.display(); // Call the display method and get output as string
+                userListDisplay.setText(userList);
             }
         });
 
@@ -1051,8 +1056,9 @@ public class helpSystemStart extends Application {
         
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton);
+        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton, userListDisplay); // Add userListDisplay here
         layout.setPadding(new Insets(20));
+        layout.setStyle("-fx-background-color: lightblue;");
 
         // Create the BorderPane and set the VBox as the center
         BorderPane adminCreateScreen = new BorderPane();
