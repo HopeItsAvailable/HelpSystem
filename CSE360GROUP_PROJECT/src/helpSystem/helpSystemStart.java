@@ -258,6 +258,7 @@ public class helpSystemStart extends Application {
         primaryStage.setScene(welcomeScene);
     }
     
+
     private void login(Stage primaryStage){
     	
     	// Labels and buttons
@@ -623,4 +624,5 @@ public class helpSystemStart extends Application {
     private void adminPage(Stage primaryStage) {
     	
     }
+
 }
