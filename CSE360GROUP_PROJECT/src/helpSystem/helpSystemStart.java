@@ -6,6 +6,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -1035,9 +1037,10 @@ public class helpSystemStart extends Application {
     }
     
     private void sendCode(Stage primaryStage) {
-    	// Labels, buttons, textfield, and checkBox
+    	// Labels, buttons, textfield, alert, and checkBox
         Label welcome = new Label("Send Code");
         Label email = new Label("Email Address: ");
+        Label noClick = new Label("Please choose which type of account");
         
         TextField emailText = new TextField();
         
@@ -1046,14 +1049,21 @@ public class helpSystemStart extends Application {
         
         CheckBox studentAccount = new CheckBox("Student");
         CheckBox teacherAccount = new CheckBox("Teacher");
+        CheckBox adminAccount = new CheckBox("Admin");
+
         
         // Label design
         welcome.setFont(new Font("Arial", 36));
         email.setFont(new Font("Arial", 20));
         
+        noClick.setFont(new Font("Arial", 20));
+        noClick.setStyle("-fx-text-fill: red;");
+        noClick.setVisible(false);
+        
         //CheckBox design
         studentAccount.setFont(new Font("Arial", 20));
         teacherAccount.setFont(new Font("Arial", 20));
+        adminAccount.setFont(new Font("Arial", 20));
         
         //Button design
         quitButton.setStyle("-fx-font-size: 1.5em;");
@@ -1063,7 +1073,26 @@ public class helpSystemStart extends Application {
         sendButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if(emailText.getText().isEmpty()) {
+                	emailText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	emailText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
                 
+                if(!studentAccount.isSelected() && !teacherAccount.isSelected()) {
+                	noClick.setVisible(true);
+                }
+                else {
+                	noClick.setVisible(false);
+                	
+                	Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Send Email");
+                    alert.setHeaderText("Email Sent");  // Optional: No header text
+                    alert.setContentText("Email has been sent with code: ");
+                    
+                    alert.showAndWait();
+                }
             }
         });
         
@@ -1085,9 +1114,11 @@ public class helpSystemStart extends Application {
         HBox.setMargin(email, new Insets(80, 80, 0, 130));
         HBox.setMargin(emailText, new Insets(80, 80, 0, 0));
         
-        HBox middleBottomPane = new HBox(studentAccount,teacherAccount);
-        HBox.setMargin(studentAccount, new Insets(80, 80, 0, 130));
-        HBox.setMargin(teacherAccount, new Insets(80, 80, 0, 0));
+        HBox middleBottomPane = new HBox(studentAccount,teacherAccount,adminAccount,noClick);
+        HBox.setMargin(studentAccount, new Insets(80, 40, 0, 60));
+        HBox.setMargin(teacherAccount, new Insets(80, 40, 0, 0));
+        HBox.setMargin(adminAccount, new Insets(80, 40, 0, 0));
+        HBox.setMargin(noClick, new Insets(80, 0, 0, 0));
         
         VBox middlePane = new VBox(middleTopPane,middleBottomPane);
         
