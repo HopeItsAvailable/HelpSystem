@@ -1,9 +1,7 @@
 package helpSystem;
 
-import java.util.List;
-
 public class Node {
-	final private int TOTALNUMBEROFROLES = 3; //Number of roles. Currently admin, user, instructor.
+	final private int TOTALNUMBEROFROLES = 3; //Number of roles. Currently admin, student, instructor.
     String username;
     String password;
     private String email;

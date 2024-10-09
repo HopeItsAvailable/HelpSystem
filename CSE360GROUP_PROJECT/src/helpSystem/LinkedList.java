@@ -1,7 +1,5 @@
 package helpSystem;
 
-import helpSystem.Node;
-
 public class LinkedList {
     protected Node head;
     private int size;
