@@ -1045,7 +1045,7 @@ public class helpSystemStart extends Application {
         email.setFont(new Font("Arial", 20));
         
         //CheckBox design
-        studentAccount.setFont(new Font("Arial", 15));
+        studentAccount.setFont(new Font("Arial", 20));
         teacherAccount.setFont(new Font("Arial", 20));
         
         //Button design
@@ -1081,6 +1081,26 @@ public class helpSystemStart extends Application {
         HBox middleBottomPane = new HBox(studentAccount,teacherAccount);
         HBox.setMargin(studentAccount, new Insets(80, 80, 0, 130));
         HBox.setMargin(teacherAccount, new Insets(80, 80, 0, 0));
+        
+        VBox middlePane = new VBox(middleTopPane,middleBottomPane);
+        
+        // Bottom pane for login button
+        HBox bottomPane = new HBox(sendButton,quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(sendButton, new Insets(0, 220, 80, 280));
+        HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+        
+        
+        //BorderPane stuff
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
         
         
     }
