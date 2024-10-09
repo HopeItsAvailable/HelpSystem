@@ -48,17 +48,21 @@ public class Node {
     	return this.numOfRoles;
     }
     
-    public boolean isAdmin() {
+    public boolean getIsAdmin() {
     	return this.isAdmin;
     }
     
-    public boolean isStudent() {
+    public boolean getIsStudent() {
     	return this.isStudent;
     }
     
-    public boolean isInstructor() {
+    public boolean getIsInstructor() {
     	return this.isInstructor;
     }
+    public String getPassword() {
+    	return this.password;
+    }
+    
     
     
     // Setter methods to update additional fields later

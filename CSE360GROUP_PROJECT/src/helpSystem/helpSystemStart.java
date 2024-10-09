@@ -703,6 +703,7 @@ public class helpSystemStart extends Application {
                 	linkedList.finalizeUserLastName(username, lastNameText.getText());
                 	linkedList.finalizeUserMiddleName(username, middleNameText.getText());
                 	linkedList.finalizeUserPreferredFirstName(username, confFirstNameText.getText());
+                	adminInfo = true;
 
                 	
                 	

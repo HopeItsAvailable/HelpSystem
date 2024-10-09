@@ -144,18 +144,18 @@ public class LinkedList {
     
     public boolean isAdmin(String username) {
     	Node user = searchByUsername(username);
-        return user.isAdmin();
+        return user.getIsAdmin();
 
     }
     
     public boolean isStudent(String username) {
     	Node user = searchByUsername(username);
-    	return user.isStudent();
+    	return user.getIsStudent();
     }
     
     public boolean isInstructor(String username) {
     	Node user = searchByUsername(username);
-    	return user.isInstructor();
+    	return user.getIsInstructor();
     }
 
     // Method to search for a node by username
