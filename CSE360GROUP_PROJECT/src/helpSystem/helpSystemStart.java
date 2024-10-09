@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -26,6 +27,21 @@ public class helpSystemStart extends Application {
     
     //checkAdmind
     Boolean adminMade = false;
+    Boolean adminInfo = false;
+    Boolean user = false;
+    Boolean admin = false;
+    Boolean teacher = false;
+    Boolean multRoles = false;
+    
+    //Random String for code
+    
+    String code = "Test";
+    
+    //Save Admin details for now
+    
+    String adminUsername; 
+    String adminPassword;
+    
     
     @Override
     public void start(Stage primaryStage) {
@@ -74,7 +90,7 @@ public class helpSystemStart extends Application {
         VBox middlePane = new VBox(logo,startButton,clickStart);
         middlePane.setAlignment(Pos.CENTER);
         
-        VBox.setMargin(startButton, new Insets(60, 0, 20, 0)); // Adds 20px margin at the top of the button
+        VBox.setMargin(startButton, new Insets(50, 0, 20, 0)); // Adds 20px margin at the top of the button
 
            
         //Pane For TOP of BorderPane
@@ -109,27 +125,24 @@ public class helpSystemStart extends Application {
     
     private void createAdmin(Stage primaryStage) {
     	
-        // needed buttons,labels etc.
+    	// Labels and buttons
         Label welcome = new Label("Create an Admin Account");
         Label userName = new Label("Enter Username: ");
         Label password = new Label("Enter Password: ");
         Label confPassword = new Label("Re-enter Password: ");
         
-        Label invUserName = new Label("Username must be between 6-12 charcters");
-        Label invPassword = new Label("Password must be at least 6 charcters");
+        Label invUserName = new Label("Username must be between 6-12 characters");
+        Label invPassword = new Label("Password must be at least 6 characters");
         Label invConPassword = new Label("Password does not match");
         
-        Button loginButton = new Button();
-        Button quitButton = new Button();
+        Button loginButton = new Button("Create Account");
+        Button quitButton = new Button("Quit");
         
         TextField userNameText = new TextField();
         TextField passwordText = new TextField();
         TextField confPasswordText = new TextField();
         
-        
-        
-        //label designs
-        
+        // Label design
         welcome.setFont(new Font("Arial", 36));
         userName.setFont(new Font("Arial", 20));
         password.setFont(new Font("Arial", 20));
@@ -146,124 +159,468 @@ public class helpSystemStart extends Application {
         invConPassword.setFont(new Font("Arial", 20));
         invConPassword.setStyle("-fx-text-fill: red;");
         invConPassword.setVisible(false);
-
-        // Create the return button
-        loginButton.setText("Create Account");
-        loginButton.setStyle("-fx-font-size: 2em; ");
-
         
-        // Set the action for the return button to go back to the login scene
+        // Button design
+        loginButton.setStyle("-fx-font-size: 2em;");
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        
+        // Login button action
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	
-            	if(userNameText.getText().trim().length() <= 6 || userNameText.getText().trim().length() > 12) {
-            		invUserName.setVisible(true);
-            	}
-            	else {
-            		invUserName.setVisible(false);
-            	}
-            	
-            	if (passwordText.getText().trim().length() < 6) {
-            		invPassword.setVisible(true);
-            	}
-            	else {
-            		invPassword.setVisible(false);
-            	}
-            	
-            	if (passwordText.getText().trim().equals(confPasswordText.getText().trim()) == false) {
-            		invConPassword.setVisible(true);
-            	}
-            	else {
-            		invConPassword.setVisible(false);
-            	}
-            	
-            	if (passwordText.getText().trim().length() > 6 && 
-            			passwordText.getText().trim().equals(confPasswordText.getText().trim()) == true &&
-            			userNameText.getText().trim().length() >= 6 && userNameText.getText().trim().length() <= 12) {
-            		adminMade = true;
-            		login(primaryStage);
-            	}
+                
+                // Check username length
+                if (userNameText.getText().trim().length() <= 6 || userNameText.getText().trim().length() > 12) {
+                    invUserName.setVisible(true);
+                } else {
+                    invUserName.setVisible(false);
+                }
+                
+                // Check password length
+                if (passwordText.getText().trim().length() < 6) {
+                    invPassword.setVisible(true);
+                } else {
+                    invPassword.setVisible(false);
+                }
+                
+                // Check if passwords match
+                if (!passwordText.getText().trim().equals(confPasswordText.getText().trim())) {
+                    invConPassword.setVisible(true);
+                } else {
+                    invConPassword.setVisible(false);
+                }
+                
+                // Proceed if all conditions are met
+                if (passwordText.getText().trim().length() >= 6 && 
+                    passwordText.getText().trim().equals(confPasswordText.getText().trim()) &&
+                    userNameText.getText().trim().length() >= 6 && 
+                    userNameText.getText().trim().length() <= 12) {
+                    
+                    adminMade = true;
+                    adminUsername = userNameText.getText().trim();
+                    adminPassword = passwordText.getText().trim();
+                    login(primaryStage);
+                }
             }
         });
         
-        //quit button
-        
-        quitButton.setText("Quit");
-        quitButton.setStyle("-fx-font-size: 1.5em; ");
-
-        
-        // Set the action for the return button to go back to the login scene
+        // Quit button action
         quitButton.setOnAction(new EventHandler<ActionEvent>() {
-        	@Override
+            @Override
             public void handle(ActionEvent event) {
-        		start(primaryStage);
-        	}
+                start(primaryStage);
+            }
         });
         
-       //Pane for Center BorderPane
+        // Layout setup
         
-        //3 Vbox
-        VBox middleleftPane = new VBox(userName,password,confPassword);
-        VBox.setMargin(userName, new Insets(100, 20, 20, 40)); 
-        VBox.setMargin(password, new Insets(20, 20, 20, 40)); 
-        VBox.setMargin(confPassword, new Insets(20, 20, 20, 40)); 
+        //Middle VBoxs
+        VBox middleLeftPane = new VBox(userName, password, confPassword);
+        VBox.setMargin(userName, new Insets(50, 20, 20, 40));
+        VBox.setMargin(password, new Insets(20, 20, 20, 40));
+        VBox.setMargin(confPassword, new Insets(20, 20, 20, 40));
         
-        VBox middleMiddlePane = new VBox(userNameText,passwordText,confPasswordText);
-        VBox.setMargin(userNameText, new Insets(100, 20, 20, 20)); 
-        VBox.setMargin(passwordText, new Insets(20, 20, 20, 20)); 
-        VBox.setMargin(confPasswordText, new Insets(20, 20, 20, 20)); 
+        VBox middleMiddlePane = new VBox(userNameText, passwordText, confPasswordText);
+        VBox.setMargin(userNameText, new Insets(50, 20, 20, 20));
+        VBox.setMargin(passwordText, new Insets(20, 20, 20, 20));
+        VBox.setMargin(confPasswordText, new Insets(20, 20, 20, 20));
         
-        VBox middlerightPane = new VBox(invUserName,invPassword,invConPassword);
-        VBox.setMargin(invUserName, new Insets(100, 20, 20, 20)); 
-        VBox.setMargin(invPassword, new Insets(20, 20, 20, 20)); 
-        VBox.setMargin(invConPassword, new Insets(20, 20, 20, 20)); 
-
-        //Combine with HBox
+        VBox middleRightPane = new VBox(invUserName, invPassword, invConPassword);
+        VBox.setMargin(invUserName, new Insets(50, 20, 20, 20));
+        VBox.setMargin(invPassword, new Insets(20, 20, 20, 20));
+        VBox.setMargin(invConPassword, new Insets(20, 20, 20, 20));
         
-        HBox middlePane = new HBox(middleleftPane,middleMiddlePane,middlerightPane);
+        // Combine the middle VBoxs
+        HBox middlePane = new HBox(middleLeftPane, middleMiddlePane, middleRightPane);
         middlePane.setAlignment(Pos.CENTER_LEFT);
         
-        //Bottom Pane
-        
-        HBox bottomPane = new HBox(loginButton);
+        // Bottom pane for login button
+        HBox bottomPane = new HBox(loginButton,quitButton);
         bottomPane.setAlignment(Pos.CENTER);
-        HBox.setMargin(loginButton, new Insets(0, 0, 80, 0)); // Adds 20px margin at the top of the button
-           
-        //Pane For TOP of BorderPane
+        HBox.setMargin(loginButton, new Insets(0, 220, 80, 280));
+        HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
         
+        // Top pane for welcome label
         HBox topPane = new HBox(welcome);
-        topPane.setAlignment(Pos.CENTER); // Centers the label in the HBox
-        
-        HBox.setMargin(welcome, new Insets(50, 0, 20, 0)); // Adds 20px margin at the top of the button
-        
-        // Initial layout with the login button
-        BorderPane admindCreateScreen = new BorderPane();
-        
-        //Pane for right
-        
-        VBox rightPane = new VBox(quitButton);
-        rightPane.setAlignment(Pos.BASELINE_RIGHT);
-        
-        VBox.setMargin(quitButton, new Insets(320, 40, 40, 0)); // Adds
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
         
         
-        //Set location of elements
+        // BorderPane layout
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
         
-        admindCreateScreen.setTop(topPane);
-        admindCreateScreen.setCenter(middlePane);
-        admindCreateScreen.setBottom(bottomPane);
-        admindCreateScreen.setRight(rightPane);
-        
-        //Background
-        admindCreateScreen.setStyle("-fx-background-color: lightblue;");
-        
-        // Create the welcome scene and set it in the primary stage
-        Scene welcomeScene = new Scene(admindCreateScreen, 900, 600);
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
         primaryStage.setScene(welcomeScene);
     }
     
     private void login(Stage primaryStage){
+    	
+    	// Labels and buttons
+        Label welcome = new Label("Log In");
+        Label newUser = new Label("Click here to make new account");
+        Label userName = new Label("Enter Username: ");
+        Label password = new Label("Enter Password: ");
+        Label confPassword = new Label("Re-enter Password: ");
+        
+        Label invUserName = new Label("Username does not exist");
+        Label invPassword = new Label("Incorrect Password");
+        Label invConPassword = new Label("Password does not match");
+        Label checkLogin = new Label("Account not found try again");
+        
+        Button loginButton = new Button("Log-In");
+        Button quitButton = new Button("Quit");
+        Button createAccountButton = new Button("Create Account");
+        
+        TextField userNameText = new TextField();
+        TextField passwordText = new TextField();
+        TextField confPasswordText = new TextField();
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        userName.setFont(new Font("Arial", 20));
+        password.setFont(new Font("Arial", 20));
+        confPassword.setFont(new Font("Arial", 20));
+        newUser.setFont(new Font("Arial", 14));
+                
+        invUserName.setFont(new Font("Arial", 20));
+        invUserName.setStyle("-fx-text-fill: red;");
+        invUserName.setVisible(false);
+        
+        invPassword.setFont(new Font("Arial", 20));
+        invPassword.setStyle("-fx-text-fill: red;");
+        invPassword.setVisible(false);
+        
+        checkLogin.setFont(new Font("Arial", 14));
+        checkLogin.setStyle("-fx-text-fill: red;");
+        checkLogin.setVisible(false);
+        
+        invConPassword.setFont(new Font("Arial", 20));
+        invConPassword.setStyle("-fx-text-fill: red;");
+        invConPassword.setVisible(false);
+        
+        // Button design
+        loginButton.setStyle("-fx-font-size: 2em;");
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        createAccountButton.setStyle("-fx-font-size: 1.5em;");
+        
+        // Login button action
+        loginButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	
+            	// Check username length
+                if (userNameText.getText().trim().length() <= 6 || userNameText.getText().trim().length() > 12) {
+                    invUserName.setVisible(true);
+                } else {
+                    invUserName.setVisible(false);
+                }
+                
+                // Check password length
+                if (passwordText.getText().trim().length() < 6) {
+                    invPassword.setVisible(true);
+                } else {
+                    invPassword.setVisible(false);
+                }
+                
+                // Check if passwords match
+                if (!passwordText.getText().trim().equals(confPasswordText.getText().trim())) {
+                    invConPassword.setVisible(true);
+                } else {
+                    invConPassword.setVisible(false);
+                }
+                
+                
+                // Proceed if all conditions are met
+                if (passwordText.getText().trim().length() >= 6 && 
+                		passwordText.getText().trim().equals(confPasswordText.getText().trim()) &&
+                		userNameText.getText().trim().length() >= 6 && 
+                		userNameText.getText().trim().length() <= 12){
+                    
+                			if(userNameText.getText().trim().equals(adminUsername) &&
+                					passwordText.getText().trim().equals(adminPassword)&&
+                					confPasswordText.getText().trim().equals(adminPassword)) {
+                				
+                     					if(adminInfo == false) {
+                     						addAccountInfo(primaryStage);
+                     					}
+                				
+                     					else {
+                     						if(multRoles == true) {
+                     							chooseRole(primaryStage);
+                     						}
+                     						else {
+                     							if (user == true) {
+                     								userPage(primaryStage);
+                     							}
+                     							else if(admin == true){
+                     								adminPage(primaryStage);
+
+                     							}
+                     							else if(teacher == true){
+                     								teacherPage(primaryStage);
+                     							}
+                     						}
+                     					}
+                				
+                     		}
+                			
+                			else {
+                					checkLogin.setVisible(true);
+                			}
+                	}
+                
+            	}
+        	});
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	start(primaryStage);
+            }
+        });
+        
+        // Create Account button action
+        createAccountButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                createUser(primaryStage);
+            }
+        });
+        
+        // Layout setup
+        
+        //Middle VBoxs
+        VBox middleLeftPane = new VBox(userName, password, confPassword);
+        VBox.setMargin(userName, new Insets(50, 20, 20, 40));
+        VBox.setMargin(password, new Insets(20, 20, 20, 40));
+        VBox.setMargin(confPassword, new Insets(20, 20, 20, 40));
+        
+        VBox middleMiddlePane = new VBox(userNameText, passwordText, confPasswordText);
+        VBox.setMargin(userNameText, new Insets(50, 20, 20, 20));
+        VBox.setMargin(passwordText, new Insets(20, 20, 20, 20));
+        VBox.setMargin(confPasswordText, new Insets(20, 20, 20, 20));
+        
+        VBox middleRightPane = new VBox(invUserName, invPassword,invConPassword);
+        VBox.setMargin(invUserName, new Insets(50, 20, 20, 20));
+        VBox.setMargin(invPassword, new Insets(20, 20, 20, 20));
+        VBox.setMargin(invConPassword, new Insets(20, 20, 20, 20));
+        
+        // Combine the middle VBoxs
+        HBox middlePane = new HBox(middleLeftPane, middleMiddlePane, middleRightPane);
+        middlePane.setAlignment(Pos.CENTER_LEFT);
+        
+        // Bottom pane for login button
+        HBox bottomPane = new HBox(createAccountButton,loginButton,quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        
+        HBox.setMargin(createAccountButton, new Insets(0, 100, 0, 30));
+        HBox.setMargin(loginButton, new Insets(0, 150, 0, 100));
+        HBox.setMargin(quitButton, new Insets(0, 80, 0, 70));
+        
+        HBox textBottom = new HBox(newUser,checkLogin);
+        HBox.setMargin(newUser, new Insets(10, 50, 50, 30));
+        HBox.setMargin(checkLogin, new Insets(10, 50, 50, 95));
+
+        
+        VBox bottomText = new VBox(bottomPane,textBottom);
+                
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        // BorderPane layout
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomText);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
+        
+    }
+    
+    private void createUser(Stage primaryStage) {
+    	
+    	// Labels and buttons
+        Label welcome = new Label("Create a User");
+        Label userName = new Label("Enter Username: ");
+        Label password = new Label("Enter Password: ");
+        Label confPassword = new Label("Re-enter Password: ");
+        Label userCode = new Label("Enter User Code: ");
+
+        
+        Label invUserName = new Label("Username must be between 6-12 characters");
+        Label invPassword = new Label("Password must be at least 6 characters");
+        Label invConPassword = new Label("Password does not match");
+        Label invUserCode = new Label("Usercode incorrect");
+        Label invChooseType = new Label("Please choose");
+
+        
+        Button loginButton = new Button("Create Account");
+        Button quitButton = new Button("Quit");
+        
+        TextField userNameText = new TextField();
+        TextField passwordText = new TextField();
+        TextField confPasswordText = new TextField();
+        TextField userCodeText = new TextField();
+        
+
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        userName.setFont(new Font("Arial", 20));
+        password.setFont(new Font("Arial", 20));
+        confPassword.setFont(new Font("Arial", 20));
+        userCode.setFont(new Font("Arial", 20));
+        
+        invUserName.setFont(new Font("Arial", 20));
+        invUserName.setStyle("-fx-text-fill: red;");
+        invUserName.setVisible(false);
+        
+        invPassword.setFont(new Font("Arial", 20));
+        invPassword.setStyle("-fx-text-fill: red;");
+        invPassword.setVisible(false);
+        
+        invConPassword.setFont(new Font("Arial", 20));
+        invConPassword.setStyle("-fx-text-fill: red;");
+        invConPassword.setVisible(false);
+        
+        invUserCode.setFont(new Font("Arial", 20));
+        invUserCode.setStyle("-fx-text-fill: red;");
+        invUserCode.setVisible(false);
+        
+        // Button design
+        loginButton.setStyle("-fx-font-size: 2em;");
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        
+        // Login button action
+        loginButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+                // Check username length
+                if (userNameText.getText().trim().length() <= 6 || userNameText.getText().trim().length() > 12) {
+                    invUserName.setVisible(true);
+                } else {
+                    invUserName.setVisible(false);
+                }
+                
+                // Check password length
+                if (passwordText.getText().trim().length() < 6) {
+                    invPassword.setVisible(true);
+                } else {
+                    invPassword.setVisible(false);
+                }
+                
+                // Check if passwords match
+                if (!passwordText.getText().trim().equals(confPasswordText.getText().trim())) {
+                    invConPassword.setVisible(true);
+                } else {
+                    invConPassword.setVisible(false);
+                }
+                
+                if (!userCodeText.getText().trim().equals(code)) {
+                	invUserCode.setVisible(true);
+                } else {
+                	invUserCode.setVisible(false);
+                }
+                
+                // Proceed if all conditions are met
+                if (passwordText.getText().trim().length() >= 6 && 
+                    passwordText.getText().trim().equals(confPasswordText.getText().trim()) &&
+                    userNameText.getText().trim().length() >= 6 && 
+                    userNameText.getText().trim().length() <= 12 &&
+                	userCodeText.getText().trim().equals(code)){
+                    
+                    //ADD USER TO LIST
+                    login(primaryStage);
+                }
+            }
+        });
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Layout setup
+        
+        //Middle VBoxs
+        VBox middleLeftPane = new VBox(userName, password, confPassword,userCode);
+        VBox.setMargin(userName, new Insets(50, 20, 20, 40));
+        VBox.setMargin(password, new Insets(20, 20, 20, 40));
+        VBox.setMargin(confPassword, new Insets(20, 20, 20, 40));
+        VBox.setMargin(userCode, new Insets(20, 20, 20, 40));
+        
+        VBox middleMiddlePane = new VBox(userNameText, passwordText, confPasswordText,userCodeText);
+        VBox.setMargin(userNameText, new Insets(50, 20, 20, 20));
+        VBox.setMargin(passwordText, new Insets(20, 20, 20, 20));
+        VBox.setMargin(confPasswordText, new Insets(15, 20, 20, 20));
+        VBox.setMargin(userCodeText, new Insets(15, 20, 20, 20));
+        
+        VBox middleRightPane = new VBox(invUserName, invPassword, invConPassword, invUserCode);
+        VBox.setMargin(invUserName, new Insets(50, 20, 20, 20));
+        VBox.setMargin(invPassword, new Insets(20, 20, 20, 20));
+        VBox.setMargin(invConPassword, new Insets(20, 20, 20, 20));
+        VBox.setMargin(invUserCode, new Insets(20, 20, 20, 20));
+        
+        // Combine the middle VBoxs
+        HBox middlePane = new HBox(middleLeftPane, middleMiddlePane, middleRightPane);
+        middlePane.setAlignment(Pos.CENTER_LEFT);
+        
+        // Bottom pane for login button
+        HBox bottomPane = new HBox(loginButton,quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(loginButton, new Insets(0, 220, 80, 280));
+        HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        
+        // BorderPane layout
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
+    }
+    
+    private void addAccountInfo(Stage primaryStage) {
+    	
+    }
+    
+    private void chooseRole(Stage primaryStage) {
+    	
+    }
+
+    private void userPage(Stage primaryStage) {
+	
+    }
+    
+    private void teacherPage(Stage primaryStage) {
+    	
+    }
+    
+    private void adminPage(Stage primaryStage) {
     	
     }
 }
