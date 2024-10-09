@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -376,7 +377,6 @@ public class helpSystemStart extends Application {
                      							}
                      						}
                      					}
-                				
                      		}
                 			
                 			else {
@@ -991,6 +991,11 @@ public class helpSystemStart extends Application {
         TextField deleteUser = new TextField();
 
         
+        // TextArea to display user accounts
+        TextArea userListDisplay = new TextArea();
+        userListDisplay.setEditable(false); // Make it read-only
+        userListDisplay.setPrefHeight(200); // Set preferred height
+        
 
         // Set button actions using EventHandler
         inviteUserButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1020,6 +1025,7 @@ public class helpSystemStart extends Application {
         listUsersButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+            	
             	linkedList.display(); // Call listUserAccounts method
             }
         });
@@ -1054,6 +1060,8 @@ public class helpSystemStart extends Application {
         Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
         primaryStage.setScene(welcomeScene);
     }
+    
+    
     
     private void sendCode(Stage primaryStage) {
     	// Labels, buttons, textfield, alert, and checkBox
