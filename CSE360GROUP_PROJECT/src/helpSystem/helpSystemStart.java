@@ -202,6 +202,10 @@ public class helpSystemStart extends Application {
                     adminMade = true;
                     adminUsername = userNameText.getText().trim();
                     adminPassword = passwordText.getText().trim();
+                    
+                    linkedList.add(adminUsername, adminPassword);
+                    linkedList.addRoleToUser(adminUsername, "admin");
+                    
                     login(primaryStage);
                 }
             }
@@ -350,7 +354,7 @@ public class helpSystemStart extends Application {
                 					confPasswordText.getText().trim().equals(adminPassword)) {
                 				
                      					if(adminInfo == false) {
-                     						addAccountInfo(primaryStage);
+                     						addAccountInfo(primaryStage, userName.getText().trim());
                      					}
                 				
                      					else {
@@ -608,7 +612,7 @@ public class helpSystemStart extends Application {
         primaryStage.setScene(welcomeScene);
     }
     
-    private void addAccountInfo(Stage primaryStage) {
+    private void addAccountInfo(Stage primaryStage, String username) {
     	
     	// Labels and buttons
         Label welcome = new Label("Finish Account Setup");
