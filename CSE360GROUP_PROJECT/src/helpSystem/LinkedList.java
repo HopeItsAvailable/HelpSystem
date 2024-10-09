@@ -3,13 +3,6 @@ package helpSystem;
 public class LinkedList {
     protected Node head;
     private int size;
-//    private String username;
-//    private String password;
-//    private String email;
-//    private String firstName;
-//    private String middleName;
-//    private String lastName;
-//    private String preferredFirstName;
 
     
     public LinkedList() {
@@ -141,6 +134,27 @@ public class LinkedList {
     
     public void inviteUser(String email) {
     	
+    }
+    
+    public int getNumOfRoles(String username) {
+        Node user = searchByUsername(username);
+        return user.getNumOfRoles();
+    }
+    
+    public boolean isAdmin(String username) {
+    	Node user = searchByUsername(username);
+        return user.isAdmin();
+
+    }
+    
+    public boolean isStudent(String username) {
+    	Node user = searchByUsername(username);
+    	return user.isStudent();
+    }
+    
+    public boolean isInstructor(String username) {
+    	Node user = searchByUsername(username);
+    	return user.isInstructor();
     }
 
     // Method to search for a node by username

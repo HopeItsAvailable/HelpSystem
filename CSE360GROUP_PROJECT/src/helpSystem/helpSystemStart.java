@@ -684,23 +684,37 @@ public class helpSystemStart extends Application {
                 	lastNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
                 }
                 
+                
                 if(!emailText.getText().isEmpty() &&
                 		!firstNameText.getText().isEmpty() &&
                 		!confFirstNameText.getText().isEmpty() &&
                 		!middleNameText.getText().isEmpty() &&
                 		!lastNameText.getText().isEmpty()) {
-                	if(multRoles == true) {
+                	
+                	System.out.println("HERE");
+                	//This uses the set methods to finalize the details of the user that is inputting these
+                	//details. At this point, user nodes only have date in their username and password fields.
+                	
+                	linkedList.finalizeUserEmail(username, emailText.getText());
+                	linkedList.finalizeUserFirstName(username, firstNameText.getText());
+                	linkedList.finalizeUserLastName(username, lastNameText.getText());
+                	linkedList.finalizeUserMiddleName(username, middleNameText.getText());
+                	linkedList.finalizeUserPreferredFirstName(username, confFirstNameText.getText());
+
+                	
+                	
+                	if(linkedList.getNumOfRoles(username)>1) {
 							chooseRole(primaryStage);
 						}
 						else {
-							if (user == true) {
+							if (linkedList.isStudent(username) == true) {
 								studentPage(primaryStage);
 							}
-							else if(admin == true){
+							else if(linkedList.isAdmin(username) == true){
 								adminPage(primaryStage);
 
 							}
-							else if(teacher == true){
+							else if(linkedList.isInstructor(username) == true){
 								teacherPage(primaryStage);
 							}
 						}

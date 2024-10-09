@@ -23,20 +23,41 @@ public class Node {
         this.username = username;
         this.password = password;
         this.next = null;
-        this.username = username;
-        this.password = password;
         this.email = null;
         this.firstName = null;
         this.middleName = null;
         this.lastName = null;
         this.preferredFirstName = null;
-        this.numOfRoles = 1;
+        this.numOfRoles = 0;
      
+        //booleans to see what roles this user has
         this.isAdmin = false;
         this.isStudent = false;
         this.isInstructor = false;
-     
          
+    }
+    
+    public void addOneToRole() {
+    	this.numOfRoles++;
+    }
+   
+    
+    //GET METHODS
+    
+    public int getNumOfRoles() {
+    	return this.numOfRoles;
+    }
+    
+    public boolean isAdmin() {
+    	return this.isAdmin;
+    }
+    
+    public boolean isStudent() {
+    	return this.isStudent;
+    }
+    
+    public boolean isInstructor() {
+    	return this.isInstructor;
     }
     
     
