@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -915,11 +916,11 @@ public class helpSystemStart extends Application {
         Label welcome = new Label("Welcome");
         Label role = new Label("Role: Teacher");
         
+        Button quitButton = new Button("Log Out");
+        
         // Label design
         welcome.setFont(new Font("Arial", 36));
         role.setFont(new Font("Arial", 20));
-        
-        Button quitButton = new Button("Log Out");
         
         //Button design
         quitButton.setStyle("-fx-font-size: 1.5em;");
@@ -955,6 +956,64 @@ public class helpSystemStart extends Application {
     
     private void adminPage(Stage primaryStage) {
     	
+    }
+    
+    private void sendCode(Stage primaryStage) {
+    	// Labels, buttons, textfield, and checkBox
+        Label welcome = new Label("Send Code");
+        Label email = new Label("Email Address: ");
+        
+        TextField emailText = new TextField();
+        
+        Button sendButton = new Button("Send");
+        Button quitButton = new Button("Quit");
+        
+        CheckBox studentAccount = new CheckBox("Student");
+        CheckBox teacherAccount = new CheckBox("Teacher");
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        email.setFont(new Font("Arial", 20));
+        
+        //CheckBox design
+        studentAccount.setFont(new Font("Arial", 15));
+        teacherAccount.setFont(new Font("Arial", 20));
+        
+        //Button design
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        sendButton.setStyle("-fx-font-size: 2em;");
+
+        // Send button action
+        sendButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+            }
+        });
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        // Middle Pane
+        HBox middleTopPane = new HBox(email,emailText);
+        HBox.setMargin(email, new Insets(80, 80, 0, 130));
+        HBox.setMargin(emailText, new Insets(80, 80, 0, 0));
+        
+        HBox middleBottomPane = new HBox(studentAccount,teacherAccount);
+        HBox.setMargin(studentAccount, new Insets(80, 80, 0, 130));
+        HBox.setMargin(teacherAccount, new Insets(80, 80, 0, 0));
+        
+        
     }
 
 }
