@@ -93,7 +93,23 @@ public class LinkedList {
     public void addRoleToUser(String username, String role) {
         Node user = searchByUsername(username);
         if (user != null) {
-            user.addRole(role);  // Call the method in Node to add the role
+            switch (role.toLowerCase()) {
+                case "admin":
+                    user.setAdmin(true);
+                    System.out.println("Role Admin added to user " + username + ".");
+                    break;
+                case "student":
+                    user.setStudent(true);
+                    System.out.println("Role Student added to user " + username + ".");
+                    break;
+                case "instructor":
+                    user.setInstructor(true);
+                    System.out.println("Role Instructor added to user " + username + ".");
+                    break;
+                default:
+                    System.out.println("Role '" + role + "' is not recognized.");
+                    break;
+            }
         } else {
             System.out.println("User with username '" + username + "' not found.");
         }
@@ -113,6 +129,18 @@ public class LinkedList {
         }
         System.out.println(size);
         
+    }
+    
+    public void resetAccount(String Username) {
+    	
+    }
+    
+    public void deleteAccoutn() {
+    	
+    }
+    
+    public void inviteUser(String email) {
+    	
     }
 
     // Method to search for a node by username

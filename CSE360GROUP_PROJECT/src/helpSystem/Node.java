@@ -9,11 +9,13 @@ public class Node {
     private String middleName;
     private String lastName;
     private String preferredFirstName;
+    private int numOfRoles;
     
     Node next;
     
-    private String[] roles;  // Array to store roles
-    private int numOfRoles; 
+    private boolean isAdmin;     // Boolean for admin role
+    private boolean isStudent;   // Boolean for student role
+    private boolean isInstructor;// Boolean for instructor role
 
     //used on initial setup screen. Set methods are used to store other fields besides username/password
     //when the user reaches account finalization screen.
@@ -29,31 +31,15 @@ public class Node {
         this.lastName = null;
         this.preferredFirstName = null;
         this.numOfRoles = 1;
-        
-        this.roles = new String[TOTALNUMBEROFROLES];  // array with slots for each role
-        this.numOfRoles = 0;          
+     
+        this.isAdmin = false;
+        this.isStudent = false;
+        this.isInstructor = false;
+     
+         
     }
-
-    public void addRole(String role) {
-    	if (numOfRoles == roles.length) {
-    		System.out.println("Max number of roles reached.");
-    		return;
-    	}
-    	
-    	// Check if the user already has that role 
-    	for (int i = 0; i < numOfRoles; i++) {
-    		if (roles[i].equals(role)) {
-    			System.out.println("User " + username + " already has the role " + role + ".");
-    			return;
-    		}
-    	}
-    	
-    	// Add the new role
-    	roles[numOfRoles] = role;
-    	numOfRoles++;
-    	System.out.println("Role " + role + " added to user " + username + ".");
-    }
-
+    
+    
     // Setter methods to update additional fields later
     
     public void setEmail(String email) {
@@ -75,18 +61,27 @@ public class Node {
     public void setPreferredFirstName(String preferredFirstName) {
         this.preferredFirstName = preferredFirstName;
     }
+    
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    public void setStudent(boolean isStudent) {
+        this.isStudent = isStudent;
+    }
+
+    public void setInstructor(boolean isInstructor) {
+        this.isInstructor = isInstructor;
+    }
 
 
     //@Override
     public String toString() {
-    	String displayRoles = "";
-        for (int i = 0; i < numOfRoles; i++) {
-        	displayRoles += (roles[i]);
-           
-        }
         return "Username: " + username + ", Password: " + password + ", Email: " + email 
                 + ", Full Name: " + firstName + " " + middleName + " " + lastName 
                 + ", Preferred First Name: " + preferredFirstName
-                + ", Roles: " + displayRoles;
+                + ", Roles: " + (isAdmin ? "Admin " : "") 
+                + (isStudent ? "Student " : "") 
+                + (isInstructor ? "Instructor " : "");
     }
 }
