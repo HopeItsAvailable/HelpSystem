@@ -21,6 +21,8 @@ import javafx.scene.text.TextAlignment;
 
 public class helpSystemStart extends Application {
     private Scene loginScene;  // To store the initial login scene
+    private LinkedList linkedList;  // Declare LinkedList
+    
     
     public static void main(String[] args) {
         launch(args);
@@ -955,7 +957,74 @@ public class helpSystemStart extends Application {
     }
     
     private void adminPage(Stage primaryStage) {
-    	
+        Label welcome = new Label("Welcome Admin");
+        Button inviteUserButton = new Button("Invite User");
+        Button resetUserButton = new Button("Reset User Account");
+        Button deleteUserButton = new Button("Delete User Account");
+        Button listUsersButton = new Button("List User Accounts");
+        Button addRoleButton = new Button("Add/Remove Role");
+        Button logoutButton = new Button("Log Out");
+        
+        TextField emailToInvite = new TextField();
+        TextField resetUser = new TextField();
+        TextField deleteUser = new TextField();
+
+        
+
+        // Set button actions using EventHandler
+        inviteUserButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	//
+            	sendCode(primaryStage);
+            }
+        });
+
+        resetUserButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String username = resetUser.getText(); // Get the username from the TextField
+                linkedList.resetAccount(username); // Call resetUserAccount method
+            }
+        });
+
+        deleteUserButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	String username = deleteUser.getText();
+            	linkedList.resetAccount(username); // Call deleteUserAccount method
+            }
+        });
+
+        listUsersButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	linkedList.display(); // Call listUserAccounts method
+            }
+        });
+
+        addRoleButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //TODO : ADD NEW PAGE
+            }
+        });
+
+        logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                login(primaryStage); // Log out and go back to login
+            }
+        });
+
+        // Layout for the admin page
+        VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton);
+        layout.setPadding(new Insets(20));
+
+        Scene adminScene = new Scene(layout, 400, 400);
+        primaryStage.setScene(adminScene);
     }
     
     private void sendCode(Stage primaryStage) {
