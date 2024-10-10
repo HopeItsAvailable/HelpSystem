@@ -31,10 +31,10 @@ public class oneTimePasswordGeneratorList {
         while (current != null) {
             if (current.code.equals(code)) {
                 if (System.currentTimeMillis() > current.expirationTime) {
-                	removePassword(previous, current);
+                	//removePassword(previous, current); NEED TO PRINT WITH USERS?
                     return false; //code Expired
                 } else {
-                	removePassword(previous, current); // Remove after use
+                	//removePassword(previous, current); // Remove after use
                     return true; //still valid
                 }
             }
@@ -42,6 +42,25 @@ public class oneTimePasswordGeneratorList {
             current = current.next;
         }
         return false; 
+    }
+    
+    public String[] validatePassword1(String code) {
+        oneTimePasswordGenerator current = head;
+        oneTimePasswordGenerator previous = null;
+
+        while (current != null) {
+            if (current.code.equals(code)) {
+                if (System.currentTimeMillis() > current.expirationTime) {
+                    return null; // OTP expired
+                } else {
+                    String[] roles = current.roles; // Grab roles associated with this OTP
+                    return roles; // OTP is valid, return roles
+                }
+            }
+            previous = current;
+            current = current.next;
+        }
+        return null; 
     }
 
     

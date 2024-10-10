@@ -29,6 +29,7 @@ public class helpSystemStart extends Application {
     private Scene loginScene;  // To store the initial login scene
     private LinkedList linkedList;  // Declare LinkedList
     oneTimePasswordGeneratorList oneTimePasswordGeneratorList ;
+    int size = 0;
 
     
     
@@ -49,8 +50,12 @@ public class helpSystemStart extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-    	linkedList = new LinkedList();
-    	oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); //holds the roles for when an invite is created
+    	if (size == 0) { // if empty, initialize the linked list
+    	    linkedList = new LinkedList();
+    	    oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is created
+    	    size++;
+    	}
+    	
     	
     	
         primaryStage.setTitle("Help System");
@@ -545,23 +550,50 @@ public class helpSystemStart extends Application {
                 } else {
                     invConPassword.setVisible(false);
                 }
+                //holds whether the password is valid
+                boolean validPassword = oneTimePasswordGeneratorList.validatePassword(userCodeText.getText().trim()); 
                 
-                if (!oneTimePasswordGeneratorList.validatePassword(userCodeText.getText().trim())) {
-                    invUserCode.setVisible(true);  // Invalid or expired OTP
+                if (validPassword) {
+                    invUserCode.setVisible(false);  // Invalid or expired OTP
                 } else {
-                    invUserCode.setVisible(false);  // OTP is valid
+                    invUserCode.setVisible(true);  // OTP is valid
                 }
                 
+                String otpCode = userCodeText.getText().trim();
+                String[] roles = oneTimePasswordGeneratorList.validatePassword1(otpCode);
+
                 
                 // Proceed if all conditions are met
+                System.out.println("here1");
                 if (passwordText.getText().trim().length() >= 6 && 
                         passwordText.getText().trim().equals(confPasswordText.getText().trim()) &&
                         userNameText.getText().trim().length() >= 6 && 
                         userNameText.getText().trim().length() <= 12 &&
-                        oneTimePasswordGeneratorList.validatePassword(userCodeText.getText().trim())) {
+                        validPassword) {
                     
                     //ADD USER TO LIST
-                    login(primaryStage);
+                    
+                	String toBeAddedUsername = userNameText.getText().trim();
+                    String toBeAddedPassword = passwordText.getText().trim();
+                    
+                    System.out.println(roles[0]+"\n"+roles[1]+"\n");
+                    
+                    linkedList.add(toBeAddedUsername, toBeAddedPassword);
+                    
+                    if(roles[0]!=null) {
+                    	linkedList.addRoleToUser(toBeAddedUsername, "Student");
+                    }
+                    if(roles[1]!=null) {
+                    	linkedList.addRoleToUser(toBeAddedUsername, "Instructor");
+                    }
+                    if(roles[2]!=null) {
+                    	linkedList.addRoleToUser(toBeAddedUsername, "Admin");
+                    }
+                    
+                	
+                	login(primaryStage);
+                	
+                    
                 }
             }
         });
@@ -1203,7 +1235,7 @@ public class helpSystemStart extends Application {
                         roles[0] = "Student";
                     }
                     if (teacherAccount.isSelected()) {
-                    	roles[1] = "Teacher";
+                    	roles[1] = "instructor";
                     }
                     if (adminAccount.isSelected()) {
                     	roles[2] = "Admin";
