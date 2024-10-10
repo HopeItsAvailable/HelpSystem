@@ -36,12 +36,7 @@ public class helpSystemStart extends Application {
     }
     
     //checkAdmind
-    Boolean adminMade = false;
-    Boolean adminInfo = false;
-    Boolean user = false;
-    Boolean admin = false;
-    Boolean teacher = false;
-    Boolean multRoles = true;
+    
 	final public int TOTALNUMBEROFROLES = 3;
     
     //Random String for code
@@ -85,10 +80,10 @@ public class helpSystemStart extends Application {
             @Override
             public void handle(ActionEvent event) {
                 // Create the welcome scene
-            	if (adminMade == false) {
+            	if (!linkedList.checkIfAdmin()) { //if there is no admin, make one
             		
             		createAdmin(primaryStage);
-            		
+    
             	}
             	else {
             		
@@ -208,7 +203,6 @@ public class helpSystemStart extends Application {
                     userNameText.getText().trim().length() >= 6 && 
                     userNameText.getText().trim().length() <= 12) {
                     
-                    adminMade = true;
                     adminUsername = userNameText.getText().trim();
                     adminPassword = passwordText.getText().trim();
                     
@@ -713,9 +707,6 @@ public class helpSystemStart extends Application {
                 	linkedList.finalizeUserLastName(username, lastNameText.getText());
                 	linkedList.finalizeUserMiddleName(username, middleNameText.getText());
                 	linkedList.finalizeUserPreferredFirstName(username, confFirstNameText.getText());
-                	adminInfo = true;
-
-                	
                 	
                 	if(linkedList.getNumOfRoles(username)>1) {
 							chooseRole(primaryStage, username);
