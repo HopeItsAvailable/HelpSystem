@@ -113,6 +113,6 @@ public class Node {
                 + ", Preferred First Name: " + preferredFirstName
                 + "\n Roles: " + (isAdmin ? "Admin " : "") 
                 + (isStudent ? "Student " : "") 
-                + (isInstructor ? "Instructor " : "");
+                + (isInstructor ? "Instructor " : "\n\n");
     }
 }
