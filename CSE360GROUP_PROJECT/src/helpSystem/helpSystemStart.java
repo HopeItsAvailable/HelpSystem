@@ -360,28 +360,32 @@ public class helpSystemStart extends Application {
                 	
                 			Node userNode = linkedList.searchByUsername(userNameText.getText().trim());
                 			
+                			String checkUserPassword = userNode.getPassword();
                     
-                			if(userNameText.getText().trim().equals(adminUsername) &&
-                					passwordText.getText().trim().equals(adminPassword)&&
-                					confPasswordText.getText().trim().equals(adminPassword)) {
+                			if(passwordText.getText().trim().equals(checkUserPassword)&&
+                					confPasswordText.getText().trim().equals(checkUserPassword)) {
                 				
-                     					if(adminInfo == false) {
+                				int roleCount = userNode.getNumOfRoles();
+                				
+                				String emailCheck = userNode.getEmail();
+                				
+                     					if(emailCheck == null) {
                      						addAccountInfo(primaryStage, userNameText.getText().trim());
                      					}
                 				
                      					else {
-                     						if(multRoles == true) {
-                     							chooseRole(primaryStage);
+                     						if(roleCount == 2 || roleCount == 3) {
+                     							chooseRole(primaryStage,userNameText.getText().trim());
                      						}
                      						else {
-                     							if (user == true) {
+                     							if (userNode.getIsStudent() == true) {
                      								studentPage(primaryStage);
                      							}
-                     							else if(admin == true){
+                     							else if(userNode.getIsAdmin() == true){
                      								adminPage(primaryStage);
 
                      							}
-                     							else if(teacher == true){
+                     							else if(userNode.getIsInstructor() == true){
                      								teacherPage(primaryStage);
                      							}
                      						}
@@ -714,7 +718,7 @@ public class helpSystemStart extends Application {
                 	
                 	
                 	if(linkedList.getNumOfRoles(username)>1) {
-							chooseRole(primaryStage);
+							chooseRole(primaryStage, username);
 						}
 						else {
 							if (linkedList.isStudent(username) == true) {
@@ -790,7 +794,11 @@ public class helpSystemStart extends Application {
         
     }
     
-    private void chooseRole(Stage primaryStage) {
+    private void chooseRole(Stage primaryStage, String UserName) {
+    	
+    	boolean checkIfStudent = linkedList.isStudent(UserName);
+    	boolean checkIfTeacher = linkedList.isStudent(UserName);
+    	boolean checkIfAdmin = linkedList.isStudent(UserName);
     	
     	// Labels and buttons
         Label welcome = new Label("Finish Account Setup");
@@ -805,34 +813,73 @@ public class helpSystemStart extends Application {
         welcome.setFont(new Font("Arial", 36));
         
         // Button Design
-        adminButton.setStyle(
-            "-fx-background-radius: 50%; " +    
-            "-fx-min-width: 170px; " +          
-            "-fx-min-height: 170px; " +         
-            "-fx-max-width: 170px; " +          
-            "-fx-max-height: 170px; " +
-            "-fx-font-size: 2em;"
-        );
+        if(checkIfAdmin == true) {
+        	adminButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" 
+                );
+        }
+        else {
+        	adminButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" +
+                    "-fx-opacity: 0.6;"
+                );
+        }
         
-        // Button Design
-        studentButton.setStyle(
-            "-fx-background-radius: 50%; " +    
-            "-fx-min-width: 170px; " +          
-            "-fx-min-height: 170px; " +         
-            "-fx-max-width: 170px; " +          
-            "-fx-max-height: 170px; " +
-            "-fx-font-size: 2em;"
-        );
+        if(checkIfStudent == true) {
+        	studentButton.setStyle(
+        			"-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;"
+                );
+        }
         
-        // Button Design
-        teacherButton.setStyle(
-            "-fx-background-radius: 50%; " +    
-            "-fx-min-width: 170px; " +          
-            "-fx-min-height: 170px; " +         
-            "-fx-max-width: 170px; " +          
-            "-fx-max-height: 170px; " +
-            "-fx-font-size: 2em;"
-        );
+        else {
+        	studentButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" +
+                    "-fx-opacity: 0.6;"
+                );
+        }
+        
+        if(checkIfTeacher == true) {
+        	teacherButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;"
+                );
+        }
+        
+        else {
+        	teacherButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" +
+                    "-fx-opacity: 0.6;"
+                );
+        }
         
         quitButton.setStyle("-fx-font-size: 2em;");
         
@@ -840,7 +887,11 @@ public class helpSystemStart extends Application {
         adminButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	adminPage(primaryStage);
+            	
+            	if(checkIfAdmin == true) {
+            		studentPage(primaryStage);
+            	}
+            	
             }
         });
         
@@ -848,7 +899,9 @@ public class helpSystemStart extends Application {
         studentButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	studentPage(primaryStage);
+            	if(checkIfStudent == true) {
+            		studentPage(primaryStage);
+            	}
             }
         });
 
@@ -857,8 +910,10 @@ public class helpSystemStart extends Application {
         teacherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	teacherPage(primaryStage);
-            }
+            	
+            	if(checkIfTeacher == true) {
+            		studentPage(primaryStage);
+            	}            }
         });
 
         
