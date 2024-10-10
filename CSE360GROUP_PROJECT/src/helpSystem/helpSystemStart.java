@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -20,6 +21,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import java.util.*; 
+
 
 public class helpSystemStart extends Application {
     private Scene loginScene;  // To store the initial login scene
@@ -382,7 +385,6 @@ public class helpSystemStart extends Application {
                      							}
                      						}
                      					}
-                				
                      		}
                 			
                 			else {
@@ -997,6 +999,15 @@ public class helpSystemStart extends Application {
         TextField deleteUser = new TextField();
 
         
+        // TextArea to display user accounts
+        TextArea userListDisplay = new TextArea();
+        userListDisplay.setEditable(false); 
+        userListDisplay.setStyle(
+        	    "-fx-control-inner-background: lightblue; " +  // Inner background
+        	    "-fx-background-color: lightblue; "          // Outer background
+        	);
+        userListDisplay.setPrefHeight(200); // Set preferred height
+        
 
         // Set button actions using EventHandler
         inviteUserButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1026,7 +1037,9 @@ public class helpSystemStart extends Application {
         listUsersButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	linkedList.display(); // Call listUserAccounts method
+            	
+            	String userList = linkedList.display(); // Call the display method and get output as string
+                userListDisplay.setText(userList);
             }
         });
 
@@ -1048,8 +1061,9 @@ public class helpSystemStart extends Application {
         
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton);
+        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton, userListDisplay); // Add userListDisplay here
         layout.setPadding(new Insets(20));
+        layout.setStyle("-fx-background-color: lightblue;");
 
         // Create the BorderPane and set the VBox as the center
         BorderPane adminCreateScreen = new BorderPane();
@@ -1060,6 +1074,8 @@ public class helpSystemStart extends Application {
         Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
         primaryStage.setScene(welcomeScene);
     }
+    
+    
     
     private void sendCode(Stage primaryStage) {
     	// Labels, buttons, textfield, alert, and checkBox
