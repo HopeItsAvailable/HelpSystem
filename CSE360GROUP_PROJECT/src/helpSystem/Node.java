@@ -41,6 +41,10 @@ public class Node {
     	this.numOfRoles++;
     }
     
+    public void minusOneToRole() {
+    	this.numOfRoles--;
+    }
+    
     //GET METHODS
     
     public int getNumOfRoles() {

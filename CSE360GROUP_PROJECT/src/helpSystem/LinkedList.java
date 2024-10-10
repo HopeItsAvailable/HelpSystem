@@ -111,6 +111,34 @@ public class LinkedList {
             System.out.println("User with username '" + username + "' not found.");
         }
     }
+    
+    public void removeRoleToUser(String username, String role) {
+        Node user = searchByUsername(username);
+        if (user != null) {
+            switch (role.toLowerCase()) {
+                case "admin":
+                    user.setAdmin(false);
+                    System.out.println("Role Admin added to user " + username + ".");
+                    user.minusOneToRole();
+                    break;
+                case "student":
+                    user.setStudent(false);
+                    System.out.println("Role Student added to user " + username + ".");
+                    user.minusOneToRole();
+                    break;
+                case "instructor":
+                    user.setInstructor(false);
+                    System.out.println("Role Instructor added to user " + username + ".");
+                    user.minusOneToRole(); 
+                    break;
+                default:
+                    System.out.println("Role '" + role + "' is not recognized.");
+                    break;
+            }
+        } else {
+            System.out.println("User with username '" + username + "' not found.");
+        }
+    }
 
     // Method to display the linked list
     public String display() {
