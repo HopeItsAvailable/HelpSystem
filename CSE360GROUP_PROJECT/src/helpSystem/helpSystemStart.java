@@ -1043,26 +1043,13 @@ public class helpSystemStart extends Application {
     
     private void adminPage(Stage primaryStage) {
         Label welcome = new Label("Welcome Admin");
+        
         Button inviteUserButton = new Button("Invite User");
         Button resetUserButton = new Button("Reset User Account");
         Button deleteUserButton = new Button("Delete User Account");
         Button listUsersButton = new Button("List User Accounts");
         Button addRoleButton = new Button("Add/Remove Role");
         Button logoutButton = new Button("Log Out");
-        
-        TextField emailToInvite = new TextField();
-        TextField resetUser = new TextField();
-        TextField deleteUser = new TextField();
-
-        
-        // TextArea to display user accounts
-        TextArea userListDisplay = new TextArea();
-        userListDisplay.setEditable(false); 
-        userListDisplay.setStyle(
-        	    "-fx-control-inner-background: lightblue; " +  // Inner background
-        	    "-fx-background-color: lightblue; "          // Outer background
-        	);
-        userListDisplay.setPrefHeight(200); // Set preferred height
         
 
         // Set button actions using EventHandler
@@ -1077,16 +1064,18 @@ public class helpSystemStart extends Application {
         resetUserButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                String username = resetUser.getText(); // Get the username from the TextField
-                linkedList.resetAccount(username); // Call resetUserAccount method
+                
+            	resetUser(primaryStage);
+            	
             }
         });
 
         deleteUserButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	String username = deleteUser.getText();
-            	linkedList.resetAccount(username); // Call deleteUserAccount method
+            	
+            	deleteUser(primaryStage);
+            	
             }
         });
 
@@ -1094,8 +1083,7 @@ public class helpSystemStart extends Application {
             @Override
             public void handle(ActionEvent event) {
             	
-            	String userList = linkedList.display(); // Call the display method and get output as string
-                userListDisplay.setText(userList);
+            	listUsers(primaryStage);
             }
         });
 
@@ -1103,6 +1091,9 @@ public class helpSystemStart extends Application {
             @Override
             public void handle(ActionEvent event) {
                 //TODO : ADD NEW PAGE
+            	
+            	changeRoles(primaryStage);
+            	
             }
         });
 
@@ -1114,10 +1105,9 @@ public class helpSystemStart extends Application {
         });
 
         
-        
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton, userListDisplay); // Add userListDisplay here
+        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton); // Add userListDisplay here
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: lightblue;");
 
@@ -1284,5 +1274,21 @@ public class helpSystemStart extends Application {
 
         return oneTimeCode.toString(); // Return the generated code as a string
     }
+    
+    public void resetUser(Stage primaryStage) {
+    	
+    }
+    
+    public void deleteUser(Stage primaryStage) {
+    	
+    }
+
+    public void listUsers(Stage primaryStage) {
+    	
+    }
+
+  	public void changeRoles(Stage primaryStage) {
+  	
+  }
 
 }
