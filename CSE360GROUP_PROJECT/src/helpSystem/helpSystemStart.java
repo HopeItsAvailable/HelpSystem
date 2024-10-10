@@ -1188,7 +1188,7 @@ public class helpSystemStart extends Application {
                 	emailText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
                 }
                 
-                if(!studentAccount.isSelected() && !teacherAccount.isSelected()) {
+                if(!studentAccount.isSelected() && !teacherAccount.isSelected()&& !adminAccount.isSelected()) {
                 	noClick.setVisible(true);
                 }
                 else {
@@ -1213,13 +1213,15 @@ public class helpSystemStart extends Application {
 
 					// Add the invitation to the linked list
                     oneTimePasswordGeneratorList.addPassword(code, roles, expirationTime);
-                    
+                   
+                    if(!emailText.getText().isEmpty()) {
                 	Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Send Email");
                     alert.setHeaderText("Email Sent");  // Optional: No header text
                     alert.setContentText("Email has been sent with code: " + code);
                     
                     alert.showAndWait();
+                    }
                 }
             }
         });
