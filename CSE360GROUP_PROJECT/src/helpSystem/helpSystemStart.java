@@ -821,9 +821,9 @@ public class helpSystemStart extends Application {
     
     private void chooseRole(Stage primaryStage, String UserName) {
     	
-    	boolean checkIfStudent = linkedList.isStudent(UserName);
-    	boolean checkIfTeacher = linkedList.isStudent(UserName);
-    	boolean checkIfAdmin = linkedList.isStudent(UserName);
+    	boolean isStudent = linkedList.isStudent(UserName);
+    	boolean isTeacher = linkedList.isInstructor(UserName);
+    	boolean isAdmin = linkedList.isAdmin(UserName);
     	
     	// Labels and buttons
         Label welcome = new Label("Finish Account Setup");
@@ -838,7 +838,7 @@ public class helpSystemStart extends Application {
         welcome.setFont(new Font("Arial", 36));
         
         // Button Design
-        if(checkIfAdmin == true) {
+        if(isAdmin) {
         	adminButton.setStyle(
                     "-fx-background-radius: 50%; " +    
                     "-fx-min-width: 170px; " +          
@@ -860,7 +860,7 @@ public class helpSystemStart extends Application {
                 );
         }
         
-        if(checkIfStudent == true) {
+        if(isStudent) {
         	studentButton.setStyle(
         			"-fx-background-radius: 50%; " +    
                     "-fx-min-width: 170px; " +          
@@ -883,7 +883,7 @@ public class helpSystemStart extends Application {
                 );
         }
         
-        if(checkIfTeacher == true) {
+        if(isTeacher) {
         	teacherButton.setStyle(
                     "-fx-background-radius: 50%; " +    
                     "-fx-min-width: 170px; " +          
@@ -913,8 +913,8 @@ public class helpSystemStart extends Application {
             @Override
             public void handle(ActionEvent event) {
             	
-            	if(checkIfAdmin == true) {
-            		studentPage(primaryStage);
+            	if(isAdmin) {
+            		adminPage(primaryStage);
             	}
             	
             }
@@ -924,7 +924,7 @@ public class helpSystemStart extends Application {
         studentButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	if(checkIfStudent == true) {
+            	if(isStudent == true) {
             		studentPage(primaryStage);
             	}
             }
@@ -936,8 +936,8 @@ public class helpSystemStart extends Application {
             @Override
             public void handle(ActionEvent event) {
             	
-            	if(checkIfTeacher == true) {
-            		studentPage(primaryStage);
+            	if(isTeacher == true) {
+            		teacherPage(primaryStage);
             	}            }
         });
 
