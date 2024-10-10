@@ -792,6 +792,10 @@ public class helpSystemStart extends Application {
     
     private void chooseRole(Stage primaryStage, String UserName) {
     	
+    	boolean checkIfStudent = linkedList.isStudent(UserName);
+    	boolean checkIfTeacher = linkedList.isStudent(UserName);
+    	boolean checkIfAdmin = linkedList.isStudent(UserName);
+    	
     	// Labels and buttons
         Label welcome = new Label("Finish Account Setup");
 
@@ -805,34 +809,73 @@ public class helpSystemStart extends Application {
         welcome.setFont(new Font("Arial", 36));
         
         // Button Design
-        adminButton.setStyle(
-            "-fx-background-radius: 50%; " +    
-            "-fx-min-width: 170px; " +          
-            "-fx-min-height: 170px; " +         
-            "-fx-max-width: 170px; " +          
-            "-fx-max-height: 170px; " +
-            "-fx-font-size: 2em;"
-        );
+        if(checkIfAdmin == true) {
+        	adminButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" 
+                );
+        }
+        else {
+        	adminButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" +
+                    "-fx-opacity: 0.6;"
+                );
+        }
         
-        // Button Design
-        studentButton.setStyle(
-            "-fx-background-radius: 50%; " +    
-            "-fx-min-width: 170px; " +          
-            "-fx-min-height: 170px; " +         
-            "-fx-max-width: 170px; " +          
-            "-fx-max-height: 170px; " +
-            "-fx-font-size: 2em;"
-        );
+        if(checkIfStudent == true) {
+        	studentButton.setStyle(
+        			"-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;"
+                );
+        }
         
-        // Button Design
-        teacherButton.setStyle(
-            "-fx-background-radius: 50%; " +    
-            "-fx-min-width: 170px; " +          
-            "-fx-min-height: 170px; " +         
-            "-fx-max-width: 170px; " +          
-            "-fx-max-height: 170px; " +
-            "-fx-font-size: 2em;"
-        );
+        else {
+        	studentButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" +
+                    "-fx-opacity: 0.6;"
+                );
+        }
+        
+        if(checkIfTeacher == true) {
+        	teacherButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;"
+                );
+        }
+        
+        else {
+        	teacherButton.setStyle(
+                    "-fx-background-radius: 50%; " +    
+                    "-fx-min-width: 170px; " +          
+                    "-fx-min-height: 170px; " +         
+                    "-fx-max-width: 170px; " +          
+                    "-fx-max-height: 170px; " +
+                    "-fx-font-size: 2em;" +
+                    "-fx-opacity: 0.6;"
+                );
+        }
         
         quitButton.setStyle("-fx-font-size: 2em;");
         
@@ -840,7 +883,11 @@ public class helpSystemStart extends Application {
         adminButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	adminPage(primaryStage);
+            	
+            	if(checkIfAdmin == true) {
+            		studentPage(primaryStage);
+            	}
+            	
             }
         });
         
@@ -848,7 +895,9 @@ public class helpSystemStart extends Application {
         studentButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	studentPage(primaryStage);
+            	if(checkIfStudent == true) {
+            		studentPage(primaryStage);
+            	}
             }
         });
 
@@ -857,8 +906,10 @@ public class helpSystemStart extends Application {
         teacherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            	teacherPage(primaryStage);
-            }
+            	
+            	if(checkIfTeacher == true) {
+            		studentPage(primaryStage);
+            	}            }
         });
 
         
