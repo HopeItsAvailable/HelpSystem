@@ -1624,6 +1624,134 @@ public class helpSystemStart extends Application {
 
   	public void changeRoles(Stage primaryStage) {
   	
+  		// Labels, buttons, textfield, alert, and checkBox
+        Label welcome = new Label("Remove");
+        Label user = new Label("Email Address: ");
+        Label noClick = new Label("Please choose roles to remove:");
+        
+        TextField userText = new TextField();
+        
+        Button removeButton = new Button("Remove");
+        Button quitButton = new Button("Quit");
+        
+        CheckBox studentAccount = new CheckBox("Student");
+        CheckBox teacherAccount = new CheckBox("Teacher");
+        CheckBox adminAccount = new CheckBox("Admin");
+
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        user.setFont(new Font("Arial", 20));
+        
+        noClick.setFont(new Font("Arial", 20));
+        noClick.setStyle("-fx-text-fill: red;");
+        noClick.setVisible(false);
+        
+        //CheckBox design
+        studentAccount.setFont(new Font("Arial", 20));
+        teacherAccount.setFont(new Font("Arial", 20));
+        adminAccount.setFont(new Font("Arial", 20));
+        
+        //Button design
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        removeButton.setStyle("-fx-font-size: 2em;");
+
+        // Send button action
+        removeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(userText.getText().isEmpty()) {
+                	userText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	userText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
+                
+                if(!studentAccount.isSelected() && !teacherAccount.isSelected()&& !adminAccount.isSelected()) {
+                	noClick.setVisible(true);
+                }
+                else {
+                	noClick.setVisible(false);
+                   
+                    if(linkedList.searchByUsername(userText.getText()) != null) {
+                    	
+                    	String[] roles = new String[TOTALNUMBEROFROLES]; //size 3 currently
+                    	
+                        if (studentAccount.isSelected()) {
+                            roles[0] = "Student";
+                        }
+                        if (teacherAccount.isSelected()) {
+                        	roles[1] = "instructor";
+                        }
+                        if (adminAccount.isSelected()) {
+                        	roles[2] = "Admin";
+                        }
+                    	
+                        if(roles[0]!= null) {
+                        	linkedList.removeRoleToUser(adminUsername,"student");
+                        }
+                        if(roles[1]!= null) {
+                        	linkedList.removeRoleToUser(adminUsername,"instructor");
+                        }
+                        if(roles[2]!= null) {
+                        	linkedList.removeRoleToUser(adminUsername,"admin");
+                        }
+                    	
+                    	Alert alert = new Alert(AlertType.CONFIRMATION);
+                    	alert.setTitle("Roles Changed");
+                    	alert.setHeaderText("Success");  // Optional: No header text
+                    	alert.setContentText("Roles have changed for User: " + userText.getText());
+                    
+                    	alert.showAndWait();
+                    }
+                }
+            }
+        });
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        // Middle Pane
+        HBox middleTopPane = new HBox(user,userText);
+        HBox.setMargin(user, new Insets(80, 80, 0, 130));
+        HBox.setMargin(userText, new Insets(80, 80, 0, 0));
+        
+        HBox middleBottomPane = new HBox(studentAccount,teacherAccount,adminAccount,noClick);
+        HBox.setMargin(studentAccount, new Insets(80, 40, 0, 60));
+        HBox.setMargin(teacherAccount, new Insets(80, 40, 0, 0));
+        HBox.setMargin(adminAccount, new Insets(80, 40, 0, 0));
+        HBox.setMargin(noClick, new Insets(80, 0, 0, 0));
+        
+        VBox middlePane = new VBox(middleTopPane,middleBottomPane);
+        
+        // Bottom pane for login button
+        HBox bottomPane = new HBox(removeButton,quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(removeButton, new Insets(0, 220, 80, 280));
+        HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+        
+        
+        //BorderPane stuff
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
+  		
   }
 
 }
