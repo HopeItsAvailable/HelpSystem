@@ -39,9 +39,6 @@ public class helpSystemStart extends Application {
     
 	final public int TOTALNUMBEROFROLES = 3;
     
-    //Random String for code
-    
-    String code = "Test";
     
     //Save Admin details for now
     
@@ -53,6 +50,7 @@ public class helpSystemStart extends Application {
     public void start(Stage primaryStage) {
     	linkedList = new LinkedList();
     	oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); //holds the roles for when an invite is created
+    	
     	
         primaryStage.setTitle("Help System");
         
@@ -545,18 +543,19 @@ public class helpSystemStart extends Application {
                     invConPassword.setVisible(false);
                 }
                 
-                if (!userCodeText.getText().trim().equals(code)) {
-                	invUserCode.setVisible(true);
+                if (!oneTimePasswordGeneratorList.validatePassword(userCodeText.getText().trim())) {
+                    invUserCode.setVisible(true);  // Invalid or expired OTP
                 } else {
-                	invUserCode.setVisible(false);
+                    invUserCode.setVisible(false);  // OTP is valid
                 }
+                
                 
                 // Proceed if all conditions are met
                 if (passwordText.getText().trim().length() >= 6 && 
-                    passwordText.getText().trim().equals(confPasswordText.getText().trim()) &&
-                    userNameText.getText().trim().length() >= 6 && 
-                    userNameText.getText().trim().length() <= 12 &&
-                	userCodeText.getText().trim().equals(code)){
+                        passwordText.getText().trim().equals(confPasswordText.getText().trim()) &&
+                        userNameText.getText().trim().length() >= 6 && 
+                        userNameText.getText().trim().length() <= 12 &&
+                        oneTimePasswordGeneratorList.validatePassword(userCodeText.getText().trim())) {
                     
                     //ADD USER TO LIST
                     login(primaryStage);
