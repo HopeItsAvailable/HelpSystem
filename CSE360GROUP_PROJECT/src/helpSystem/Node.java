@@ -1,7 +1,7 @@
 package helpSystem;
 
 public class Node {
-	final private int TOTALNUMBEROFROLES = 3; //Number of roles. Currently admin, student, instructor.
+	final public int TOTALNUMBEROFROLES = 3; //Number of roles. Currently admin, student, instructor.
     String username;
     String password;
     private String email;

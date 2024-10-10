@@ -27,6 +27,8 @@ import java.util.*;
 public class helpSystemStart extends Application {
     private Scene loginScene;  // To store the initial login scene
     private LinkedList linkedList;  // Declare LinkedList
+    oneTimePasswordGeneratorList oneTimePasswordGeneratorList ;
+
     
     
     public static void main(String[] args) {
@@ -40,6 +42,7 @@ public class helpSystemStart extends Application {
     Boolean admin = false;
     Boolean teacher = false;
     Boolean multRoles = true;
+	final public int TOTALNUMBEROFROLES = 3;
     
     //Random String for code
     
@@ -54,6 +57,7 @@ public class helpSystemStart extends Application {
     @Override
     public void start(Stage primaryStage) {
     	linkedList = new LinkedList();
+    	oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); //holds the roles for when an invite is created
     	
         primaryStage.setTitle("Help System");
         
@@ -1124,10 +1128,30 @@ public class helpSystemStart extends Application {
                 else {
                 	noClick.setVisible(false);
                 	
+                	String[] roles = new String[TOTALNUMBEROFROLES]; //size 3 currently
+                	
+                    if (studentAccount.isSelected()) {
+                        roles[0] = "Student";
+                    }
+                    if (teacherAccount.isSelected()) {
+                    	roles[1] = "Teacher";
+                    }
+                    if (adminAccount.isSelected()) {
+                    	roles[2] = "Admin";
+
+                    }
+
+                    // Generate the one-time code and expiration time
+                    String code = generateOneTimeCode();
+                    long expirationTime = System.currentTimeMillis() + (24 * 60 * 60 * 1000); // Valid for 24 hours from now
+
+					// Add the invitation to the linked list
+                    oneTimePasswordGeneratorList.addPassword(code, roles, expirationTime);
+                    
                 	Alert alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Send Email");
                     alert.setHeaderText("Email Sent");  // Optional: No header text
-                    alert.setContentText("Email has been sent with code: ");
+                    alert.setContentText("Email has been sent with code: " + code);
                     
                     alert.showAndWait();
                 }
@@ -1179,6 +1203,31 @@ public class helpSystemStart extends Application {
         primaryStage.setScene(welcomeScene);
         
         
+    }
+    
+    public String generateOneTimeCode() {
+    	// Length of the code
+        int length = 10; //MAY CHANGE LATER
+        
+        // all characters, will combine later
+        String capitalChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String smallChars = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String symbols = "!@#$%^&*_=+-/.?<>)";
+
+        // combine
+        String values = capitalChars + smallChars + numbers + symbols;
+
+        // Using Random to generate the code
+        Random rndmMethod = new Random();
+        StringBuilder oneTimeCode = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            // Generate a random character from the combined string
+            oneTimeCode.append(values.charAt(rndmMethod.nextInt(values.length())));
+        }
+
+        return oneTimeCode.toString(); // Return the generated code as a string
     }
 
 }
