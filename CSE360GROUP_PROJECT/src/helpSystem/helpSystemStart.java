@@ -371,7 +371,7 @@ public class helpSystemStart extends Application {
                 				
                      					else {
                      						if(roleCount == 2 || roleCount == 3) {
-                     							chooseRole(primaryStage);
+                     							chooseRole(primaryStage,userNameText.getText().trim());
                      						}
                      						else {
                      							if (userNode.getIsStudent() == true) {
@@ -714,7 +714,7 @@ public class helpSystemStart extends Application {
                 	
                 	
                 	if(linkedList.getNumOfRoles(username)>1) {
-							chooseRole(primaryStage);
+							chooseRole(primaryStage, username);
 						}
 						else {
 							if (linkedList.isStudent(username) == true) {
@@ -790,7 +790,7 @@ public class helpSystemStart extends Application {
         
     }
     
-    private void chooseRole(Stage primaryStage) {
+    private void chooseRole(Stage primaryStage, String UserName) {
     	
     	// Labels and buttons
         Label welcome = new Label("Finish Account Setup");
