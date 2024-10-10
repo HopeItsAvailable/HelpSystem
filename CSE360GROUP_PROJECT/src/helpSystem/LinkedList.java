@@ -118,17 +118,17 @@ public class LinkedList {
             switch (role.toLowerCase()) {
                 case "admin":
                     user.setAdmin(false);
-                    System.out.println("Role Admin added to user " + username + ".");
+                    System.out.println("Role Admin removed from user " + username + ".");
                     user.minusOneToRole();
                     break;
                 case "student":
                     user.setStudent(false);
-                    System.out.println("Role Student added to user " + username + ".");
+                    System.out.println("Role Student removed from user " + username + ".");
                     user.minusOneToRole();
                     break;
                 case "instructor":
                     user.setInstructor(false);
-                    System.out.println("Role Instructor added to user " + username + ".");
+                    System.out.println("Role Instructor removed from user " + username + ".");
                     user.minusOneToRole(); 
                     break;
                 default:
@@ -162,8 +162,32 @@ public class LinkedList {
     }
     
     public void deleteAccount(String Username) {
-    	
+    	if (head == null) {
+            System.out.println("List is empty. No users to delete.");
+            return;
+        }
+
+        Node current = head;
+        Node previous = null;
+
+        while (current != null) {
+            if (current.username.equals(Username)) {
+            	//delete node from head
+                if (previous == null) {
+                    head = current.next; // move head to one ahead
+                } else {
+                    previous.next = current.next; // move next to the next next
+                }
+                System.out.println("User " + Username + " has been deleted.");
+                return;
+            }
+            previous = current;
+            current = current.next;
+        }
+
+        System.out.println("User " + Username + " does not exist.");
     }
+    
     
     public void inviteUser(String email) {
     	

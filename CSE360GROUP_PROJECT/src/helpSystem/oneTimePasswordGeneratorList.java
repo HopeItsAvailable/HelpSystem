@@ -7,10 +7,12 @@ import java.util.List;
 public class oneTimePasswordGeneratorList {
     private oneTimePasswordGenerator head; //is node
     private int size; //num of passwords out at once
+    private boolean alreadyUsed;
     
     public oneTimePasswordGeneratorList() { //constructor
     	head = null;
     	size = 0;
+    	alreadyUsed = false; //flag to indicate one time code
     }
 
     public void addPassword(String code, String[] roles, long expirationTime) {
@@ -35,6 +37,7 @@ public class oneTimePasswordGeneratorList {
                     return false; //code Expired
                 } else {
                 	//removePassword(previous, current); // Remove after use
+                	alreadyUsed = true;
                     return true; //still valid
                 }
             }
