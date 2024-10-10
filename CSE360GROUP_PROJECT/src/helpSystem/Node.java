@@ -106,9 +106,9 @@ public class Node {
     //@Override
     public String toString() {
         return "Username: " + username + ", Password: " + password + ", Email: " + email 
-                + ", Full Name: " + firstName + " " + middleName + " " + lastName 
+                + "\n Full Name: " + firstName + " " + middleName + " " + lastName 
                 + ", Preferred First Name: " + preferredFirstName
-                + ", Roles: " + (isAdmin ? "Admin " : "") 
+                + "\n Roles: " + (isAdmin ? "Admin " : "") 
                 + (isStudent ? "Student " : "") 
                 + (isInstructor ? "Instructor " : "");
     }

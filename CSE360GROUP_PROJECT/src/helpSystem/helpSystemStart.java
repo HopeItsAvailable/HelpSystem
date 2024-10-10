@@ -1526,8 +1526,6 @@ public class helpSystemStart extends Application {
 
             }
         });
-
-        
         
         // Top pane for welcome label
         HBox topPane = new HBox(welcome);
@@ -1573,6 +1571,54 @@ public class helpSystemStart extends Application {
     }
 
     public void listUsers(Stage primaryStage) {
+    	
+    	// Labels, buttons, textfield, alert, and checkBox
+        Label welcome = new Label("Delete a User");
+        Label printList = new Label(linkedList.display());
+        
+        Button quitButton = new Button("Quit");
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        printList.setFont(new Font("Arial", 15));
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        //Button design
+        quitButton.setStyle("-fx-font-size: 2em;");
+        
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        // Top pane for welcome label
+        HBox middlePane = new HBox(printList);
+        middlePane.setAlignment(Pos.CENTER);
+        HBox.setMargin(printList, new Insets(50, 0, 20, 0));
+        
+        // Top pane for welcome label
+        HBox bottomPane = new HBox(quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(quitButton, new Insets(50, 0, 20, 0));
+        
+        //BorderPane stuff
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
     	
     }
 
