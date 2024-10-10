@@ -136,6 +136,30 @@ public class LinkedList {
     	
     }
     
+    public boolean checkIfAdmin() {
+        Node current = head;
+        while (current != null) {
+            if (current.getIsAdmin()) {
+                return true; 
+            }
+            current = current.next;
+        }
+        return false; 
+    }
+    
+    public boolean isAdminFinalized() {
+        Node current = head;
+        while (current != null) {
+        	//check if all fields have something. Only check email bc if email has soemthing, 
+        	//everything will
+            if (current.getIsAdmin() && current.getEmail() != null && !current.getEmail().isEmpty()) { 
+                return true; 
+            }
+            current = current.next;
+        }
+        return false; // No finalized admin found
+    }
+    
     public int getNumOfRoles(String username) {
         Node user = searchByUsername(username);
         return user.getNumOfRoles();
