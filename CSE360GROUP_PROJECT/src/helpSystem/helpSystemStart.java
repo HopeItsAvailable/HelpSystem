@@ -1168,7 +1168,7 @@ public class helpSystemStart extends Application {
                 	emailText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
                 }
                 
-                if(!studentAccount.isSelected() && !teacherAccount.isSelected()) {
+                if(!studentAccount.isSelected() && !teacherAccount.isSelected()&& !adminAccount.isSelected()) {
                 	noClick.setVisible(true);
                 }
                 else {
