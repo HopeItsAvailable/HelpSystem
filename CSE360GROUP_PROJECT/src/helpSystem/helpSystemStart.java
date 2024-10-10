@@ -363,24 +363,25 @@ public class helpSystemStart extends Application {
                 				
                 				int roleCount = userNode.getNumOfRoles();
                 				
+                				String emailCheck = userNode.getEmail();
                 				
-                     					if(multRoles == false) {
+                     					if(emailCheck == null) {
                      						addAccountInfo(primaryStage, userNameText.getText().trim());
                      					}
                 				
                      					else {
-                     						if(multRoles == true) {
+                     						if(roleCount == 2 || roleCount == 3) {
                      							chooseRole(primaryStage);
                      						}
                      						else {
-                     							if (user == true) {
+                     							if (userNode.getIsStudent() == true) {
                      								studentPage(primaryStage);
                      							}
-                     							else if(admin == true){
+                     							else if(userNode.getIsAdmin() == true){
                      								adminPage(primaryStage);
 
                      							}
-                     							else if(teacher == true){
+                     							else if(userNode.getIsInstructor() == true){
                      								teacherPage(primaryStage);
                      							}
                      						}
