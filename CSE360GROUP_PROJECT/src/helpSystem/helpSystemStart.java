@@ -1040,6 +1040,7 @@ public class helpSystemStart extends Application {
         Button deleteUserButton = new Button("Delete User Account");
         Button listUsersButton = new Button("List User Accounts");
         Button addRoleButton = new Button("Add/Remove Role");
+        
         Button logoutButton = new Button("Log Out");
         
         //Label Design
@@ -1049,6 +1050,7 @@ public class helpSystemStart extends Application {
         inviteUserButton.setStyle("-fx-font-size: 1.8em;");
         resetUserButton.setStyle("-fx-font-size: 1.8em;");
         deleteUserButton.setStyle("-fx-font-size: 1.8em;");
+        
         listUsersButton.setStyle("-fx-font-size: 1.8em;");
         addRoleButton.setStyle("-fx-font-size: 1.8em;");
         logoutButton.setStyle("-fx-font-size: 1.8em;");
@@ -1113,14 +1115,14 @@ public class helpSystemStart extends Application {
         
         //Middle Pane
         HBox middleTopPane = new HBox(inviteUserButton,resetUserButton,deleteUserButton);
-        HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 50));
+        HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 120));
         HBox.setMargin(resetUserButton, new Insets(50, 50, 80, 0));
         HBox.setMargin(deleteUserButton, new Insets(50, 0, 80, 0));
         
-        HBox middleBottomPane = new HBox(inviteUserButton,resetUserButton,deleteUserButton);
-        HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 50));
-        HBox.setMargin(resetUserButton, new Insets(50, 50, 0, 0));
-        HBox.setMargin(deleteUserButton, new Insets(50, 0, 0, 0));
+        HBox middleBottomPane = new HBox(listUsersButton,addRoleButton,logoutButton);
+        HBox.setMargin(listUsersButton, new Insets(50, 50, 80, 200));
+        HBox.setMargin(addRoleButton, new Insets(50, 50, 0, 0));
+        HBox.setMargin(logoutButton, new Insets(50, 0, 0, 0));
 
         VBox middlePane = new VBox(middleTopPane,middleBottomPane);
         
@@ -1134,14 +1136,13 @@ public class helpSystemStart extends Application {
         
         adminCreateScreen.setTop(topPane); 
         adminCreateScreen.setCenter(middlePane); 
-        adminCreateScreen.setBottom(middlePane); 
+        adminCreateScreen.setBottom(bottomPane); 
         adminCreateScreen.setStyle("-fx-background-color: lightblue;");
 
         // Set the scene
         Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
         primaryStage.setScene(welcomeScene);
     }
-    
     
     
     private void sendCode(Stage primaryStage) {
