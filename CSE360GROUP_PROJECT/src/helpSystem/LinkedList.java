@@ -131,7 +131,7 @@ public class LinkedList {
     	
     }
     
-    public void deleteAccoutn() {
+    public void deleteAccount(String Username) {
     	
     }
     
