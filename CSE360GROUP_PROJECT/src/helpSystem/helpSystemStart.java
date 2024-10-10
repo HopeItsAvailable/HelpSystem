@@ -353,12 +353,15 @@ public class helpSystemStart extends Application {
                 	
                 			Node userNode = linkedList.searchByUsername(userNameText.getText().trim());
                 			
+                			String checkUserPassword = userNode.getPassword();
                     
-                			if(userNameText.getText().trim().equals(adminUsername) &&
-                					passwordText.getText().trim().equals(adminPassword)&&
-                					confPasswordText.getText().trim().equals(adminPassword)) {
+                			if(passwordText.getText().trim().equals(checkUserPassword)&&
+                					confPasswordText.getText().trim().equals(checkUserPassword)) {
                 				
-                     					if(adminInfo == false) {
+                				int roleCount = userNode.getNumOfRoles();
+                				
+                				
+                     					if(multRoles == false) {
                      						addAccountInfo(primaryStage, userNameText.getText().trim());
                      					}
                 				
