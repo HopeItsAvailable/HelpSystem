@@ -8,21 +8,39 @@ public class oneTimePasswordGeneratorList {
     private oneTimePasswordGenerator head; //is node
     private int size; //num of passwords out at once
     private boolean alreadyUsed;
+    private boolean oneTime;
     
     public oneTimePasswordGeneratorList() { //constructor
     	head = null;
     	size = 0;
+    	
     	alreadyUsed = false; //flag to indicate one time code
+    	oneTime = false;
     }
 
-    public void addPassword(String code, String[] roles, long expirationTime) {
-    	oneTimePasswordGenerator newNode = new oneTimePasswordGenerator(code, roles, expirationTime);
+    public void addPassword(String Code, String[] roles, long expirationTime) {
+    	oneTimePasswordGenerator newNode = new oneTimePasswordGenerator(Code, roles, expirationTime);
         if (head == null) {
             head = newNode;
         } else {
             newNode.next = head;
             head = newNode;
         }
+    }
+    
+    public void addPasswordForReset(String Code, long expirationTime) {
+    	oneTimePasswordGenerator newNode = new oneTimePasswordGenerator(Code, expirationTime);
+    	this.oneTime = true; //since the password is for reset, set the flag to false and check in main to send user to right page
+        if (head == null) {
+            head = newNode;
+        } else {
+            newNode.next = head;
+            head = newNode;
+        }
+    }
+    
+    public boolean getFlag(String code) { //check if a code is one-time
+    	return this.oneTime;
     }
 
     //check if the password is still valid.
@@ -34,6 +52,7 @@ public class oneTimePasswordGeneratorList {
             if (current.code.equals(code)) {
                 if (System.currentTimeMillis() > current.expirationTime) {
                 	//removePassword(previous, current); NEED TO PRINT WITH USERS?
+                	System.out.println("False1");
                     return false; //code Expired
                 } else {
                 	//removePassword(previous, current); // Remove after use
@@ -44,6 +63,7 @@ public class oneTimePasswordGeneratorList {
             previous = current;
             current = current.next;
         }
+        System.out.println("False2");
         return false; 
     }
     

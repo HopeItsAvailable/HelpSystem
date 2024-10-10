@@ -31,6 +31,16 @@ public class LinkedList {
         
     }
     
+    public void changeUserPassword(String username, String password) {
+    	Node user = searchByUsername(username);
+    	if (user != null) {
+            user.setPassword(password);
+            System.out.println("Account for " + username + " changed.");
+        } else {
+            System.out.println("User with username '" + username + "' not found.");
+        }
+    }
+    
     public void finalizeUserEmail(String username, String email) {
     	Node user = searchByUsername(username);
     	if (user != null) {

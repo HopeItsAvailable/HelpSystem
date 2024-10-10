@@ -1302,6 +1302,9 @@ public class helpSystemStart extends Application {
 
 					// Generate the one-time code and expiration time
 					String code = generateOneTimeCode();
+					long expirationTime = System.currentTimeMillis() + (24 * 60 * 60 * 1000); // Valid for 24 hours from
+																							  // now
+					oneTimePasswordGeneratorList.addPasswordForReset(code, expirationTime); //code added into list
 
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Sent Code");
@@ -1688,6 +1691,45 @@ public class helpSystemStart extends Application {
 		quitButton.setStyle("-fx-font-size: 1.5em;");
 
 
+		// Login button action
+				loginButton.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+
+						Node user = linkedList.searchByUsername(userNameText.getText().trim()); //if username exists
+						// Check username length
+						if (user==null) {
+							invUserName.setVisible(true);
+						} else {
+							invUserName.setVisible(false);
+						}
+
+						// holds whether the password is valid
+						String otpCode = passwordText.getText().trim();
+						boolean validPassword = oneTimePasswordGeneratorList.validatePassword(otpCode);
+						System.out.println(validPassword);
+
+						if (validPassword==true) {
+							password.setVisible(false); // valid
+						} else {
+							password.setVisible(true); // OTP is invalid
+						}
+
+						// Proceed if all conditions are met
+						System.out.println("herereset");
+						System.out.println(validPassword);
+						System.out.println(user.toString());
+						
+						
+						if (validPassword&& user!=null) {
+							System.out.println("here2");
+							// ADD USER TO LIST
+							resetPasswordPage(primaryStage, userNameText.getText().trim()); //enter only if the OTP is corrent
+						}
+						
+					}
+				});
+		
 		// Quit button action
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -1738,5 +1780,59 @@ public class helpSystemStart extends Application {
 		primaryStage.setScene(welcomeScene);
 		
 	}
+	
+	
+	public void resetPasswordPage(Stage primaryStage, String username) {
+		// Labels and buttons
+				Label welcome = new Label("Create a New Password");
+				Label newPassword = new Label("New Password: ");
+				Label confirmPassword = new Label("Confirm Password: ");
+				Label mismatchPassword = new Label("Passwords do not match!");
 
+				TextField newPasswordText = new TextField();
+				TextField confirmPasswordText = new TextField();
+
+				Button resetButton = new Button("Reset Password");
+				Button quitButton = new Button("Quit");
+
+				// Label design
+				welcome.setFont(new Font("Arial", 36));
+				newPassword.setFont(new Font("Arial", 20));
+				confirmPassword.setFont(new Font("Arial", 20));
+
+				mismatchPassword.setFont(new Font("Arial", 20));
+				mismatchPassword.setStyle("-fx-text-fill: red;");
+				mismatchPassword.setVisible(false);
+
+				// Button design
+				resetButton.setStyle("-fx-font-size: 2em;");
+				quitButton.setStyle("-fx-font-size: 1.5em;");
+
+				// Reset button action
+				resetButton.setOnAction(new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						// Check if both passwords match
+						if (newPasswordText.getText().equals(confirmPasswordText.getText())) {
+							mismatchPassword.setVisible(false);
+							// Save the new password in the system for the user
+							
+							linkedList.changeUserPassword(username, newPasswordText.getText());
+							
+							// After successful reset, return to the login page
+							login(primaryStage);
+						} else {
+							mismatchPassword.setVisible(true);
+						}
+					}
+				});
+
+				// Layout for the reset password scene
+				VBox resetLayout = new VBox(10, welcome, newPassword, newPasswordText, confirmPassword, confirmPasswordText, mismatchPassword, resetButton, quitButton);
+				resetLayout.setAlignment(Pos.CENTER);
+				
+				Scene resetScene = new Scene(resetLayout, 400, 400);
+				primaryStage.setScene(resetScene);
+				primaryStage.show();
+	}
 }
