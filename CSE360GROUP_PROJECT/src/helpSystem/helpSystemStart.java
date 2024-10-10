@@ -1042,6 +1042,16 @@ public class helpSystemStart extends Application {
         Button addRoleButton = new Button("Add/Remove Role");
         Button logoutButton = new Button("Log Out");
         
+        //Label Design
+        welcome.setFont(new Font("Arial", 36));
+        
+        //Button Design
+        inviteUserButton.setStyle("-fx-font-size: 1.8em;");
+        resetUserButton.setStyle("-fx-font-size: 1.8em;");
+        deleteUserButton.setStyle("-fx-font-size: 1.8em;");
+        listUsersButton.setStyle("-fx-font-size: 1.8em;");
+        addRoleButton.setStyle("-fx-font-size: 1.8em;");
+        logoutButton.setStyle("-fx-font-size: 1.8em;");
 
         // Set button actions using EventHandler
         inviteUserButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1096,15 +1106,35 @@ public class helpSystemStart extends Application {
         });
 
         
-        VBox layout = new VBox(20);
-        layout.setAlignment(Pos.CENTER);
-        layout.getChildren().addAll(welcome, inviteUserButton, resetUserButton, deleteUserButton, listUsersButton, addRoleButton, logoutButton); // Add userListDisplay here
-        layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: lightblue;");
+        //Top Pane
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        //Middle Pane
+        HBox middleTopPane = new HBox(inviteUserButton,resetUserButton,deleteUserButton);
+        HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 50));
+        HBox.setMargin(resetUserButton, new Insets(50, 50, 80, 0));
+        HBox.setMargin(deleteUserButton, new Insets(50, 0, 80, 0));
+        
+        HBox middleBottomPane = new HBox(inviteUserButton,resetUserButton,deleteUserButton);
+        HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 50));
+        HBox.setMargin(resetUserButton, new Insets(50, 50, 0, 0));
+        HBox.setMargin(deleteUserButton, new Insets(50, 0, 0, 0));
+
+        VBox middlePane = new VBox(middleTopPane,middleBottomPane);
+        
+        //Bottom pane for exit
+        HBox bottomPane = new HBox(logoutButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(logoutButton, new Insets(0, 0, 70, 0));
 
         // Create the BorderPane and set the VBox as the center
         BorderPane adminCreateScreen = new BorderPane();
-        adminCreateScreen.setCenter(layout); // Add VBox to the center of the BorderPane
+        
+        adminCreateScreen.setTop(topPane); 
+        adminCreateScreen.setCenter(middlePane); 
+        adminCreateScreen.setBottom(middlePane); 
         adminCreateScreen.setStyle("-fx-background-color: lightblue;");
 
         // Set the scene
