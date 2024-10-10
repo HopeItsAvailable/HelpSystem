@@ -40,7 +40,6 @@ public class Node {
     public void addOneToRole() {
     	this.numOfRoles++;
     }
-   
     
     //GET METHODS
     
