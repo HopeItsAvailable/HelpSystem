@@ -91,14 +91,17 @@ public class LinkedList {
                 case "admin":
                     user.setAdmin(true);
                     System.out.println("Role Admin added to user " + username + ".");
+                    user.addOneToRole();
                     break;
                 case "student":
                     user.setStudent(true);
                     System.out.println("Role Student added to user " + username + ".");
+                    user.addOneToRole();
                     break;
                 case "instructor":
                     user.setInstructor(true);
                     System.out.println("Role Instructor added to user " + username + ".");
+                    user.addOneToRole(); 
                     break;
                 default:
                     System.out.println("Role '" + role + "' is not recognized.");

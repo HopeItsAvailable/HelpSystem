@@ -745,14 +745,14 @@ public class helpSystemStart extends Application {
 							chooseRole(primaryStage, username);
 						}
 						else {
-							if (linkedList.isStudent(username) == true) {
+							if (linkedList.isStudent(username) && !linkedList.isAdmin(username) && !linkedList.isInstructor(username)) {
 								studentPage(primaryStage);
 							}
-							else if(linkedList.isAdmin(username) == true){
+							else if(linkedList.isAdmin(username)&&!linkedList.isStudent(username)&&!linkedList.isInstructor(username)){
 								adminPage(primaryStage);
 
 							}
-							else if(linkedList.isInstructor(username) == true){
+							else if(linkedList.isInstructor(username) && !linkedList.isStudent(username)&&!linkedList.isAdmin(username)){
 								teacherPage(primaryStage);
 							}
 						}
