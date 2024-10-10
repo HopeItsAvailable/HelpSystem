@@ -354,38 +354,40 @@ public class helpSystemStart extends Application {
                 	
                 			Node userNode = linkedList.searchByUsername(userNameText.getText().trim());
                 			
-                			String checkUserPassword = userNode.getPassword();
-                    
-                			if(passwordText.getText().trim().equals(checkUserPassword)&&
-                					confPasswordText.getText().trim().equals(checkUserPassword)) {
-                				
-                				int roleCount = userNode.getNumOfRoles();
-                				
-                				String emailCheck = userNode.getEmail();
-                				
-                     					if(emailCheck == null) {
-                     						addAccountInfo(primaryStage, userNameText.getText().trim());
-                     					}
-                				
-                     					else {
-                     						if(roleCount == 2 || roleCount == 3) {
-                     							chooseRole(primaryStage,userNameText.getText().trim());
-                     						}
-                     						else {
-                     							if (userNode.getIsStudent() == true) {
-                     								studentPage(primaryStage);
-                     							}
-                     							else if(userNode.getIsAdmin() == true){
-                     								adminPage(primaryStage);
+                			if(userNode != null) {
+                       			String checkUserPassword = userNode.getPassword();
+                                
+                    			if(passwordText.getText().trim().equals(checkUserPassword)&&
+                    					confPasswordText.getText().trim().equals(checkUserPassword)) {
+                    				
+                    				int roleCount = userNode.getNumOfRoles();
+                    				
+                    				String emailCheck = userNode.getEmail();
+                    				
+                         					if(emailCheck == null) {
+                         						addAccountInfo(primaryStage, userNameText.getText().trim());
+                         					}
+                    				
+                         					else {
+                         						if(roleCount == 2 || roleCount == 3) {
+                         							chooseRole(primaryStage,userNameText.getText().trim());
+                         						}
+                         						else {
+                         							if (userNode.getIsStudent() == true) {
+                         								studentPage(primaryStage);
+                         							}
+                         							else if(userNode.getIsAdmin() == true){
+                         								adminPage(primaryStage);
 
-                     							}
-                     							else if(userNode.getIsInstructor() == true){
-                     								teacherPage(primaryStage);
-                     							}
-                     						}
-                     					}
-                     		}
-                			
+                         							}
+                         							else if(userNode.getIsInstructor() == true){
+                         								teacherPage(primaryStage);
+                         							}
+                         						}
+                         					}
+                         		}
+
+                			}                			
                 			else {
                 					checkLogin.setVisible(true);
                 			}
@@ -1271,7 +1273,6 @@ public class helpSystemStart extends Application {
         Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
         primaryStage.setScene(welcomeScene);
         
-        
     }
     
     public String generateOneTimeCode() {
@@ -1300,6 +1301,98 @@ public class helpSystemStart extends Application {
     }
     
     public void resetUser(Stage primaryStage) {
+    	
+    	// Labels, buttons, textfield, alert, and checkBox
+        Label welcome = new Label("Reset User");
+        Label username = new Label("Username: ");
+        Label noExist = new Label("Username does not exist");
+        
+        TextField usernameText = new TextField();
+        
+        Button sendButton = new Button("Send");
+        Button quitButton = new Button("Quit");
+
+        
+        // Label design
+        welcome.setFont(new Font("Arial", 36));
+        username.setFont(new Font("Arial", 20));
+        
+        noExist.setFont(new Font("Arial", 20));
+        noExist.setStyle("-fx-text-fill: red;");
+        noExist.setVisible(false);
+        
+        
+        //Button design
+        quitButton.setStyle("-fx-font-size: 1.5em;");
+        sendButton.setStyle("-fx-font-size: 2em;");
+
+        // Send button action
+        sendButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(usernameText.getText().isEmpty()) {
+                	usernameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+                }
+                else {
+                	usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+                }
+                
+                if(linkedList.searchByUsername(usernameText.getText().trim()) == null) {
+                	noExist.setVisible(true);
+                }
+                else {
+                	noExist.setVisible(false);
+
+                    // Generate the one-time code and expiration time
+                    String code = generateOneTimeCode();
+                   
+                	Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Sent Code");
+                    alert.setHeaderText("Code Sent");  // Optional: No header text
+                    alert.setContentText("Following code has been sent: " + code);                    
+                    alert.showAndWait();
+                }
+            }
+        });
+        
+        // Quit button action
+        quitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                start(primaryStage);
+            }
+        });
+        
+        // Top pane for welcome label
+        HBox topPane = new HBox(welcome);
+        topPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+        
+        // Middle Pane
+        HBox middlePane = new HBox(username,usernameText,noExist);
+        HBox.setMargin(username, new Insets(80, 80, 0, 130));
+        HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
+        HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
+        
+        
+        
+        // Bottom pane for login button
+        HBox bottomPane = new HBox(sendButton,quitButton);
+        bottomPane.setAlignment(Pos.CENTER);
+        HBox.setMargin(sendButton, new Insets(0, 220, 80, 280));
+        HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+        
+        
+        //BorderPane stuff
+        BorderPane adminCreateScreen = new BorderPane();
+        adminCreateScreen.setTop(topPane);
+        adminCreateScreen.setCenter(middlePane);
+        adminCreateScreen.setBottom(bottomPane);
+        adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+        
+        // Set the scene
+        Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+        primaryStage.setScene(welcomeScene);
     	
     }
     
