@@ -23,6 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import java.util.*;
+import java.sql.SQLException;
+import java.util.Scanner;
 
 public class helpSystemStart extends Application {
 	private Scene loginScene; // To store the initial login scene
