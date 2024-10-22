@@ -1,6 +1,9 @@
 package helpSystem;
 
 import javafx.application.Application;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,28 +18,28 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import java.util.*;
-import java.awt.Image;
+import javafx.scene.image.Image;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+
 public class helpSystemStart extends Application {
+	
 	private Scene loginScene; // To store the initial login scene
 	private LinkedList linkedList; // Declare LinkedList
 	oneTimePasswordGeneratorList oneTimePasswordGeneratorList;
 	int size = 0;
-
-	public static void main(String[] args) {
-		launch(args);
-	}
-
+	
 	// checkAdmind
 
 	final public int TOTALNUMBEROFROLES = 3;
@@ -46,34 +49,40 @@ public class helpSystemStart extends Application {
 	String adminUsername;
 	String adminPassword;
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+
 	@Override
 	public void start(Stage primaryStage) {
-		if (size == 0) { // if empty, initialize the linked list
-			linkedList = new LinkedList();
-			oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is
-																				// created
-			size++;
-		}
+		
+		// Initialize the linked list if empty
+	    if (size == 0) {
+	        linkedList = new LinkedList();
+	        oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is created
+	        size++;
+	    }
 
-		primaryStage.setTitle("Help System");
+	    primaryStage.setTitle("Help System");
 
-		// Labels
-
+		// Label
 		Label welcome = new Label("Welcome to our Help System");
-		Label clickStart = new Label("Click the button to begin!");
-		Label logo = new Label("?");
-
-		// label designs
-
-		welcome.setFont(new Font("Arial", 36));
-		logo.setFont(new Font("Arial", 200));
-		clickStart.setFont(new Font("Arial", 18));
+		welcome.setFont(new Font("Montserrat", 45));
+		
+		//Line for header
+		Line line = new Line(0, 0, 600, 0);
+	    line.setId("lineDetails");
+	    
+	    //Logo
+	    ImageView logoImageView = new ImageView();
+	    logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
+	    logoImageView.setFitWidth(200);
+	    logoImageView.setFitHeight(200);
 
 		// Create the login button
-		Button startButton = new Button();
-		startButton.setText("Start");
-
-		startButton.setStyle("-fx-font-size: 2em; ");
+		Button startButton = new Button("Start");
+		startButton.setId("buttonStart");
 
 		// Set the action for when the login button is clicked
 		startButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -91,42 +100,39 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
-
-		// Pane for Center BorderPane
-		VBox middlePane = new VBox(logo, startButton, clickStart);
-		middlePane.setAlignment(Pos.CENTER);
-
-		VBox.setMargin(startButton, new Insets(50, 0, 20, 0)); // Adds 20px margin at the top of the button
-
-		// Pane For TOP of BorderPane
-
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER); // Centers the label in the HBox
-
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0)); // Adds 20px margin at the top of the button
 		
-		System.out.println(getClass().getResource("application.css"));  // should print a valid URL
-		System.out.println(getClass().getResource("startBackground.png"));  // should print a valid URL
-		
-		
-		// Initial layout with the login button
-		BorderPane starterScreen = new BorderPane();
-		starterScreen.setId("startBackground");
-		starterScreen.getStylesheets().addAll(this.getClass().getResource("application.css").toExternalForm());
+		// Top Pane (VBox for the welcome label and line)
+	    VBox topPane = new VBox();
+	    topPane.getChildren().addAll(welcome, line);
+	    topPane.setAlignment(Pos.CENTER);
+	    VBox.setMargin(welcome, new Insets(50, 0, 5, 0));
 
-		// Set location of elements
+		// Center Pane (HBox for the logo)
+	    HBox middlePane = new HBox();
+	    middlePane.getChildren().addAll(logoImageView);
+	    middlePane.setAlignment(Pos.CENTER);
 
-		starterScreen.setTop(topPane);
-		starterScreen.setCenter(middlePane);
+	    // Bottom Pane (HBox for the Start button)
+	    HBox bottomPane = new HBox(startButton);
+	    bottomPane.setAlignment(Pos.CENTER);
+	    HBox.setMargin(startButton, new Insets(0, 0, 80, 0));
 
-		// Background
+	    // Main layout with BorderPane
+	    BorderPane starterScreen = new BorderPane();
+	    starterScreen.setId("startBackground");
+	    starterScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		// Store the initial scene
-		loginScene = new Scene(starterScreen, 900, 600);
+	    // Set the location of elements in the BorderPane
+	    starterScreen.setTop(topPane);
+	    starterScreen.setCenter(middlePane);
+	    starterScreen.setBottom(bottomPane);
 
-		primaryStage.setScene(loginScene);
-		primaryStage.show();
+	    // Store the initial scene
+	    Scene loginScene = new Scene(starterScreen, 900, 600);
 
+	    // Set the scene and show the stage
+	    primaryStage.setScene(loginScene);
+	    primaryStage.show();
 	}
 
 	private void createAdmin(Stage primaryStage) {
