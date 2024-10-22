@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import java.util.*;
+import java.awt.Image;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -103,9 +104,15 @@ public class helpSystemStart extends Application {
 		topPane.setAlignment(Pos.CENTER); // Centers the label in the HBox
 
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 0)); // Adds 20px margin at the top of the button
-
+		
+		System.out.println(getClass().getResource("application.css"));  // should print a valid URL
+		System.out.println(getClass().getResource("startBackground.png"));  // should print a valid URL
+		
+		
 		// Initial layout with the login button
 		BorderPane starterScreen = new BorderPane();
+		starterScreen.setId("startBackground");
+		starterScreen.getStylesheets().addAll(this.getClass().getResource("application.css").toExternalForm());
 
 		// Set location of elements
 
@@ -113,7 +120,6 @@ public class helpSystemStart extends Application {
 		starterScreen.setCenter(middlePane);
 
 		// Background
-		starterScreen.setStyle("-fx-background-color: lightblue;");
 
 		// Store the initial scene
 		loginScene = new Scene(starterScreen, 900, 600);
