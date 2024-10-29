@@ -208,12 +208,24 @@ public class helpSystemStart extends Application {
 						&& userNameText.getText().trim().length() >= 6
 						&& userNameText.getText().trim().length() <= 12) {
 
+<<<<<<< HEAD
 					adminUsername = userNameText.getText().trim();
 					adminPassword = passwordText.getText().trim();
 
 					linkedList.add(adminUsername, adminPassword);
 					linkedList.addRoleToUser(adminUsername, "admin");
 
+=======
+					String email = userNameText.getText().trim();
+					String password = passwordText.getText().trim();
+					try {
+						databaseHelper.registerFirstUser(email, password);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
 					login(primaryStage);
 				}
 			}
@@ -571,6 +583,7 @@ public class helpSystemStart extends Application {
 
 					// ADD USER TO LIST
 
+<<<<<<< HEAD
 					String toBeAddedUsername = userNameText.getText().trim();
 					String toBeAddedPassword = passwordText.getText().trim();
 
@@ -580,6 +593,15 @@ public class helpSystemStart extends Application {
 
 					if (roles[0] != null) {
 						linkedList.addRoleToUser(toBeAddedUsername, "Student");
+=======
+					String email = userNameText.getText().trim();
+					String password = passwordText.getText().trim();
+					try {
+						databaseHelper.registerWithInviteCode(email, password, userCodeText.getText().strip());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
 					}
 					if (roles[1] != null) {
 						linkedList.addRoleToUser(toBeAddedUsername, "Instructor");
@@ -1068,7 +1090,12 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				listUsers(primaryStage);
+				try {
+					listUsers(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1709,10 +1736,9 @@ public class helpSystemStart extends Application {
 				loginButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent event) {
-
-						Node user = linkedList.searchByUsername(userNameText.getText().trim()); //if username exists
+												
 						// Check username length
-						if (user==null) {
+						if (databaseHelper.doesUserExist(userNameText.getText().strip())) {
 							invUserName.setVisible(true);
 						} else {
 							invUserName.setVisible(false);
@@ -1728,14 +1754,9 @@ public class helpSystemStart extends Application {
 						} else {
 							password.setVisible(true); // OTP is invalid
 						}
-
-						// Proceed if all conditions are met
-						System.out.println("herereset");
-						System.out.println(validPassword);
-						System.out.println(user.toString());
 						
 						
-						if (validPassword&& user!=null) {
+						if (validPassword&& databaseHelper.doesUserExist(userNameText.getText().strip())) {
 							System.out.println("here2");
 							// ADD USER TO LIST
 							resetPasswordPage(primaryStage, userNameText.getText().trim()); //enter only if the OTP is corrent
@@ -1831,7 +1852,7 @@ public class helpSystemStart extends Application {
 							mismatchPassword.setVisible(false);
 							// Save the new password in the system for the user
 							
-							linkedList.changeUserPassword(username, newPasswordText.getText());
+							databaseHelper.resetPassword();
 							
 							// After successful reset, return to the login page
 							login(primaryStage);
