@@ -32,11 +32,19 @@ import javafx.scene.image.Image;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import helpSystem.DatabaseHelperUser;
+import helpSystem.DatabaseHelperArticle;
+
 
 public class helpSystemStart extends Application {
 	
+	private static DatabaseHelperUser databaseHelper;
+	private static DatabaseHelperArticle databaseHelper1;
+	private static final Scanner scanner = new Scanner(System.in);
+
+	
 	private Scene loginScene; // To store the initial login scene
-	private LinkedList linkedList; // Declare LinkedList
+	//private LinkedList linkedList; // Declare LinkedList
 	oneTimePasswordGeneratorList oneTimePasswordGeneratorList;
 	int size = 0;
 	
@@ -46,93 +54,116 @@ public class helpSystemStart extends Application {
 
 	// Save Admin details for now
 
-	String adminUsername;
-	String adminPassword;
 
 	public static void main(String[] args) {
+		
+		
 		launch(args);
 	}
 
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws Exception {
 		
 		// Initialize the linked list if empty
 	    if (size == 0) {
-	        linkedList = new LinkedList();
+	        //linkedList = new LinkedList();
 	        oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is created
 	        size++;
 	    }
-
-	    primaryStage.setTitle("Help System");
-
-		// Label
-		Label welcome = new Label("Welcome to our Help System");
-		welcome.setFont(new Font("Montserrat", 45));
-		
-		//Line for header
-		Line line = new Line(0, 0, 600, 0);
-	    line.setId("lineDetails");
 	    
-	    //Logo
-	    ImageView logoImageView = new ImageView();
-	    logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
-	    logoImageView.setFitWidth(200);
-	    logoImageView.setFitHeight(200);
-
-		// Create the login button
-		Button startButton = new Button("Start");
-		startButton.setId("buttonStart");
-
-		// Set the action for when the login button is clicked
-		startButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				// Create the welcome scene
-				if (!linkedList.checkIfAdmin()) { // if there is no admin, make one
-
-					createAdmin(primaryStage);
-
-				} else {
-
-					login(primaryStage);
-
-				}
-			}
-		});
+	    databaseHelper = new DatabaseHelperUser();
+		databaseHelper1 = new DatabaseHelperArticle();
 		
-		// Top Pane (VBox for the welcome label and line)
-	    VBox topPane = new VBox();
-	    topPane.getChildren().addAll(welcome, line);
-	    topPane.setAlignment(Pos.CENTER);
-	    VBox.setMargin(welcome, new Insets(50, 0, 5, 0));
+		
+	    try {
+	    	databaseHelper.connectToDatabase();
+			databaseHelper1.connectToDatabase();
+			
+			primaryStage.setTitle("Help System");
 
-		// Center Pane (HBox for the logo)
-	    HBox middlePane = new HBox();
-	    middlePane.getChildren().addAll(logoImageView);
-	    middlePane.setAlignment(Pos.CENTER);
+			// Label
+			Label welcome = new Label("Welcome to our Help System");
+			welcome.setFont(new Font("Montserrat", 45));
+			
+			//Line for header
+			Line line = new Line(0, 0, 600, 0);
+		    line.setId("lineDetails");
+		    
+		    //Logo
+		    ImageView logoImageView = new ImageView();
+		    logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
+		    logoImageView.setFitWidth(200);
+		    logoImageView.setFitHeight(200);
 
-	    // Bottom Pane (HBox for the Start button)
-	    HBox bottomPane = new HBox(startButton);
-	    bottomPane.setAlignment(Pos.CENTER);
-	    HBox.setMargin(startButton, new Insets(0, 0, 80, 0));
+			// Create the login button
+			Button startButton = new Button("Start");
+			startButton.setId("buttonStart");
 
-	    // Main layout with BorderPane
-	    BorderPane starterScreen = new BorderPane();
-	    starterScreen.setId("startBackground");
-	    starterScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			// Set the action for when the login button is clicked
+			startButton.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					// Create the welcome scene
+					try {
+						if (databaseHelper.isDatabaseEmpty()) { // if there is no admin, make one
 
-	    // Set the location of elements in the BorderPane
-	    starterScreen.setTop(topPane);
-	    starterScreen.setCenter(middlePane);
-	    starterScreen.setBottom(bottomPane);
+							createAdmin(primaryStage);
 
-	    // Store the initial scene
-	    Scene loginScene = new Scene(starterScreen, 900, 600);
+						} else {
 
-	    // Set the scene and show the stage
-	    primaryStage.setScene(loginScene);
-	    primaryStage.show();
+							login(primaryStage);
+
+						}
+					} catch (SQLException e) {
+
+						System.err.println("Database error: " + e.getMessage());
+						e.printStackTrace();
+
+					}
+				}
+			});
+			
+			// Top Pane (VBox for the welcome label and line)
+		    VBox topPane = new VBox();
+		    topPane.getChildren().addAll(welcome, line);
+		    topPane.setAlignment(Pos.CENTER);
+		    VBox.setMargin(welcome, new Insets(50, 0, 5, 0));
+
+			// Center Pane (HBox for the logo)
+		    HBox middlePane = new HBox();
+		    middlePane.getChildren().addAll(logoImageView);
+		    middlePane.setAlignment(Pos.CENTER);
+
+		    // Bottom Pane (HBox for the Start button)
+		    HBox bottomPane = new HBox(startButton);
+		    bottomPane.setAlignment(Pos.CENTER);
+		    HBox.setMargin(startButton, new Insets(0, 0, 80, 0));
+
+		    // Main layout with BorderPane
+		    BorderPane starterScreen = new BorderPane();
+		    starterScreen.setId("startBackground");
+		    starterScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+		    // Set the location of elements in the BorderPane
+		    starterScreen.setTop(topPane);
+		    starterScreen.setCenter(middlePane);
+		    starterScreen.setBottom(bottomPane);
+
+		    // Store the initial scene
+		    Scene loginScene = new Scene(starterScreen, 900, 600);
+
+		    // Set the scene and show the stage
+		    primaryStage.setScene(loginScene);
+		    primaryStage.show();
+	    }
+	    
+	    catch (SQLException e) {
+
+			System.err.println("Database error: " + e.getMessage());
+			e.printStackTrace();
+		}
+	    
 	}
 
 	private void createAdmin(Stage primaryStage) {
@@ -195,26 +226,22 @@ public class helpSystemStart extends Application {
 					invPassword.setVisible(false);
 				}
 
-				// Check if passwords match
-				if (!passwordText.getText().trim().equals(confPasswordText.getText().trim())) {
-					invConPassword.setVisible(true);
-				} else {
-					invConPassword.setVisible(false);
-				}
-
 				// Proceed if all conditions are met
-				if (passwordText.getText().trim().length() >= 6
-						&& passwordText.getText().trim().equals(confPasswordText.getText().trim())
+				if (passwordText.getText().trim().length() >= 6						
 						&& userNameText.getText().trim().length() >= 6
 						&& userNameText.getText().trim().length() <= 12) {
 
-					adminUsername = userNameText.getText().trim();
-					adminPassword = passwordText.getText().trim();
-
-					linkedList.add(adminUsername, adminPassword);
-					linkedList.addRoleToUser(adminUsername, "admin");
-
+					String email = userNameText.getText().trim();
+					String password = passwordText.getText().trim();
+					try {
+						databaseHelper.register(email, password, "admin");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 					login(primaryStage);
+					
 				}
 			}
 		});
@@ -223,10 +250,15 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
-
+		
 		// Layout setup
 
 		// Middle VBoxs
@@ -351,54 +383,12 @@ public class helpSystemStart extends Application {
 					invPassword.setVisible(false);
 				}
 
-				// Check if passwords match
-				if (!passwordText.getText().trim().equals(confPasswordText.getText().trim())) {
-					invConPassword.setVisible(true);
-				} else {
-					invConPassword.setVisible(false);
-				}
-
 				// Proceed if all conditions are met
 				if (passwordText.getText().trim().length() >= 6
-						&& passwordText.getText().trim().equals(confPasswordText.getText().trim())
 						&& userNameText.getText().trim().length() >= 6
-						&& userNameText.getText().trim().length() <= 12) {
-
-					Node userNode = linkedList.searchByUsername(userNameText.getText().trim());
-
-					if (userNode != null) {
-						String checkUserPassword = userNode.getPassword();
-
-						if (passwordText.getText().trim().equals(checkUserPassword)
-								&& confPasswordText.getText().trim().equals(checkUserPassword)) {
-
-							int roleCount = userNode.getNumOfRoles();
-
-							String emailCheck = userNode.getEmail();
-
-							if (emailCheck == null) {
-								addAccountInfo(primaryStage, userNameText.getText().trim());
-							}
-
-							else {
-								if (roleCount == 2 || roleCount == 3) {
-									chooseRole(primaryStage, userNameText.getText().trim());
-								} else {
-									if (userNode.getIsStudent() == true) {
-										studentPage(primaryStage);
-									} else if (userNode.getIsAdmin() == true) {
-										adminPage(primaryStage);
-
-									} else if (userNode.getIsInstructor() == true) {
-										teacherPage(primaryStage);
-									}
-								}
-							}
-						}
-
-					} else {
-						checkLogin.setVisible(true);
-					}
+						&& userNameText.getText().trim().length() <= 12){
+					
+					//WORK ON THIS
 				}
 
 			}
@@ -408,7 +398,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -543,50 +538,25 @@ public class helpSystemStart extends Application {
 				} else {
 					invPassword.setVisible(false);
 				}
-
-				// Check if passwords match
-				if (!passwordText.getText().trim().equals(confPasswordText.getText().trim())) {
-					invConPassword.setVisible(true);
-				} else {
-					invConPassword.setVisible(false);
-				}
-				// holds whether the password is valid
-				boolean validPassword = oneTimePasswordGeneratorList.validatePassword(userCodeText.getText().trim());
-
-				if (validPassword) {
-					invUserCode.setVisible(false); // Invalid or expired OTP
-				} else {
-					invUserCode.setVisible(true); // OTP is valid
-				}
-
-				String otpCode = userCodeText.getText().trim();
-				String[] roles = oneTimePasswordGeneratorList.validatePassword1(otpCode);
-
+				
+				
 				// Proceed if all conditions are met
 				System.out.println("here1");
 				if (passwordText.getText().trim().length() >= 6
-						&& passwordText.getText().trim().equals(confPasswordText.getText().trim())
-						&& userNameText.getText().trim().length() >= 6 && userNameText.getText().trim().length() <= 12
-						&& validPassword) {
+						&& userNameText.getText().trim().length() >= 6 && userNameText.getText().trim().length() <= 12)
+						{
 
 					// ADD USER TO LIST
 
-					String toBeAddedUsername = userNameText.getText().trim();
-					String toBeAddedPassword = passwordText.getText().trim();
-
-					System.out.println(roles[0] + "\n" + roles[1] + "\n");
-
-					linkedList.add(toBeAddedUsername, toBeAddedPassword);
-
-					if (roles[0] != null) {
-						linkedList.addRoleToUser(toBeAddedUsername, "Student");
+					String email = userNameText.getText().trim();
+					String password = passwordText.getText().trim();
+					try {
+						databaseHelper.register(email, password, "user");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					if (roles[1] != null) {
-						linkedList.addRoleToUser(toBeAddedUsername, "Instructor");
-					}
-					if (roles[2] != null) {
-						linkedList.addRoleToUser(toBeAddedUsername, "Admin");
-					}
+					
 
 					login(primaryStage);
 
@@ -598,7 +568,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -725,27 +700,8 @@ public class helpSystemStart extends Application {
 					// password fields.
 
 					System.out.println(username + "HERE");
-					linkedList.finalizeUserEmail(username, emailText.getText());
-					linkedList.finalizeUserFirstName(username, firstNameText.getText());
-					linkedList.finalizeUserLastName(username, lastNameText.getText());
-					linkedList.finalizeUserMiddleName(username, middleNameText.getText());
-					linkedList.finalizeUserPreferredFirstName(username, confFirstNameText.getText());
-
-					if (linkedList.getNumOfRoles(username) > 1) {
-						chooseRole(primaryStage, username);
-					} else {
-						if (linkedList.isStudent(username) && !linkedList.isAdmin(username)
-								&& !linkedList.isInstructor(username)) {
-							studentPage(primaryStage);
-						} else if (linkedList.isAdmin(username) && !linkedList.isStudent(username)
-								&& !linkedList.isInstructor(username)) {
-							adminPage(primaryStage);
-
-						} else if (linkedList.isInstructor(username) && !linkedList.isStudent(username)
-								&& !linkedList.isAdmin(username)) {
-							teacherPage(primaryStage);
-						}
-					}
+					
+					// ADD account info to user and then go to right page
 				}
 			}
 		});
@@ -754,7 +710,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -808,9 +769,11 @@ public class helpSystemStart extends Application {
 
 	private void chooseRole(Stage primaryStage, String UserName) {
 
-		boolean isStudent = linkedList.isStudent(UserName);
-		boolean isTeacher = linkedList.isInstructor(UserName);
-		boolean isAdmin = linkedList.isAdmin(UserName);
+		//WORK ON THIS CHECK WHICH ROLES USER IS
+		
+		boolean isStudent = true;
+		boolean isTeacher = true;
+		boolean isAdmin = true;
 
 		// Labels and buttons
 		Label welcome = new Label("Finish Account Setup");
@@ -894,7 +857,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -945,7 +913,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -989,7 +962,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1209,7 +1187,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1309,7 +1292,7 @@ public class helpSystemStart extends Application {
 					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
 
-				if (linkedList.searchByUsername(usernameText.getText().trim()) == null) {
+				if (databaseHelper.doesUserExist(usernameText.getText().trim())) {
 					noExist.setVisible(true);
 				} else {
 					noExist.setVisible(false);
@@ -1333,7 +1316,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1413,7 +1401,7 @@ public class helpSystemStart extends Application {
 					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
 
-				if (linkedList.searchByUsername(usernameText.getText().trim()) == null) {
+				if (!databaseHelper.doesUserExist(usernameText.getText().trim())) {
 					noExist.setVisible(true);
 				} else {
 					noExist.setVisible(false);
@@ -1431,7 +1419,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1444,7 +1437,12 @@ public class helpSystemStart extends Application {
 				confirmDelete.setVisible(false);
 				askDelete.setVisible(false);
 
-				linkedList.deleteAccount(usernameText.getText().trim());
+				try {
+					databaseHelper.deleteUser(usernameText.getText().trim());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1501,11 +1499,11 @@ public class helpSystemStart extends Application {
 
 	}
 
-	public void listUsers(Stage primaryStage) {
+	public void listUsers(Stage primaryStage) throws Exception {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Delete a User");
-		Label printList = new Label(linkedList.display());
+		Label printList = new Label(databaseHelper.displayUsersByUser());
 
 		Button quitButton = new Button("Quit");
 
@@ -1517,7 +1515,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1601,19 +1604,13 @@ public class helpSystemStart extends Application {
 					noClick.setVisible(true);
 				} else {
 					noClick.setVisible(false);
-
-					 Node user = linkedList.searchByUsername(usernameToDeleteFrom);
+					
+					databaseHelper.doesUserExist(userText.getText().strip());
 					
 					 if (user != null) {
-			                if (studentAccount.isSelected()&&user.getIsStudent()) {
-			                    linkedList.removeRoleToUser(usernameToDeleteFrom, "student"); // Correct role name
-			                }
-			                if (teacherAccount.isSelected()&&user.getIsInstructor()) {
-			                    linkedList.removeRoleToUser(usernameToDeleteFrom, "instructor"); // Correct role name
-			                }
-			                if (adminAccount.isSelected()&&user.getIsAdmin()) {
-			                    linkedList.removeRoleToUser(usernameToDeleteFrom, "admin"); // Correct role name
-			                }
+			                
+			                
+			               
 
 						Alert alert = new Alert(AlertType.CONFIRMATION);
 						alert.setTitle("Roles Changed");
@@ -1630,7 +1627,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1748,7 +1750,12 @@ public class helpSystemStart extends Application {
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				start(primaryStage);
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 

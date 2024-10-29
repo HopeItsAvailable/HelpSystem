@@ -1,11 +1,6 @@
 package helpSystem;
 
 import java.sql.*;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Base64;
 
 import org.bouncycastle.util.Arrays;
@@ -61,6 +56,21 @@ class DatabaseHelperUser {
 	            + ")";
 	    statement.execute(userTable);
 	}
+	
+	public void deleteUser(String email) throws SQLException {
+		if(doesUserExist(email)) {
+			
+			String deleteSQL = "DELETE FROM cse360Articles WHERE email = ?";
+		    
+		    try (PreparedStatement pstmt = connection.prepareStatement(deleteSQL)){
+		    	
+		    	pstmt.setString(1, email);
+		   	
+		    	pstmt.executeUpdate();
+	            
+		    }
+		}
+    }
 
 
 
@@ -197,66 +207,44 @@ class DatabaseHelperUser {
 	    return false; // If an error occurs, assume user doesn't exist
 	}
 
-	public void displayUsersByAdmin() throws Exception{
+	public String displayUsersByAdmin() throws Exception{
 		String sql = "SELECT * FROM cse360users"; 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(sql); 
+		
+		StringBuilder userInfo = new StringBuilder();
+
 
 		while(rs.next()) { 
 			// Retrieve by column name 
 			int id  = rs.getInt("id"); 
 			String  email = rs.getString("email"); 
 			String role = rs.getString("role");  
-			String encryptedPassword = rs.getString("password"); 
-			char[] decryptedPassword = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									encryptedPassword
-							), 
-							EncryptionUtils.getInitializationVector(email.toCharArray())
-					)	
-			);
 
-			// Display values 
-			System.out.print("ID: " + id); 
-			System.out.print(", Email: " + email); 
-			System.out.print(", Password: "); 
-			EncryptionUtils.printCharArray(decryptedPassword);
-			System.out.println(", Role: " + role); 
-			
-			Arrays.fill(decryptedPassword, '0');
-		} 
+			userInfo.append("Article ID: ").append(email)
+            .append(", Role: ").append(role).append("\n\n");
+		}
+		return userInfo.toString();
 	}
 	
-	public void displayUsersByUser() throws Exception{
+	public String displayUsersByUser() throws Exception{
 		String sql = "SELECT * FROM cse360users"; 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(sql); 
+		
+		StringBuilder userInfo = new StringBuilder();
+
 
 		while(rs.next()) { 
 			// Retrieve by column name 
 			int id  = rs.getInt("id"); 
 			String  email = rs.getString("email"); 
 			String role = rs.getString("role");  
-			String encryptedPassword = rs.getString("password"); 
-			char[] decryptedPassword = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									encryptedPassword
-							), 
-							EncryptionUtils.getInitializationVector(email.toCharArray())
-					)	
-			);
 
-			// Display values 
-			System.out.print("ID: " + id); 
-			System.out.print(", Email: " + email); 
-			System.out.print(", Password: "); 
-			EncryptionUtils.printCharArray(decryptedPassword);
-			System.out.println(", Role: " + role); 
-			
-			Arrays.fill(decryptedPassword, '0');
+			userInfo.append("Article ID: ").append(email)
+            .append(", Role: ").append(role).append("\n\n");
 		} 
+		return userInfo.toString();
 	}
 	
 	private boolean isTableEmpty() throws SQLException {
