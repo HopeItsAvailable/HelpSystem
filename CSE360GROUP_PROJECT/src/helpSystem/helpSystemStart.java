@@ -1008,6 +1008,12 @@ public class helpSystemStart extends Application {
 		Button deleteUserButton = new Button("Delete User Account");
 		Button listUsersButton = new Button("List User Accounts");
 		Button addRoleButton = new Button("Add/Remove Role");
+		
+		Button createArticle = new Button("Create Article");
+		Button deleteArticle = new Button("Delete Aritcle");
+		Button listArticles = new Button("List Articles");
+		Button backupArticles = new Button("Back up Articles");
+		Button RestoreArticles = new Button("Restore Articles");
 
 		Button logoutButton = new Button("Log Out");
 
@@ -1022,6 +1028,64 @@ public class helpSystemStart extends Application {
 		listUsersButton.setStyle("-fx-font-size: 1.8em;");
 		addRoleButton.setStyle("-fx-font-size: 1.8em;");
 		logoutButton.setStyle("-fx-font-size: 1.8em;");
+		
+		createArticle.setStyle("-fx-font-size: 1.8em;");
+		deleteArticle.setStyle("-fx-font-size: 1.8em;");
+		listArticles.setStyle("-fx-font-size: 1.8em;");
+
+		backupArticles.setStyle("-fx-font-size: 1.8em;");
+		RestoreArticles.setStyle("-fx-font-size: 1.8em;");
+		logoutButton.setStyle("-fx-font-size: 1.8em;");
+
+		// Set buttons actions using EventHandler
+		createArticle.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+				createArticle(primaryStage);
+			}
+		});
+
+		deleteArticle.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				deleteArticle(primaryStage);
+
+			}
+		});
+
+		listArticles.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				try {
+					listArticles(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		});
+
+		backupArticles.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				backupArticles(primaryStage);
+			}
+		});
+
+		RestoreArticles.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO : ADD NEW PAGE
+
+				restoreArticles(primaryStage);
+
+			}
+		});
 
 		// Set button actions using EventHandler
 		inviteUserButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1086,6 +1150,9 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
 		// Middle Pane
+		
+		HBox middleTopTop = new HBox(createArticle,deleteArticle,listArticles,backupArticles,RestoreArticles);
+		
 		HBox middleTopPane = new HBox(inviteUserButton, resetUserButton, deleteUserButton);
 		HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 120));
 		HBox.setMargin(resetUserButton, new Insets(50, 50, 80, 0));
@@ -1096,7 +1163,7 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(addRoleButton, new Insets(50, 50, 0, 0));
 		HBox.setMargin(logoutButton, new Insets(50, 0, 0, 0));
 
-		VBox middlePane = new VBox(middleTopPane, middleBottomPane);
+		VBox middlePane = new VBox(middleTopTop, middleTopPane, middleBottomPane);
 
 		// Bottom pane for exit
 		HBox bottomPane = new HBox(logoutButton);
@@ -1863,4 +1930,483 @@ public class helpSystemStart extends Application {
 				primaryStage.setScene(resetScene);
 				primaryStage.show();
 	}
+	
+	private void createArticle(Stage primaryStage) {
+
+		// Labels and buttons
+		Label welcome = new Label("Create Article");
+		
+		Label email = new Label("Title: ");
+		Label firstName = new Label("Author: ");
+		Label confFirstName = new Label("Abstract: ");
+		Label middleName = new Label("Set of keywords: ");
+		Label lastName = new Label("Body of the article: ");
+		Label references = new Label("References: ");
+
+		TextField emailText = new TextField();
+		TextField firstNameText = new TextField();
+		TextField confFirstNameText = new TextField();
+		TextField middleNameText = new TextField();
+		TextField lastNameText = new TextField();
+		TextField referencesText = new TextField();
+
+		Button conButton = new Button("Confirm");
+		Button quitButton = new Button("Quit");
+
+		// Label design
+		welcome.setFont(new Font("Arial", 36));
+		email.setFont(new Font("Arial", 20));
+		firstName.setFont(new Font("Arial", 20));
+		confFirstName.setFont(new Font("Arial", 20));
+		middleName.setFont(new Font("Arial", 20));
+		lastName.setFont(new Font("Arial", 20));
+		references.setFont(new Font("Arial", 20));
+
+		// Button design
+		conButton.setStyle("-fx-font-size: 2em;");
+		quitButton.setStyle("-fx-font-size: 1.5em;");
+
+		// Con button action
+		conButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (emailText.getText().isEmpty()) {
+					emailText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} else {
+					emailText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+
+				if (firstNameText.getText().isEmpty()) {
+					firstNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} else {
+					firstNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+
+				if (confFirstNameText.getText().isEmpty()) {
+					confFirstNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} else {
+					confFirstNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+
+				if (middleNameText.getText().isEmpty()) {
+					middleNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} else {
+					middleNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+
+				if (lastNameText.getText().isEmpty()) {
+					lastNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} else {
+					lastNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+				
+				if (referencesText.getText().isEmpty()) {
+					referencesText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} else {
+					referencesText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+
+				if (!emailText.getText().isEmpty() && !firstNameText.getText().isEmpty()
+						&& !confFirstNameText.getText().isEmpty() && !middleNameText.getText().isEmpty()
+						&& !lastNameText.getText().isEmpty() && !referencesText.getText().isEmpty()
+						&& !databaseHelper.doesUserExist(emailText.getText())) {
+					
+					char[] title = emailText.getText().toCharArray();
+					char[] author = firstNameText.getText().toCharArray();
+					char[] abstract1 = confFirstNameText.getText().toCharArray();
+					char[] keywords = middleNameText.getText().toCharArray();
+					char[] body = lastNameText.getText().toCharArray();
+					char[] references = referencesText.getText().toCharArray();
+					
+					try {
+						databaseHelper1.register(title, author, abstract1, keywords, body, references);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+		// Layout setup
+
+		// Top pane for welcome label
+		HBox topPane = new HBox(welcome);
+		topPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+
+		// Middle VBoxs
+		VBox middleOne = new VBox(firstName, middleName, email);
+		VBox.setMargin(firstName, new Insets(50, 20, 20, 40));
+		VBox.setMargin(middleName, new Insets(20, 20, 20, 40));
+		VBox.setMargin(email, new Insets(20, 20, 20, 40));
+
+		VBox middleTwo = new VBox(firstNameText, middleNameText, emailText);
+		VBox.setMargin(firstNameText, new Insets(50, 20, 20, 40));
+		VBox.setMargin(middleNameText, new Insets(20, 20, 20, 40));
+		VBox.setMargin(emailText, new Insets(20, 20, 20, 40));
+
+		VBox middleThree = new VBox(confFirstName, lastName,references);
+		VBox.setMargin(confFirstName, new Insets(50, 20, 20, 40));
+		VBox.setMargin(lastName, new Insets(20, 20, 20, 40));
+		VBox.setMargin(references, new Insets(20, 20, 20, 40));
+
+		VBox middleFour = new VBox(confFirstNameText, lastNameText, referencesText);
+		VBox.setMargin(confFirstNameText, new Insets(50, 20, 20, 40));
+		VBox.setMargin(lastNameText, new Insets(20, 20, 20, 40));
+		VBox.setMargin(referencesText, new Insets(20, 20, 20, 40));
+
+		// Combine VBoxs
+		HBox middlePane = new HBox(middleOne, middleTwo, middleThree, middleFour);
+
+		// Bottom pane for login button
+		HBox bottomPane = new HBox(conButton, quitButton);
+		bottomPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(conButton, new Insets(0, 220, 80, 280));
+		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+
+		// BorderPane layout
+		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
+		adminCreateScreen.setBottom(bottomPane);
+		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+
+		// Set the scene
+		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+		primaryStage.setScene(welcomeScene);
+
+	}
+	
+	public void listArticles(Stage primaryStage) throws Exception {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("List Articles");
+		Label printList = new Label(databaseHelper1.displayArticles());
+
+		Button quitButton = new Button("Quit");
+
+		// Label design
+		welcome.setFont(new Font("Arial", 36));
+		printList.setFont(new Font("Arial", 15));
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+		// Button design
+		quitButton.setStyle("-fx-font-size: 2em;");
+
+		// Top pane for welcome label
+		HBox topPane = new HBox(welcome);
+		topPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+
+		// Top pane for welcome label
+		HBox middlePane = new HBox(printList);
+		middlePane.setAlignment(Pos.CENTER);
+		HBox.setMargin(printList, new Insets(50, 0, 20, 0));
+
+		// Top pane for welcome label
+		HBox bottomPane = new HBox(quitButton);
+		bottomPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(quitButton, new Insets(50, 0, 20, 0));
+
+		// BorderPane stuff
+		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
+		adminCreateScreen.setBottom(bottomPane);
+		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+
+		// Set the scene
+		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+		primaryStage.setScene(welcomeScene);
+
+	}
+
+	public void deleteArticle(Stage primaryStage) {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("Delete an Article");
+		Label username = new Label("Username: ");
+		Label noExist = new Label("Username does not exist");
+
+		TextField usernameText = new TextField();
+
+		Button deletedButton = new Button("Delete");
+		Button quitButton = new Button("Quit");
+
+		// Label design
+		welcome.setFont(new Font("Arial", 36));
+		username.setFont(new Font("Arial", 20));
+
+		noExist.setFont(new Font("Arial", 20));
+		noExist.setStyle("-fx-text-fill: red;");
+		noExist.setVisible(false);
+
+		// Button design
+		quitButton.setStyle("-fx-font-size: 1.5em;");
+		deletedButton.setStyle("-fx-font-size: 2em;");
+
+
+		// Send button action
+		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (usernameText.getText().isEmpty()) {
+					usernameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+					return;
+				} else {
+					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+
+				if (databaseHelper1.doesArticleExist(usernameText.getText().strip())) {
+					noExist.setVisible(false);
+					try {
+						databaseHelper1.deleteArticle(usernameText.getText().strip());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					noExist.setVisible(true);
+
+				}
+			}
+		});
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+
+		// Top pane for welcome label
+		HBox topPane = new HBox(welcome);
+		topPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+
+		// Middle Pane
+		HBox middlePane = new HBox(username, usernameText, noExist);
+		HBox.setMargin(username, new Insets(80, 80, 0, 130));
+		HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
+		HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
+
+		// Bottom pane for login button
+		HBox bottomPane = new HBox(deletedButton, quitButton);
+		bottomPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
+		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+
+		// BorderPane stuff
+		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
+		adminCreateScreen.setBottom(bottomPane);
+		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+
+		// Set the scene
+		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+		primaryStage.setScene(welcomeScene);
+
+	}
+
+	public void backupArticles(Stage primaryStage) {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("Backup Articles");
+		Label username = new Label("File name: ");
+
+		TextField fileNameText = new TextField();
+
+		Button deletedButton = new Button("Backup");
+		Button quitButton = new Button("Quit");
+
+		// Label design
+		welcome.setFont(new Font("Arial", 36));
+		username.setFont(new Font("Arial", 20));
+
+		// Button design
+		quitButton.setStyle("-fx-font-size: 1.5em;");
+		deletedButton.setStyle("-fx-font-size: 2em;");
+
+
+		// Send button action
+		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (fileNameText.getText().isEmpty()) {
+					fileNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+					return;
+				} else {
+					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+					try {
+						databaseHelper1.backup(fileNameText.getText().strip());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		});
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+
+		// Top pane for welcome label
+		HBox topPane = new HBox(welcome);
+		topPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+
+		// Middle Pane
+		HBox middlePane = new HBox(username, fileNameText);
+		HBox.setMargin(username, new Insets(80, 80, 0, 130));
+		HBox.setMargin(fileNameText, new Insets(80, 80, 0, 0));
+
+		// Bottom pane for login button
+		HBox bottomPane = new HBox(deletedButton, quitButton);
+		bottomPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
+		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+
+		// BorderPane stuff
+		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
+		adminCreateScreen.setBottom(bottomPane);
+		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+
+		// Set the scene
+		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+		primaryStage.setScene(welcomeScene);
+
+	}
+
+	public void restoreArticles(Stage primaryStage) {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("Restore Articles");
+		Label username = new Label("File name: ");
+
+		TextField fileNameText = new TextField();
+
+		Button deletedButton = new Button("Restore");
+		Button quitButton = new Button("Quit");
+
+		// Label design
+		welcome.setFont(new Font("Arial", 36));
+		username.setFont(new Font("Arial", 20));
+
+		// Button design
+		quitButton.setStyle("-fx-font-size: 1.5em;");
+		deletedButton.setStyle("-fx-font-size: 2em;");
+
+
+		// Send button action
+		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (fileNameText.getText().isEmpty()) {
+					fileNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+					return;
+				} else {
+					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+					try {
+						databaseHelper1.restore(fileNameText.getText().strip()); //restores articles with old file
+						
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		});
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+
+		// Top pane for welcome label
+		HBox topPane = new HBox(welcome);
+		topPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+
+		// Middle Pane
+		HBox middlePane = new HBox(username, fileNameText);
+		HBox.setMargin(username, new Insets(80, 80, 0, 130));
+		HBox.setMargin(fileNameText, new Insets(80, 80, 0, 0));
+
+		// Bottom pane for login button
+		HBox bottomPane = new HBox(deletedButton, quitButton);
+		bottomPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
+		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+
+		// BorderPane stuff
+		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
+		adminCreateScreen.setBottom(bottomPane);
+		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+
+		// Set the scene
+		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+		primaryStage.setScene(welcomeScene);
+
+	}
+	
 }
