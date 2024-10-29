@@ -40,8 +40,6 @@ public class helpSystemStart extends Application {
 	
 	private static DatabaseHelperUser databaseHelper;
 	private static DatabaseHelperArticle databaseHelper1;
-	private static final Scanner scanner = new Scanner(System.in);
-
 	
 	private Scene loginScene; // To store the initial login scene
 	//private LinkedList linkedList; // Declare LinkedList
@@ -388,7 +386,17 @@ public class helpSystemStart extends Application {
 						&& userNameText.getText().trim().length() >= 6
 						&& userNameText.getText().trim().length() <= 12){
 					
-					//WORK ON THIS
+					boolean check = databaseHelper.doesUserExist(userNameText.getText().strip());
+					
+					if(check) {
+						checkLogin.setVisible(false);
+						System.out.println("FOUND UOU");
+
+						
+					}
+					else {
+						checkLogin.setVisible(true);
+					}
 				}
 
 			}
@@ -1837,7 +1845,7 @@ public class helpSystemStart extends Application {
 							mismatchPassword.setVisible(false);
 							// Save the new password in the system for the user
 							
-							databaseHelper.resetPassword();
+							//databaseHelper.changeUserPassword();
 							
 							// After successful reset, return to the login page
 							login(primaryStage);
