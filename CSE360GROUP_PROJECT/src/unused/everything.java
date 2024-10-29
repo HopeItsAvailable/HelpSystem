@@ -1,4 +1,4 @@
-package helpSystem;
+package unused;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
