@@ -1,7 +1,3 @@
-//EDIT _ COPIED STRAING FROM HOMEWORK
-//EDIT _ COPIED STRAING FROM HOMEWORK
-//EDIT _ COPIED STRAING FROM HOMEWORK
-
 package helpSystem;
 
 import java.sql.*;
@@ -19,7 +15,7 @@ import org.bouncycastle.util.Arrays;
 import Encryption.EncryptionHelper;
 import Encryption.EncryptionUtils;
 
-class DatabaseHelper {
+class DatabaseHelperArticle {
 
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "org.h2.Driver";
@@ -36,10 +32,9 @@ class DatabaseHelper {
 
 	private EncryptionHelper encryptionHelper;
 
-	public DatabaseHelper() throws Exception {
+	public DatabaseHelperArticle() throws Exception {
 		encryptionHelper = new EncryptionHelper();
 	}
-
 	/**
 	 * Connects to the database and creates table of articles.
 	 */
