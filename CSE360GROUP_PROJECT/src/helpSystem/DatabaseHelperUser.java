@@ -171,6 +171,10 @@ class DatabaseHelperUser {
 	        }
 	    }
 	}
+	
+	public void changeUserPassword(String username, String newPassword) {
+		
+	}
 
 
 
