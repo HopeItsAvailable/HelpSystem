@@ -234,7 +234,7 @@ public class helpSystemStart extends Application {
 					String email = userNameText.getText().trim();
 					String password = passwordText.getText().trim();
 					try {
-						databaseHelper.register(email, password, "admin");
+						databaseHelper.registerFirstUser(email, password);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -551,7 +551,7 @@ public class helpSystemStart extends Application {
 					String email = userNameText.getText().trim();
 					String password = passwordText.getText().trim();
 					try {
-						databaseHelper.register(email, password, "user");
+						databaseHelper.registerWithInviteCode(email, password, userCodeText.getText().strip());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -1046,7 +1046,12 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				listUsers(primaryStage);
+				try {
+					listUsers(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1711,10 +1716,9 @@ public class helpSystemStart extends Application {
 				loginButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent event) {
-
-						Node user = linkedList.searchByUsername(userNameText.getText().trim()); //if username exists
+												
 						// Check username length
-						if (user==null) {
+						if (databaseHelper.doesUserExist(userNameText.getText().strip())) {
 							invUserName.setVisible(true);
 						} else {
 							invUserName.setVisible(false);
@@ -1730,14 +1734,9 @@ public class helpSystemStart extends Application {
 						} else {
 							password.setVisible(true); // OTP is invalid
 						}
-
-						// Proceed if all conditions are met
-						System.out.println("herereset");
-						System.out.println(validPassword);
-						System.out.println(user.toString());
 						
 						
-						if (validPassword&& user!=null) {
+						if (validPassword&& databaseHelper.doesUserExist(userNameText.getText().strip())) {
 							System.out.println("here2");
 							// ADD USER TO LIST
 							resetPasswordPage(primaryStage, userNameText.getText().trim()); //enter only if the OTP is corrent
@@ -1838,7 +1837,7 @@ public class helpSystemStart extends Application {
 							mismatchPassword.setVisible(false);
 							// Save the new password in the system for the user
 							
-							linkedList.changeUserPassword(username, newPasswordText.getText());
+							databaseHelper.resetPassword();
 							
 							// After successful reset, return to the login page
 							login(primaryStage);
