@@ -150,13 +150,13 @@ class DatabaseHelperArticle {
 	                   .append(", References: ").append(references)
 	                   .append("\nBody: ").append(encryptedBody).append("\n\n");
 			
-			Arrays.fill(decryptedBody, '0');
-			
 		} 
 		
 		return allArticles.toString();
 
 	}
+	
+	
 	
 	public void deleteArticle(String title) throws SQLException {
 		if(doesArticleExist(title)) {
