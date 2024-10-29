@@ -52,7 +52,8 @@ class DatabaseHelperArticle {
 				+ "paper_abstract VARCHAR(255),"
 				+ "keywords VARCHAR(255),"
 				+ "body VARCHAR(255),"
-				+ "references VARCHAR(255))";
+				+ "references VARCHAR(255))"
+				+ "level VARCHAR(255),";
 		statement.execute(userTable);
 	}
 
@@ -67,7 +68,7 @@ class DatabaseHelperArticle {
 		return true;
 	}
 
-	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references) throws Exception {
+	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level) throws Exception {
 		
 		//Convert char to strings
 		String titleStr = new String(title);
@@ -76,6 +77,8 @@ class DatabaseHelperArticle {
 	    String keywordsStr = new String(keywords);
 	    String bodyStr = new String(body);
 	    String referencesStr = new String(references);
+	    String levelStr = new String(level);
+
 		
 	    //encrypts body 
 		String encryptedBody = Base64.getEncoder().encodeToString(
@@ -90,6 +93,7 @@ class DatabaseHelperArticle {
 			pstmt.setString(4, keywordsStr);
 			pstmt.setString(5, encryptedBody);
 			pstmt.setString(6, referencesStr);
+			pstmt.setString(6, levelStr);
 			pstmt.executeUpdate();
 		}
 	}

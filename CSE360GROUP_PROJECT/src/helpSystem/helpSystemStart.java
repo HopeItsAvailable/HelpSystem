@@ -1942,6 +1942,7 @@ public class helpSystemStart extends Application {
 		Label middleName = new Label("Set of keywords: ");
 		Label lastName = new Label("Body of the article: ");
 		Label references = new Label("References: ");
+		Label level = new Label("Level");
 
 		TextField emailText = new TextField();
 		TextField firstNameText = new TextField();
@@ -1952,6 +1953,14 @@ public class helpSystemStart extends Application {
 
 		Button conButton = new Button("Confirm");
 		Button quitButton = new Button("Quit");
+		
+		ChoiceBox<String> getLevel = new ChoiceBox<>();
+
+		getLevel.getItems().add("Beginner");
+		getLevel.getItems().add("Intermediate");
+		getLevel.getItems().add("Advanced");
+		getLevel.getItems().add("Expert");
+
 
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
@@ -1961,6 +1970,7 @@ public class helpSystemStart extends Application {
 		middleName.setFont(new Font("Arial", 20));
 		lastName.setFont(new Font("Arial", 20));
 		references.setFont(new Font("Arial", 20));
+		level.setFont(new Font("Arial", 20));
 
 		// Button design
 		conButton.setStyle("-fx-font-size: 2em;");
@@ -2017,9 +2027,10 @@ public class helpSystemStart extends Application {
 					char[] keywords = middleNameText.getText().toCharArray();
 					char[] body = lastNameText.getText().toCharArray();
 					char[] references = referencesText.getText().toCharArray();
+					char[] level = referencesText.getText().toCharArray();
 					
 					try {
-						databaseHelper1.register(title, author, abstract1, keywords, body, references);
+						databaseHelper1.register(title, author, abstract1, keywords, body, references,level);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2049,15 +2060,18 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
 		// Middle VBoxs
-		VBox middleOne = new VBox(firstName, middleName, email);
+		VBox middleOne = new VBox(firstName, middleName, email, level);
 		VBox.setMargin(firstName, new Insets(50, 20, 20, 40));
 		VBox.setMargin(middleName, new Insets(20, 20, 20, 40));
 		VBox.setMargin(email, new Insets(20, 20, 20, 40));
+		VBox.setMargin(level, new Insets(20, 20, 20, 40));
 
-		VBox middleTwo = new VBox(firstNameText, middleNameText, emailText);
+
+		VBox middleTwo = new VBox(firstNameText, middleNameText, emailText,getLevel);
 		VBox.setMargin(firstNameText, new Insets(50, 20, 20, 40));
 		VBox.setMargin(middleNameText, new Insets(20, 20, 20, 40));
 		VBox.setMargin(emailText, new Insets(20, 20, 20, 40));
+		VBox.setMargin(getLevel, new Insets(20, 20, 20, 40));
 
 		VBox middleThree = new VBox(confFirstName, lastName,references);
 		VBox.setMargin(confFirstName, new Insets(50, 20, 20, 40));
