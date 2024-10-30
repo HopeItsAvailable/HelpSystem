@@ -227,21 +227,21 @@ class DatabaseHelperUser {
 	}
 	
 	public boolean doesUserExist(String username) {
-	    String query = "SELECT COUNT(*) FROM cse360users WHERE username = ?";
+	    String query = "SELECT 1 FROM cse360users WHERE username = ? LIMIT 1"; // Limit to 1 to check for existence
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        
 	        pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
 	        
-	        if (rs.next()) {
-	            // If the count is greater than 0, the user exists
-	            return rs.getInt(1) > 0;
-	        }
+	        // If we get any result, the user exists
+	        return rs.next(); 
+	        
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	    return false; // If an error occurs, assume user doesn't exist
 	}
+
 
 	public String displayUsersByAdmin() throws Exception{
 		String sql = "SELECT * FROM cse360users"; 

@@ -388,6 +388,7 @@ public class helpSystemStart extends Application {
 					
 					boolean check = databaseHelper.doesUserExist(userNameText.getText().strip());
 					boolean [] roles = new boolean[3];
+					System.out.println("Logging in with username: " + userNameText.getText().strip());
 					
 					if(check) {
 						checkLogin.setVisible(false);
