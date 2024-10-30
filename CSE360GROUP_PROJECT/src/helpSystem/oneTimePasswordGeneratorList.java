@@ -42,6 +42,7 @@ public class oneTimePasswordGeneratorList {
     public boolean getFlag(String code) { //check if a code is one-time
     	return this.oneTime;
     }
+    
 
     //check if the password is still valid.
     public boolean validatePassword(String code) {
@@ -85,6 +86,17 @@ public class oneTimePasswordGeneratorList {
         }
         return null; 
     }
+    
+    public String[] getRolesFromOTP(String code) {
+    	oneTimePasswordGenerator current = head; // Assuming head is the start of your linked list
+	    while (current != null) {
+	        if (current.getCode().equals(code) && current.getExpirationTime() > System.currentTimeMillis()) {
+	            return current.getRoles(); // Return the roles if OTP is valid
+	        }
+	        current = current.next; // Move to the next node
+	    }
+	    return null; // Return null if the OTP is invalid or expired
+	}
 
     
     private void removePassword(oneTimePasswordGenerator previous, oneTimePasswordGenerator current) {

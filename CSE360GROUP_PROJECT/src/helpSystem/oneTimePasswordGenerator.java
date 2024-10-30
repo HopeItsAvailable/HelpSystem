@@ -14,6 +14,7 @@ public class oneTimePasswordGenerator { //linkedList for OTP's
         this.roles = roles;
         this.expirationTime = expirationTime;
         this.next = null;
+        
     }
 
     //used by the admin when they are going to send a reset password code to users
@@ -22,4 +23,15 @@ public class oneTimePasswordGenerator { //linkedList for OTP's
         this.expirationTime = expirationTime;
         this.next = null;
 	}
+	
+	 public String [] getRoles() {
+		 return this.roles;
+	}
+	 
+	 public String getCode() {
+		 return this.code;
+	 }
+	 public long getExpirationTime() {
+		 return this.expirationTime;
+	 }
 }

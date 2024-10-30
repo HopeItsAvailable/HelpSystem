@@ -132,50 +132,40 @@ class DatabaseHelperUser {
 	        }
 	    }
 	}
+	
+	
 
 	// Method to register users after the admin with an invite code
-	public void registerWithInviteCode(String email, String password, String inviteCode) throws Exception {
-	    // Check if table already has users
-	    String countQuery = "SELECT COUNT(*) FROM cse360users";
-	    try (Statement stmt = connection.createStatement();
-	         ResultSet rs = stmt.executeQuery(countQuery)) {
-	        
-	        rs.next();
-	        int userCount = rs.getInt(1);
+	public void registerWithInviteCode(String email, String password, String[] roles) throws Exception {
+	    // Encrypt password
+	    String encryptedPassword = Base64.getEncoder().encodeToString(
+	        encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
+	    );
 
-	        // If no users exist, throw an error (admin should be created first)
-	        if (userCount == 0) {
-	            throw new Exception("No admin user found. Admin must register first.");
-	        } else {
-	            // Validate invite code
-	            if (!validateInviteCode(inviteCode)) {
-	                throw new Exception("Invalid invite code.");
-	            }
+	    // Insert user into the database
+	    String insertUser = "INSERT INTO cse360users (email, password) VALUES (?, ?)";
 
-	            // Assign default role (e.g., 'student') or a role based on the invite code
-	            String role = "student"; // Modify this if your invite code specifies roles
+	    try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+	        pstmt.setString(1, email);
+	        pstmt.setString(2, encryptedPassword);
+	        pstmt.executeUpdate(); // Execute the insert statement
+	    }
 
-	            // Encrypt password
-	            String encryptedPassword = Base64.getEncoder().encodeToString(
-	                encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
-	            );
-
-	            // Insert user into the database
-	            String insertUser = "INSERT INTO cse360users (email, password, role) VALUES (?, ?, ?)";
-	            try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-	                pstmt.setString(1, email);
-	                pstmt.setString(2, encryptedPassword);
-	                pstmt.setString(3, role);
-	                pstmt.executeUpdate();
-	            }
+	    // Insert roles for the user
+	    String insertRole = "UPDATE cse360users SET role = ? WHERE email = ?";
+	    for (String role : roles) {
+	        try (PreparedStatement pstmt = connection.prepareStatement(insertRole)) {
+	            pstmt.setString(1, role);
+	            pstmt.setString(2, email);
+	            pstmt.executeUpdate(); // Update user role in the database
 	        }
 	    }
 	}
+
 	
 	public void changeUserPassword(String username, String newPassword) {
 		
 	}
-
 
 
 	public boolean login(String email, String password, String role) throws Exception {
@@ -275,5 +265,7 @@ class DatabaseHelperUser {
 			se.printStackTrace(); 
 		} 
 	}
+
+	
 
 }

@@ -550,13 +550,21 @@ public class helpSystemStart extends Application {
 
 					String email = userNameText.getText().trim();
 					String password = passwordText.getText().trim();
-					try {
-						databaseHelper.registerWithInviteCode(email, password, userCodeText.getText().strip());
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
+				    String userCode = userCodeText.getText().strip(); // OTP entered by the user
+				    
+				    String[] roles = oneTimePasswordGeneratorList.getRolesFromOTP(userCode);
+
+				    if (roles == null || roles.length == 0) {
+				        System.out.println("Invalid or expired invite code");
+				        return; // Exit if the OTP is invalid
+				    }
+
+				    try {
+				        // Register user with email and password
+				        databaseHelper.registerWithInviteCode(email, password, roles);
+				    } catch (Exception e) {
+				        e.printStackTrace();
+				    }
 
 					login(primaryStage);
 
@@ -1837,7 +1845,7 @@ public class helpSystemStart extends Application {
 							mismatchPassword.setVisible(false);
 							// Save the new password in the system for the user
 							
-							databaseHelper.resetPassword();
+							//databaseHelper.resetPassword();
 							
 							// After successful reset, return to the login page
 							login(primaryStage);
