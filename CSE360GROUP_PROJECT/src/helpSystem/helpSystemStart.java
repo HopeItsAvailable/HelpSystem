@@ -432,7 +432,17 @@ public class helpSystemStart extends Application {
 									}
 								} else if (roleCount > 1) {
 									// Redirect to a page where user can choose their role
-									chooseRole(primaryStage, username);
+									try {
+										try {
+											chooseRole(primaryStage, username);
+										} catch (SQLException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									} catch (Exception e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
 							}
 						}
@@ -885,13 +895,15 @@ public class helpSystemStart extends Application {
 
 	}
 
-	private void chooseRole(Stage primaryStage, String UserName) {
+	private void chooseRole(Stage primaryStage, String UserName) throws SQLException {
 
 		// WORK ON THIS CHECK WHICH ROLES USER IS
+		
+		boolean[] checkRoles = databaseHelper.getUserRoles(UserName);
 
-		boolean isStudent = true;
-		boolean isTeacher = true;
-		boolean isAdmin = true;
+		boolean isStudent = checkRoles[0];
+		boolean isTeacher = checkRoles[1];
+		boolean isAdmin = checkRoles[2];
 
 		// Labels and buttons
 		Label welcome = new Label("Finish Account Setup");
