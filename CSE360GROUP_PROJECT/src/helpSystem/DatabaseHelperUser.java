@@ -1,7 +1,11 @@
 package helpSystem;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.Base64;
+import java.util.Scanner;
 
 import org.bouncycastle.util.Arrays;
 
@@ -388,6 +392,54 @@ class DatabaseHelperUser {
 	    return result.toString();
 	}
 
+	
+	public void backupArticlesToFile(String fileName) throws SQLException, IOException {
+		String query = "SELECT * FROM articles";
+		try (ResultSet rs = statement.executeQuery(query); FileWriter fileWriter = new FileWriter(fileName)) {
+
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String title = rs.getString("title");
+				String authors = rs.getString("authors");
+				String abstractText = rs.getString("abstract");
+				String keywords = rs.getString("keywords");
+				String body = rs.getString("body");
+				String references = rs.getString("references");
+
+				// Writing SQL insert statements into the backup file
+				String sqlInsert = String.format(
+						"INSERT INTO articles (id, title, authors, abstract, keywords, body, references) "
+								+ "VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s');\n",
+						id, title, authors, abstractText, keywords, body, references);
+				fileWriter.write(sqlInsert);
+			}
+			System.out.println("Backup completed successfully to file: " + fileName);
+		} catch (IOException e) {
+			System.out.println("Error writing to file: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Restores articles from a backup file to the database.
+	 * 
+	 * @param fileName The filename which will be used to perform the restoration.
+	 */
+	public void restoreArticlesFromFile(String fileName) throws SQLException, IOException {
+		// Clear current articles
+		String deleteQuery = "DELETE FROM articles";
+		statement.executeUpdate(deleteQuery);
+
+		// Load the backup SQL statements from the file
+		try (Scanner scanner = new Scanner(new FileReader(fileName))) {
+			while (scanner.hasNextLine()) {
+				String sql = scanner.nextLine();
+				statement.executeUpdate(sql);
+			}
+			System.out.println("Restore completed successfully from file: " + fileName);
+		} catch (IOException e) {
+			System.out.println("Error reading from file: " + e.getMessage());
+		}
+	}
 	
 	private boolean isTableEmpty() throws SQLException {
 	    String countQuery = "SELECT COUNT(*) FROM cse360users";
