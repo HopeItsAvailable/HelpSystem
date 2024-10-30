@@ -80,18 +80,14 @@ class DatabaseHelperArticle {
 	    String levelStr = new String(level);
 
 		
-	    //encrypts body 
-		String encryptedBody = Base64.getEncoder().encodeToString(
-				encryptionHelper.encrypt(bodyStr.getBytes(), EncryptionUtils.getInitializationVector(titleStr.toCharArray()))
-		);
 		
-		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references) VALUES (?, ?, ?, ?, ?, ?)";
+		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, titleStr);
 			pstmt.setString(2, authorStr);
 			pstmt.setString(3, abstractStr);
 			pstmt.setString(4, keywordsStr);
-			pstmt.setString(5, encryptedBody);
+			pstmt.setString(5, bodyStr);
 			pstmt.setString(6, referencesStr);
 			pstmt.setString(6, levelStr);
 			pstmt.executeUpdate();
@@ -129,26 +125,57 @@ class DatabaseHelperArticle {
 			String author = rs.getString("author");  
 			String paper_abstract = rs.getString("paper_abstract");  
 			String keywords = rs.getString("keywords");  
-			String encryptedBody = rs.getString("body"); 
-			char[] decryptedBody = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									encryptedBody
-							), 
-							EncryptionUtils.getInitializationVector(title.toCharArray())
-					)	
-			);
+			String body = rs.getString("body"); 
 			String references = rs.getString("references");  
+			String level = rs.getString("level");
 
 			//Get string
 			
 	        allArticles.append("Article ID: ").append(id)
 	                   .append(", Title: ").append(title)
-	                   .append(", Author: ").append(author)
-	                   .append(", Abstract: ").append(paper_abstract)
+	                   .append(", Author: ").append(author).append("\n")
+	                   .append("Abstract: ").append(paper_abstract)
 	                   .append(", Keywords: ").append(keywords)
 	                   .append(", References: ").append(references)
-	                   .append("\nBody: ").append(encryptedBody).append("\n\n");
+	                   .append(", Level: ").append(level)
+	                   .append("\nBody: ").append(body).append("\n\n");
+			
+		} 
+		
+		return allArticles.toString();
+
+	}
+	
+	public String displayGroupedArticles(String group) throws Exception{
+		String sql = "SELECT * FROM cse360Articles WHERE level = ?";
+		PreparedStatement stmt = connection.prepareStatement(sql);
+	    stmt.setString(1, group);  // Set the level parameter in the query
+	    
+	    ResultSet rs = stmt.executeQuery(); 
+		
+		StringBuilder allArticles = new StringBuilder();
+
+		while(rs.next()) { 
+			// Retrieve by column name 
+			int id  = rs.getInt("id"); 
+			String  title = rs.getString("title"); 
+			String author = rs.getString("author");  
+			String paper_abstract = rs.getString("paper_abstract");  
+			String keywords = rs.getString("keywords");  
+			String body = rs.getString("body"); 
+			String references = rs.getString("references");  
+			String level = rs.getString("level");
+
+			//Get string
+			
+	        allArticles.append("Article ID: ").append(id)
+	                   .append(", Title: ").append(title)
+	                   .append(", Author: ").append(author).append("\n")
+	                   .append("Abstract: ").append(paper_abstract)
+	                   .append(", Keywords: ").append(keywords)
+	                   .append(", References: ").append(references)
+	                   .append(", Level: ").append(level)
+	                   .append("\nBody: ").append(body).append("\n\n");
 			
 		} 
 		
