@@ -901,9 +901,9 @@ public class helpSystemStart extends Application {
 		
 		boolean[] checkRoles = databaseHelper.getUserRoles(UserName);
 
-		boolean isStudent = checkRoles[0];
-		boolean isTeacher = checkRoles[1];
-		boolean isAdmin = checkRoles[2];
+		boolean isAdmin = checkRoles[0];
+		boolean isStudent = checkRoles[1];
+		boolean isTeacher = checkRoles[2];
 
 		// Labels and buttons
 		Label welcome = new Label("Finish Account Setup");
@@ -1002,10 +1002,10 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
 		// Middle Pane
-		HBox middlePane = new HBox(studentButton, teacherButton, adminButton);
-		HBox.setMargin(studentButton, new Insets(80, 80, 0, 130));
+		HBox middlePane = new HBox(adminButton, studentButton, teacherButton);
+		HBox.setMargin(adminButton, new Insets(80, 80, 0, 130));
+		HBox.setMargin(studentButton, new Insets(80, 80, 0, 0));
 		HBox.setMargin(teacherButton, new Insets(80, 80, 0, 0));
-		HBox.setMargin(adminButton, new Insets(80, 80, 0, 0));
 
 		// Bottom pane for exit
 		HBox bottomPane = new HBox(quitButton);
@@ -1316,9 +1316,9 @@ public class helpSystemStart extends Application {
 		Button sendButton = new Button("Send");
 		Button quitButton = new Button("Quit");
 
+		CheckBox adminAccount = new CheckBox("Admin");
 		CheckBox studentAccount = new CheckBox("Student");
 		CheckBox teacherAccount = new CheckBox("Teacher");
-		CheckBox adminAccount = new CheckBox("Admin");
 
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
@@ -1329,9 +1329,9 @@ public class helpSystemStart extends Application {
 		noClick.setVisible(false);
 
 		// CheckBox design
+		adminAccount.setFont(new Font("Arial", 20));
 		studentAccount.setFont(new Font("Arial", 20));
 		teacherAccount.setFont(new Font("Arial", 20));
-		adminAccount.setFont(new Font("Arial", 20));
 
 		// Button design
 		quitButton.setStyle("-fx-font-size: 1.5em;");
@@ -1354,15 +1354,14 @@ public class helpSystemStart extends Application {
 
 					String[] roles = new String[TOTALNUMBEROFROLES]; // size 3 currently
 
+					if (adminAccount.isSelected()) {
+						roles[0] = "admin";
+					}
 					if (studentAccount.isSelected()) {
-						roles[0] = "Student";
+						roles[1] = "student";
 					}
 					if (teacherAccount.isSelected()) {
-						roles[1] = "instructor";
-					}
-					if (adminAccount.isSelected()) {
-						roles[2] = "Admin";
-
+						roles[2] = "instructor";
 					}
 
 					// Generate the one-time code and expiration time
@@ -1408,10 +1407,10 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(email, new Insets(80, 80, 0, 130));
 		HBox.setMargin(emailText, new Insets(80, 80, 0, 0));
 
-		HBox middleBottomPane = new HBox(studentAccount, teacherAccount, adminAccount, noClick);
-		HBox.setMargin(studentAccount, new Insets(80, 40, 0, 60));
+		HBox middleBottomPane = new HBox(adminAccount, studentAccount, teacherAccount, noClick);
+		HBox.setMargin(adminAccount, new Insets(80, 40, 0, 60));
+		HBox.setMargin(studentAccount, new Insets(80, 40, 0, 0));
 		HBox.setMargin(teacherAccount, new Insets(80, 40, 0, 0));
-		HBox.setMargin(adminAccount, new Insets(80, 40, 0, 0));
 		HBox.setMargin(noClick, new Insets(80, 0, 0, 0));
 
 		VBox middlePane = new VBox(middleTopPane, middleBottomPane);
