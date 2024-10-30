@@ -53,7 +53,9 @@ class DatabaseHelperUser {
 	            + "lastName VARCHAR(50), "       // Last name, must not be null
 	            + "preferredFirstName VARCHAR(50), "      // Preferred first name, optional
 	            + "isAdmin BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is an admin
-	            + "isStudent BOOLEAN DEFAULT FALSE)";  // Boolean indicating if the user is a student
+	            + "isStudent BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is a student
+	            + "isInstructor BOOLEAN DEFAULT FALSE)";
+	           
 	    statement.execute(userTable);
 	}
 	
