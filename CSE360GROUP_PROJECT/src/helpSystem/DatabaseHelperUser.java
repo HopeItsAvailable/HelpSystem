@@ -139,30 +139,50 @@ class DatabaseHelperUser {
 
 	// Method to register users after the admin with an invite code
 	public void registerWithInviteCode(String email, String password, String[] roles) throws Exception {
-	    // Encrypt password
-	    String encryptedPassword = Base64.getEncoder().encodeToString(
-	        encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
-	    );
+	    // Check if table already has users
+	    String countQuery = "SELECT COUNT(*) FROM cse360users";
+	    try (Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(countQuery)) {
 
-	    // Insert user into the database
-	    String insertUser = "INSERT INTO cse360users (email, password) VALUES (?, ?)";
+	        rs.next();
+	        int userCount = rs.getInt(1);
 
-	    try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-	        pstmt.setString(1, email);
-	        pstmt.setString(2, encryptedPassword);
-	        pstmt.executeUpdate(); // Execute the insert statement
-	    }
+	        // Encrypt password
+	        String encryptedPassword = Base64.getEncoder().encodeToString(
+	            encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
+	        );
 
-	    // Insert roles for the user
-	    String insertRole = "UPDATE cse360users SET role = ? WHERE email = ?";
-	    for (String role : roles) {
-	        try (PreparedStatement pstmt = connection.prepareStatement(insertRole)) {
-	            pstmt.setString(1, role);
-	            pstmt.setString(2, email);
-	            pstmt.executeUpdate(); // Update user role in the database
+	        // Insert user into the database
+	        String insertUser = "INSERT INTO cse360users (email, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
+
+	        try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+	            pstmt.setString(1, email);
+	            pstmt.setString(2, encryptedPassword);
+
+	            // Set the role booleans based on the roles array
+	            boolean isAdmin = false;
+	            boolean isStudent = false;
+	            boolean isInstructor = false;
+
+	            for (String role : roles) {
+	                if (role.equalsIgnoreCase("admin")) {
+	                    isAdmin = true;
+	                } else if (role.equalsIgnoreCase("student")) {
+	                    isStudent = true;
+	                } else if (role.equalsIgnoreCase("instructor")) {
+	                    isInstructor = true;
+	                }
+	            }
+
+	            pstmt.setBoolean(3, isAdmin);
+	            pstmt.setBoolean(4, isStudent);
+	            pstmt.setBoolean(5, isInstructor);
+
+	            pstmt.executeUpdate();
 	        }
 	    }
 	}
+
 
 	
 	public void changeUserPassword(String username, String newPassword) {
