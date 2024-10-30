@@ -252,6 +252,60 @@ class DatabaseHelperArticle {
 		}
 
 	}
+	
+	public boolean mergeData(String backupFileName) throws Exception {
+		
+        backupFileName += ".mv.db"; 
+
+        String backupFilePath = Paths.get(System.getProperty("user.home"), backupFileName).toString();
+        String originalPath = Paths.get(System.getProperty("user.home"), "articleDatabase.mv.db").toString();
+
+        // Check if the backup file exists
+        if (!Files.exists(Paths.get(backupFilePath))) {
+            System.out.println("Backup file not found.");
+            return false;
+        }
+
+        // JDBC URL for the backup database
+        String backupDbUrl = "jdbc:h2:" + backupFilePath.replace(".mv.db", "");
+
+        try (Connection backupConn = DriverManager.getConnection(backupDbUrl, USER, PASS)) {
+            // Fetch all articles from the backup database
+            String queryBackup = "SELECT * FROM cse360Articles";
+            try (Statement stmtBackup = backupConn.createStatement();
+                 ResultSet rsBackup = stmtBackup.executeQuery(queryBackup)) {
+
+                while (rsBackup.next()) {
+                    // Get all fields from the backup article
+                    String title = rsBackup.getString("title");
+                    String author = rsBackup.getString("author");
+                    String paperAbstract = rsBackup.getString("paper_abstract");
+                    String keywords = rsBackup.getString("keywords");
+                    String body = rsBackup.getString("body");
+                    String references = rsBackup.getString("references");
+                    String level = rsBackup.getString("level");
+
+                    // Check if the article with the same title already exists in the original database
+                    if (!doesArticleExist(title)) {
+                        // Insert the record if it doesn't exist
+                        String insertQuery = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
+                        	register(title.toCharArray(), author.toCharArray(), paperAbstract.toCharArray(), 
+                                    keywords.toCharArray(), body.toCharArray(), references.toCharArray(), 
+                                    level.toCharArray());
+                        }
+                    } 
+                }
+            }
+
+            System.out.println("Merge done");
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 	public void closeConnection() {

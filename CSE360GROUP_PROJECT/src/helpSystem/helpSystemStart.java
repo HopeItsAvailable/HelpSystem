@@ -2508,6 +2508,7 @@ public class helpSystemStart extends Application {
 		TextField fileNameText = new TextField();
 
 		Button deletedButton = new Button("Restore");
+		Button mergeButton = new Button("Merge");
 		Button quitButton = new Button("Quit");
 
 		// Label design
@@ -2517,6 +2518,7 @@ public class helpSystemStart extends Application {
 		// Button design
 		quitButton.setStyle("-fx-font-size: 1.5em;");
 		deletedButton.setStyle("-fx-font-size: 2em;");
+		mergeButton.setStyle("-fx-font-size: 2em;");
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -2534,6 +2536,21 @@ public class helpSystemStart extends Application {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
+
+			}
+		});
+		
+		// Send button action
+		mergeButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (fileNameText.getText().isEmpty()) {
+					fileNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+					return;
+				} else {
+					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+					databaseHelper1.mergeData(fileNameText.getText().strip()); // Merge both files
 				}
 
 			}
@@ -2563,9 +2580,10 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(fileNameText, new Insets(80, 80, 0, 0));
 
 		// Bottom pane for login button
-		HBox bottomPane = new HBox(deletedButton, quitButton);
+		HBox bottomPane = new HBox(mergeButton, deletedButton, quitButton);
 		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
+		HBox.setMargin(mergeButton, new Insets(0, 0, 80, 0));
+		HBox.setMargin(deletedButton, new Insets(0, 120, 80, 280));
 		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
 
 		// BorderPane stuff
