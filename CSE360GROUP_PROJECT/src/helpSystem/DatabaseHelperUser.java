@@ -81,41 +81,33 @@ class DatabaseHelperUser {
 	    }
 	}
 	
-	public void updateUserRoles(String username, boolean[] roles) throws Exception {
-	    // Define the SQL update statements for each role
-	    String deleteRoleSql = "UPDATE cse360users SET isAdmin = ?, isStudent = ?, isInstructor = ? WHERE username = ?";
-	    boolean deleteAdmin = false;
-	    boolean deleteStudent = false;
-	    boolean deleteInstructor = false;
-	    	
-	    if(roles[0]==true) {
-	    	deleteAdmin = true;
-	    }
-	    if(roles[1]==true) {
-	    	deleteStudent = true;
-	    }
-	    if(roles[2]==true) {
-	    	deleteInstructor = true;
-	    }
+	public void removeAdminRole(String username) throws Exception {
+	    String updateAdminSql = "UPDATE cse360users SET isAdmin = false WHERE username = ?";
 	    
-	    try (PreparedStatement pstmt = connection.prepareStatement(deleteRoleSql)) {
-	        // Set the roles to false if they are to be deleted. MUST PUT IN IF STATEMENTS TO SEE IF THEY WERE ALTERED IN THE FIRST PLACE. 
-	    	//eg, DONT SET ROLES TO TRUE IF THEY NEVER HAD THEM IN THE FIRST PLACE
-	        if(deleteAdmin) {
-	        	pstmt.setBoolean(1, !deleteAdmin); // Remove admin role if true, set to false
-	        }
-	    	if(deleteStudent) {	    		
-	    		pstmt.setBoolean(2, !deleteStudent); // Remove student role if true, set to false
-	    	}
-	    	if(deleteInstructor) {	    		
-	    		pstmt.setBoolean(3, !deleteInstructor); // Remove instructor role if true, set to false
-	    	}
-	        pstmt.setString(4, username);
-
-	        // Execute the update
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateAdminSql)) {
+	        pstmt.setString(1, username);
 	        pstmt.executeUpdate();
 	    }
 	}
+
+	public void removeStudentRole(String username) throws Exception {
+	    String updateStudentSql = "UPDATE cse360users SET isStudent = false WHERE username = ?";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateStudentSql)) {
+	        pstmt.setString(1, username);
+	        pstmt.executeUpdate();
+	    }
+	}
+
+	public void removeInstructorRole(String username) throws Exception {
+	    String updateInstructorSql = "UPDATE cse360users SET isInstructor = false WHERE username = ?";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateInstructorSql)) {
+	        pstmt.setString(1, username);
+	        pstmt.executeUpdate();
+	    }
+	}
+
 
 	public void deleteUser(String username) throws SQLException {
 		if(doesUserExist(username)) {

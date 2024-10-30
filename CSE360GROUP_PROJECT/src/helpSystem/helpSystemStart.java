@@ -1807,22 +1807,20 @@ public class helpSystemStart extends Application {
 				} else {
 					noClick.setVisible(false);
 					
-					if(adminAccount.isSelected()) {
-						roles[0]=true;
-					}
-					if(studentAccount.isSelected()) {
-						roles[1]=true;
-					}
-					if(teacherAccount.isSelected()) {
-						roles[2]=true; 
-					}
-
 					try {
-						databaseHelper.updateUserRoles(userText.getText().strip(), roles);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			            if (adminAccount.isSelected()) {
+			                databaseHelper.removeAdminRole(usernameToDeleteFrom);
+			            }
+			            if (studentAccount.isSelected()) {
+			                databaseHelper.removeStudentRole(usernameToDeleteFrom);
+			            }
+			            if (teacherAccount.isSelected()) {
+			                databaseHelper.removeInstructorRole(usernameToDeleteFrom);
+			            }
+			            // Optionally provide feedback to the admin, e.g., show a success message
+			        } catch (Exception e) {
+			            e.printStackTrace(); // Handle exceptions appropriately
+			        }
 
 				}
 			}
