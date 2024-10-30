@@ -820,7 +820,12 @@ public class helpSystemStart extends Application {
 							}
 						} else if (roleCount > 1) {
 							// Redirect to a page where user can choose their role
-							chooseRole(primaryStage, username);
+							try {
+								chooseRole(primaryStage, username);
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 
