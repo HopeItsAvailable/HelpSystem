@@ -52,10 +52,14 @@ class DatabaseHelperUser {
 	            + "middleName VARCHAR(50), "              // Middle name, optional
 	            + "lastName VARCHAR(50), "       // Last name, must not be null
 	            + "preferredFirstName VARCHAR(50), "      // Preferred first name, optional
+<<<<<<< HEAD
 	            + "isAdmin BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is an admin
 	            + "isStudent BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is a student
 	            + "isInstructor BOOLEAN DEFAULT FALSE"  // Boolean indicating if the user is an instructor
 	            + ")";  
+=======
+	            + "role ENUM('admin', 'student', 'instructor'))";  // Role limited to these values
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
 	    statement.execute(userTable);
 	}
 	
