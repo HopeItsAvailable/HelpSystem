@@ -52,8 +52,7 @@ class DatabaseHelperUser {
 	            + "middleName VARCHAR(50), "              // Middle name, optional
 	            + "lastName VARCHAR(50), "       // Last name, must not be null
 	            + "preferredFirstName VARCHAR(50), "      // Preferred first name, optional
-	            + "role ENUM('admin', 'student', 'instructor')"  // Role limited to these values
-	            + ")";
+	            + "role ENUM('admin', 'student', 'instructor')";  // Role limited to these values
 	    statement.execute(userTable);
 	}
 	
