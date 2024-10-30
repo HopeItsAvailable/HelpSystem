@@ -94,7 +94,7 @@ class DatabaseHelperUser {
 	    if(roles[1]==true) {
 	    	deleteStudent = true;
 	    }
-	    if(roles[3]==true) {
+	    if(roles[2]==true) {
 	    	deleteInstructor = true;
 	    }
 	    
