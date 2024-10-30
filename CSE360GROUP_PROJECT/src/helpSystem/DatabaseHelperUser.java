@@ -319,25 +319,50 @@ class DatabaseHelperUser {
 		return userInfo.toString();
 	}
 	
-	public String displayUsersByUser() throws Exception{
-		String sql = "SELECT * FROM cse360users"; 
-		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery(sql); 
-		
-		StringBuilder userInfo = new StringBuilder();
+	public String getAllUsers() {
+	    String query = "SELECT * FROM cse360users";
+	    StringBuilder result = new StringBuilder();
+	    
+	    try (Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
 
+	        // Append column headers
+	        result.append("ID | Username | Email | Roles\n");
+	        
+	        // Iterate over the result set and append the necessary user info to the string builder
+	        while (rs.next()) {
+	            int id = rs.getInt("id");
+	            String username = rs.getString("username");
+	            String email = rs.getString("email");
 
-		while(rs.next()) { 
-			// Retrieve by column name 
-			int id  = rs.getInt("id"); 
-			String  email = rs.getString("email"); 
-			String role = rs.getString("role");  
+	            // Determine roles based on the boolean values
+	            StringBuilder roles = new StringBuilder();
+	            if (rs.getBoolean("isAdmin")) {
+	                roles.append("Admin");
+	            }
+	            if (rs.getBoolean("isStudent")) {
+	                if (roles.length() > 0) roles.append(", ");
+	                roles.append("Student");
+	            }
+	            if (rs.getBoolean("isInstructor")) {
+	                if (roles.length() > 0) roles.append(", ");
+	                roles.append("Instructor");
+	            }
 
-			userInfo.append("Article ID: ").append(email)
-            .append(", Role: ").append(role).append("\n\n");
-		} 
-		return userInfo.toString();
+	            // Append user info to the string builder
+	            result.append(String.format("%d | %s | %s | %s%n",
+	                    id, username, email, roles.toString()));
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return "Error retrieving users.";
+	    }
+
+	    // Return the final string
+	    return result.toString();
 	}
+
 	
 	private boolean isTableEmpty() throws SQLException {
 	    String countQuery = "SELECT COUNT(*) FROM cse360users";

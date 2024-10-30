@@ -1629,7 +1629,7 @@ public class helpSystemStart extends Application {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Delete a User");
-		Label printList = new Label(databaseHelper.displayUsersByUser());
+		Label printList = new Label(databaseHelper.getAllUsers());
 
 		Button quitButton = new Button("Quit");
 
