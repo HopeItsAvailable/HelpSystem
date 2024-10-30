@@ -54,7 +54,6 @@ class DatabaseHelperUser {
 	            + "preferredFirstName VARCHAR(50), "      // Preferred first name, optional
 	            + "isAdmin BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is an admin
 	            + "isStudent BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is a student
-	            + "isInstructor BOOLEAN DEFAULT FALSE"  // Boolean indicating if the user is an instructor
 	            + ")";  
 	    statement.execute(userTable);
 	}
@@ -127,25 +126,25 @@ class DatabaseHelperUser {
 	    String countQuery = "SELECT COUNT(*) FROM cse360users";
 	    try (Statement stmt = connection.createStatement();
 	         ResultSet rs = stmt.executeQuery(countQuery)) {
-	        
+
 	        rs.next();
 	        int userCount = rs.getInt(1);
 
 	        // If no users exist, register the first user as 'admin'
 	        if (userCount == 0) {
-	            String role = "admin";
-
 	            // Encrypt password
 	            String encryptedPassword = Base64.getEncoder().encodeToString(
 	                encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
 	            );
 
-	            // Insert admin user into the database
-	            String insertUser = "INSERT INTO cse360users (email, password, role) VALUES (?, ?, ?)";
+	            // Insert admin user into the database with the isAdmin role set to true
+	            String insertUser = "INSERT INTO cse360users (email, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
 	            try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 	                pstmt.setString(1, email);
 	                pstmt.setString(2, encryptedPassword);
-	                pstmt.setString(3, role);
+	                pstmt.setBoolean(3, true);  // isAdmin = true for the first user
+	                pstmt.setBoolean(4, false); // isStudent = false
+	                pstmt.setBoolean(5, false); // isInstructor = false
 	                pstmt.executeUpdate();
 	            }
 	        } else {
@@ -153,11 +152,12 @@ class DatabaseHelperUser {
 	        }
 	    }
 	}
+
 	
 	
 
 	// Method to register users after the admin with an invite code
-	public void registerWithInviteCode(String email, String password, String[] roles) throws Exception {
+	public void registerWithInviteCode(String username, String password, String[] roles) throws Exception {
 	    // Check if table already has users
 	    String countQuery = "SELECT COUNT(*) FROM cse360users";
 	    try (Statement stmt = connection.createStatement();
@@ -168,14 +168,14 @@ class DatabaseHelperUser {
 
 	        // Encrypt password
 	        String encryptedPassword = Base64.getEncoder().encodeToString(
-	            encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
+	            encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(username.toCharArray()))
 	        );
 
 	        // Insert user into the database
-	        String insertUser = "INSERT INTO cse360users (email, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
+	        String insertUser = "INSERT INTO cse360users (username, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
 
 	        try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-	            pstmt.setString(1, email);
+	            pstmt.setString(1, username);
 	            pstmt.setString(2, encryptedPassword);
 
 	            // Set the role booleans based on the roles array
@@ -209,14 +209,14 @@ class DatabaseHelperUser {
 	}
 
 
-	public boolean login(String email, String password, String role) throws Exception {
+	public boolean login(String username, String password, String role) throws Exception {
 		String encryptedPassword = Base64.getEncoder().encodeToString(
-				encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
+				encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(username.toCharArray()))
 		);	
 		
-		String query = "SELECT * FROM cse360users WHERE email = ? AND password = ? AND role = ?";
+		String query = "SELECT * FROM cse360users WHERE username = ? AND password = ? AND role = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-			pstmt.setString(1, email);
+			pstmt.setString(1, username);
 			pstmt.setString(2, encryptedPassword);
 			pstmt.setString(3, role);
 			try (ResultSet rs = pstmt.executeQuery()) {
@@ -225,11 +225,11 @@ class DatabaseHelperUser {
 		}
 	}
 	
-	public boolean doesUserExist(String email) {
-	    String query = "SELECT COUNT(*) FROM cse360users WHERE email = ?";
+	public boolean doesUserExist(String username) {
+	    String query = "SELECT COUNT(*) FROM cse360users WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        
-	        pstmt.setString(1, email);
+	        pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
 	        
 	        if (rs.next()) {

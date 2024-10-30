@@ -229,10 +229,10 @@ public class helpSystemStart extends Application {
 						&& userNameText.getText().trim().length() >= 6
 						&& userNameText.getText().trim().length() <= 12) {
 
-					String email = userNameText.getText().trim();
+					String username = userNameText.getText().trim();
 					String password = passwordText.getText().trim();
 					try {
-						databaseHelper.registerFirstUser(email, password);
+						databaseHelper.registerFirstUser(username, password);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -394,9 +394,9 @@ public class helpSystemStart extends Application {
 						
 						System.out.println("FOUND UOU");
 						
-						String email = userNameText.getText().strip();
+						String username = userNameText.getText().strip();
 					    try {
-							roles = databaseHelper.getUserRoles(email);
+							roles = databaseHelper.getUserRoles(username);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -425,7 +425,7 @@ public class helpSystemStart extends Application {
 					            }
 					        } else if (roleCount > 1) {
 					            // Redirect to a page where user can choose their role
-					            chooseRole(primaryStage, email);
+					            chooseRole(primaryStage, username);
 					        }
 					    }
 
@@ -593,7 +593,7 @@ public class helpSystemStart extends Application {
 
 					// ADD USER TO LIST
 
-					String email = userNameText.getText().trim();
+					String username = userNameText.getText().trim();
 					String password = passwordText.getText().trim();
 				    String userCode = userCodeText.getText().strip(); // OTP entered by the user
 				    
@@ -606,7 +606,7 @@ public class helpSystemStart extends Application {
 
 				    try {
 				        // Register user with email and password
-				        databaseHelper.registerWithInviteCode(email, password, roles);
+				        databaseHelper.registerWithInviteCode(username, password, roles);
 				    } catch (Exception e) {
 				        e.printStackTrace();
 				    }
