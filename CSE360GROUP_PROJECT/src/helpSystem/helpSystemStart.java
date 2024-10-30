@@ -390,6 +390,7 @@ public class helpSystemStart extends Application {
 					
 					if(check) {
 						checkLogin.setVisible(false);
+						
 						System.out.println("FOUND UOU");
 
 						

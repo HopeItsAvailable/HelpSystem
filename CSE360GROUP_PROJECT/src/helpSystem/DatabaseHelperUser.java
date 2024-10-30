@@ -52,7 +52,10 @@ class DatabaseHelperUser {
 	            + "middleName VARCHAR(50), "              // Middle name, optional
 	            + "lastName VARCHAR(50), "       // Last name, must not be null
 	            + "preferredFirstName VARCHAR(50), "      // Preferred first name, optional
-	            + "role ENUM('admin', 'student', 'instructor')";  // Role limited to these values
+	            + "isAdmin BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is an admin
+	            + "isStudent BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is a student
+	            + "isInstructor BOOLEAN DEFAULT FALSE"  // Boolean indicating if the user is an instructor
+	            + ")";  
 	    statement.execute(userTable);
 	}
 	
