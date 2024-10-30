@@ -80,9 +80,6 @@ class DatabaseHelperUser {
 	        }
 	    }
 	}
-
-	
-<<<<<<< HEAD
 	
 	public void updateUserRoles(String username, boolean[] roles) throws Exception {
 	    // Define the SQL update statements for each role
@@ -121,8 +118,6 @@ class DatabaseHelperUser {
 	}
 
 	
-=======
->>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
 	public void deleteUser(String username) throws SQLException {
 		if(doesUserExist(username)) {
 			
