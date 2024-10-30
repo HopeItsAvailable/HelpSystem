@@ -94,7 +94,7 @@ class DatabaseHelperUser {
 	    if(roles[1]==true) {
 	    	deleteStudent = true;
 	    }
-	    if(roles[3]==true) {
+	    if(roles[2]==true) {
 	    	deleteInstructor = true;
 	    }
 	    
@@ -214,48 +214,38 @@ class DatabaseHelperUser {
 	
 	// Method to register users after the admin with an invite code
 	public void registerWithInviteCode(String username, String password, String[] roles) throws Exception {
-	    // Check if table already has users
-	    String countQuery = "SELECT COUNT(*) FROM cse360users";
-	    try (Statement stmt = connection.createStatement();
-	         ResultSet rs = stmt.executeQuery(countQuery)) {
-
-	        rs.next();
-	        int userCount = rs.getInt(1);
-
-	        // Encrypt password
-	        String encryptedPassword = Base64.getEncoder().encodeToString(
-	            encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(username.toCharArray()))
-	        );
-
-	        // Insert user into the database
-	        String insertUser = "INSERT INTO cse360users (username, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
-
-	        try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-	            pstmt.setString(1, username);
-	            pstmt.setString(2, encryptedPassword);
-
-	            // Set the role booleans based on the roles array
-	            boolean isAdmin = false;
-	            boolean isStudent = false;
-	            boolean isInstructor = false;
-
-	            for (String role : roles) {
-	                if (role.equalsIgnoreCase("admin")) {
-	                    isAdmin = true;
-	                } else if (role.equalsIgnoreCase("student")) {
-	                    isStudent = true;
-	                } else if (role.equalsIgnoreCase("instructor")) {
-	                    isInstructor = true;
-	                }
-	            }
-
-	            pstmt.setBoolean(3, isAdmin);
-	            pstmt.setBoolean(4, isStudent);
-	            pstmt.setBoolean(5, isInstructor);
-
-	            pstmt.executeUpdate();
-	        }
-	    }
+		// Check if table already has users
+		String countQuery = "SELECT COUNT(*) FROM cse360users";
+		try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(countQuery)) {
+			rs.next();
+			int userCount = rs.getInt(1);
+			// Encrypt password
+			String encryptedPassword = Base64.getEncoder().encodeToString(encryptionHelper.encrypt(password.getBytes(),
+					EncryptionUtils.getInitializationVector(username.toCharArray())));
+			// Insert user into the database
+			String insertUser = "INSERT INTO cse360users (username, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
+			try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
+				pstmt.setString(1, username);
+				pstmt.setString(2, encryptedPassword);
+				// Set the role booleans based on the roles array
+				boolean isAdmin = false;
+				boolean isStudent = false;
+				boolean isInstructor = false;
+				if (roles[0] == "admin") {
+					isAdmin = true;
+				}
+				if (roles[1] == "student") {
+					isStudent = true;
+				}
+				if (roles[2] == "instructor") {
+					isInstructor = true;
+				}
+				pstmt.setBoolean(3, isAdmin);
+				pstmt.setBoolean(4, isStudent);
+				pstmt.setBoolean(5, isInstructor);
+				pstmt.executeUpdate();
+			}
+		}
 	}
 
 	public void printAllUsers() {
