@@ -59,10 +59,10 @@ class DatabaseHelperUser {
 	    statement.execute(userTable);
 	}
 	
-	public boolean[] getUserRoles(String email) throws SQLException {
-	    String query = "SELECT isAdmin, isStudent, isInstructor FROM cse360users WHERE email = ?";
+	public boolean[] getUserRoles(String username) throws SQLException {
+	    String query = "SELECT isAdmin, isStudent, isInstructor FROM cse360users WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-	        pstmt.setString(1, email);
+	        pstmt.setString(1, username);
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            if (rs.next()) {
 	                boolean[] roles = new boolean[3];
@@ -122,7 +122,7 @@ class DatabaseHelperUser {
 //	}
 	
 	// Method to register the first user (admin) without an invite code
-	public void registerFirstUser(String email, String password) throws Exception {
+	public void registerFirstUser(String username, String password) throws Exception {
 	    // Check if table is empty
 	    String countQuery = "SELECT COUNT(*) FROM cse360users";
 	    try (Statement stmt = connection.createStatement();
@@ -135,13 +135,13 @@ class DatabaseHelperUser {
 	        if (userCount == 0) {
 	            // Encrypt password
 	            String encryptedPassword = Base64.getEncoder().encodeToString(
-	                encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(email.toCharArray()))
+	                encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(username.toCharArray()))
 	            );
 
 	            // Insert admin user into the database with the isAdmin role set to true
-	            String insertUser = "INSERT INTO cse360users (email, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
+	            String insertUser = "INSERT INTO cse360users (username, password, isAdmin, isStudent, isInstructor) VALUES (?, ?, ?, ?, ?)";
 	            try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
-	                pstmt.setString(1, email);
+	                pstmt.setString(1, username);
 	                pstmt.setString(2, encryptedPassword);
 	                pstmt.setBoolean(3, true);  // isAdmin = true for the first user
 	                pstmt.setBoolean(4, false); // isStudent = false
@@ -154,9 +154,25 @@ class DatabaseHelperUser {
 	    }
 	}
 
-	
-	
+	public boolean isEmailEmpty(String username) {
+	    String query = "SELECT email FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                String email = rs.getString("email");
+	                if(email == null || email.trim().isEmpty()) {
+	                	return false;
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return true;  // Default return true if no user is found
+	}
 
+	
 	// Method to register users after the admin with an invite code
 	public void registerWithInviteCode(String username, String password, String[] roles) throws Exception {
 	    // Check if table already has users
@@ -203,6 +219,39 @@ class DatabaseHelperUser {
 	    }
 	}
 
+	public void printAllUsers() {
+	    String query = "SELECT * FROM cse360users";
+	    
+	    try (Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
+
+	        // Print column headers
+	        System.out.println("ID | Username | Password | Email | First Name | Middle Name | Last Name | Preferred First Name | Is Admin | Is Student | Is Instructor");
+	        
+	        // Iterate over the result set and print each user
+	        while (rs.next()) {
+	            int id = rs.getInt("id");
+	            String username = rs.getString("username");
+	            String password = rs.getString("password");
+	            String email = rs.getString("email");
+	            String firstName = rs.getString("firstName");
+	            String middleName = rs.getString("middleName");
+	            String lastName = rs.getString("lastName");
+	            String preferredFirstName = rs.getString("preferredFirstName");
+	            boolean isAdmin = rs.getBoolean("isAdmin");
+	            boolean isStudent = rs.getBoolean("isStudent");
+	            boolean isInstructor = rs.getBoolean("isInstructor");
+
+	            // Print user info
+	            System.out.printf("%d | %s | %s | %s | %s | %s | %s | %s | %b | %b | %b%n",
+	                    id, username, password, email, firstName, middleName, lastName, preferredFirstName, isAdmin, isStudent, isInstructor);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 
 	
 	public void changeUserPassword(String username, String newPassword) {
@@ -227,20 +276,27 @@ class DatabaseHelperUser {
 	}
 	
 	public boolean doesUserExist(String username) {
-	    String query = "SELECT 1 FROM cse360users WHERE username = ? LIMIT 1"; // Limit to 1 to check for existence
+	    String query = "SELECT 1 FROM cse360users WHERE username = ? LIMIT 1"; // Check for existence
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-	        
+
 	        pstmt.setString(1, username);
+	        System.out.println("Executing query: " + pstmt);  // Log the query with the parameter
+	        
 	        ResultSet rs = pstmt.executeQuery();
 	        
-	        // If we get any result, the user exists
-	        return rs.next(); 
+	        if (rs.next()) {
+	            System.out.println("User found with username: " + username);
+	            return true;  // User exists
+	        } else {
+	            System.out.println("No user found with username: " + username);
+	        }
 	        
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return false; // If an error occurs, assume user doesn't exist
+	    return false;  // If an error occurs or user doesn't exist
 	}
+
 
 
 	public String displayUsersByAdmin() throws Exception{
