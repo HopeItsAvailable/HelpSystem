@@ -85,7 +85,7 @@ class DatabaseHelperUser {
 	public void deleteUser(String username) throws SQLException {
 		if(doesUserExist(username)) {
 			
-			String deleteSQL = "DELETE FROM cse360Articles WHERE email = ?";
+			String deleteSQL = "DELETE FROM cse360users WHERE username = ?";
 		    
 		    try (PreparedStatement pstmt = connection.prepareStatement(deleteSQL)){
 		    	
