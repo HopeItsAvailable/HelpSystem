@@ -35,64 +35,60 @@ import java.util.Scanner;
 import helpSystem.DatabaseHelperUser;
 import helpSystem.DatabaseHelperArticle;
 
-
 public class helpSystemStart extends Application {
-	
+
 	private static DatabaseHelperUser databaseHelper;
 	private static DatabaseHelperArticle databaseHelper1;
-	
+
 	private Scene loginScene; // To store the initial login scene
-	//private LinkedList linkedList; // Declare LinkedList
+	// private LinkedList linkedList; // Declare LinkedList
 	oneTimePasswordGeneratorList oneTimePasswordGeneratorList;
 	int size = 0;
-	
+
 	// checkAdmind
 
 	final public int TOTALNUMBEROFROLES = 3;
 
 	// Save Admin details for now
 
-
 	public static void main(String[] args) {
-		
-		
+
 		launch(args);
 	}
 
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		
+
 		// Initialize the linked list if empty
-	    if (size == 0) {
-	        //linkedList = new LinkedList();
-	        oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is created
-	        size++;
-	    }
-	    
-	    databaseHelper = new DatabaseHelperUser();
+		if (size == 0) {
+			// linkedList = new LinkedList();
+			oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is
+																				// created
+			size++;
+		}
+
+		databaseHelper = new DatabaseHelperUser();
 		databaseHelper1 = new DatabaseHelperArticle();
-		
-		
-	    try {
-	    	databaseHelper.connectToDatabase();
+
+		try {
+			databaseHelper.connectToDatabase();
 			databaseHelper1.connectToDatabase();
-			
+
 			primaryStage.setTitle("Help System");
 
 			// Label
 			Label welcome = new Label("Welcome to our Help System");
 			welcome.setFont(new Font("Montserrat", 45));
-			
-			//Line for header
+
+			// Line for header
 			Line line = new Line(0, 0, 600, 0);
-		    line.setId("lineDetails");
-		    
-		    //Logo
-		    ImageView logoImageView = new ImageView();
-		    logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
-		    logoImageView.setFitWidth(200);
-		    logoImageView.setFitHeight(200);
+			line.setId("lineDetails");
+
+			// Logo
+			ImageView logoImageView = new ImageView();
+			logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
+			logoImageView.setFitWidth(200);
+			logoImageView.setFitHeight(200);
 
 			// Create the login button
 			Button startButton = new Button("Start");
@@ -121,47 +117,47 @@ public class helpSystemStart extends Application {
 					}
 				}
 			});
-			
+
 			// Top Pane (VBox for the welcome label and line)
-		    VBox topPane = new VBox();
-		    topPane.getChildren().addAll(welcome, line);
-		    topPane.setAlignment(Pos.CENTER);
-		    VBox.setMargin(welcome, new Insets(50, 0, 5, 0));
+			VBox topPane = new VBox();
+			topPane.getChildren().addAll(welcome, line);
+			topPane.setAlignment(Pos.CENTER);
+			VBox.setMargin(welcome, new Insets(50, 0, 5, 0));
 
 			// Center Pane (HBox for the logo)
-		    HBox middlePane = new HBox();
-		    middlePane.getChildren().addAll(logoImageView);
-		    middlePane.setAlignment(Pos.CENTER);
+			HBox middlePane = new HBox();
+			middlePane.getChildren().addAll(logoImageView);
+			middlePane.setAlignment(Pos.CENTER);
 
-		    // Bottom Pane (HBox for the Start button)
-		    HBox bottomPane = new HBox(startButton);
-		    bottomPane.setAlignment(Pos.CENTER);
-		    HBox.setMargin(startButton, new Insets(0, 0, 80, 0));
+			// Bottom Pane (HBox for the Start button)
+			HBox bottomPane = new HBox(startButton);
+			bottomPane.setAlignment(Pos.CENTER);
+			HBox.setMargin(startButton, new Insets(0, 0, 80, 0));
 
-		    // Main layout with BorderPane
-		    BorderPane starterScreen = new BorderPane();
-		    starterScreen.setId("startBackground");
-		    starterScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			// Main layout with BorderPane
+			BorderPane starterScreen = new BorderPane();
+			starterScreen.setId("startBackground");
+			starterScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-		    // Set the location of elements in the BorderPane
-		    starterScreen.setTop(topPane);
-		    starterScreen.setCenter(middlePane);
-		    starterScreen.setBottom(bottomPane);
+			// Set the location of elements in the BorderPane
+			starterScreen.setTop(topPane);
+			starterScreen.setCenter(middlePane);
+			starterScreen.setBottom(bottomPane);
 
-		    // Store the initial scene
-		    Scene loginScene = new Scene(starterScreen, 900, 600);
+			// Store the initial scene
+			Scene loginScene = new Scene(starterScreen, 900, 600);
 
-		    // Set the scene and show the stage
-		    primaryStage.setScene(loginScene);
-		    primaryStage.show();
-	    }
-	    
-	    catch (SQLException e) {
+			// Set the scene and show the stage
+			primaryStage.setScene(loginScene);
+			primaryStage.show();
+		}
+
+		catch (SQLException e) {
 
 			System.err.println("Database error: " + e.getMessage());
 			e.printStackTrace();
 		}
-	    
+
 	}
 
 	private void createAdmin(Stage primaryStage) {
@@ -225,8 +221,7 @@ public class helpSystemStart extends Application {
 				}
 
 				// Proceed if all conditions are met
-				if (passwordText.getText().trim().length() >= 6						
-						&& userNameText.getText().trim().length() >= 6
+				if (passwordText.getText().trim().length() >= 6 && userNameText.getText().trim().length() >= 6
 						&& userNameText.getText().trim().length() <= 12) {
 
 					String username = userNameText.getText().trim();
@@ -237,9 +232,9 @@ public class helpSystemStart extends Application {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+
 					login(primaryStage);
-					
+
 				}
 			}
 		});
@@ -256,7 +251,7 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
-		
+
 		// Layout setup
 
 		// Middle VBoxs
@@ -353,14 +348,14 @@ public class helpSystemStart extends Application {
 		quitButton.setStyle("-fx-font-size: 1.5em;");
 		createAccountButton.setStyle("-fx-font-size: 1.5em;");
 		forgotPassword.setStyle("-fx-font-size: 1em;");
-		
+
 		// Create Account button action
 		forgotPassword.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-				public void handle(ActionEvent event) {
-					forgotPassword(primaryStage);
-				}
-			});
+			public void handle(ActionEvent event) {
+				forgotPassword(primaryStage);
+			}
+		});
 
 		// Login button action
 		loginButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -382,59 +377,72 @@ public class helpSystemStart extends Application {
 				}
 
 				// Proceed if all conditions are met
-				if (passwordText.getText().trim().length() >= 6
-						&& userNameText.getText().trim().length() >= 6
-						&& userNameText.getText().trim().length() <= 12){
-					
+				if (passwordText.getText().trim().length() >= 6 && userNameText.getText().trim().length() >= 6
+						&& userNameText.getText().trim().length() <= 12) {
+
 					boolean check = databaseHelper.doesUserExist(userNameText.getText().strip());
-					boolean [] roles = new boolean[3];
+					boolean[] roles = new boolean[3];
 					System.out.println("Logging in with username: " + userNameText.getText().strip());
-					
-					if(check) {
+
+					if (check) {
 						checkLogin.setVisible(false);
-						
+
 						System.out.println("FOUND UOU");
-						
+
 						String username = userNameText.getText().strip();
-					    try {
+						try {
 							roles = databaseHelper.getUserRoles(username);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					    
-					    
-					    if (roles != null) {
-					        int roleCount = 0;
-					        String roleToRedirect = "";
 
-					        if (roles[0]) { roleCount++; roleToRedirect = "Admin"; }
-					        if (roles[1]) { roleCount++; roleToRedirect = "Student"; }
-					        if (roles[2]) { roleCount++; roleToRedirect = "Instructor"; }
+						if (databaseHelper.isEmailEmpty(username) == false) {
+							addAccountInfo(primaryStage, username);
+						} else {
 
-					        if (roleCount == 1) {
-					            // Redirect to the role page directly if only one role exists
-					            if (roleToRedirect.equals("Admin")) {
-					                // Redirect to admin page
-					                adminPage(primaryStage);
-					            } else if (roleToRedirect.equals("Student")) {
-					                // Redirect to student page
-					            	studentPage(primaryStage);
-					            } else if (roleToRedirect.equals("Instructor")) {
-					                // Redirect to instructor page
-					                teacherPage(primaryStage);
-					            }
-					        } else if (roleCount > 1) {
-					            // Redirect to a page where user can choose their role
-					            chooseRole(primaryStage, username);
-					        }
-					    }
+							if (roles != null) {
+								int roleCount = 0;
+								String roleToRedirect = "";
 
-						
+								if (roles[0]) {
+									roleCount++;
+									roleToRedirect = "Admin";
+								}
+								if (roles[1]) {
+									roleCount++;
+									roleToRedirect = "Student";
+								}
+								if (roles[2]) {
+									roleCount++;
+									roleToRedirect = "Instructor";
+								}
+
+								if (roleCount == 1) {
+									// Redirect to the role page directly if only one role exists
+									if (roleToRedirect.equals("Admin")) {
+										// Redirect to admin page
+										adminPage(primaryStage);
+									} else if (roleToRedirect.equals("Student")) {
+										// Redirect to student page
+										studentPage(primaryStage);
+									} else if (roleToRedirect.equals("Instructor")) {
+										// Redirect to instructor page
+										teacherPage(primaryStage);
+									}
+								} else if (roleCount > 1) {
+									// Redirect to a page where user can choose their role
+									chooseRole(primaryStage, username);
+								}
+							}
+						}
+
 					}
+
 					else {
 						checkLogin.setVisible(true);
 					}
+
 				}
 
 			}
@@ -464,7 +472,7 @@ public class helpSystemStart extends Application {
 		// Layout setup
 
 		// Middle VBoxs
-		VBox middleLeftPane = new VBox(userName, password, confPassword,forgotPassword);
+		VBox middleLeftPane = new VBox(userName, password, confPassword, forgotPassword);
 		VBox.setMargin(userName, new Insets(50, 20, 20, 40));
 		VBox.setMargin(password, new Insets(20, 20, 20, 40));
 		VBox.setMargin(confPassword, new Insets(20, 20, 20, 40));
@@ -584,33 +592,31 @@ public class helpSystemStart extends Application {
 				} else {
 					invPassword.setVisible(false);
 				}
-				
-				
+
 				// Proceed if all conditions are met
 				System.out.println("here1");
-				if (passwordText.getText().trim().length() >= 6
-						&& userNameText.getText().trim().length() >= 6 && userNameText.getText().trim().length() <= 12)
-						{
+				if (passwordText.getText().trim().length() >= 6 && userNameText.getText().trim().length() >= 6
+						&& userNameText.getText().trim().length() <= 12) {
 
 					// ADD USER TO LIST
 
 					String username = userNameText.getText().trim();
 					String password = passwordText.getText().trim();
-				    String userCode = userCodeText.getText().strip(); // OTP entered by the user
-				    
-				    String[] roles = oneTimePasswordGeneratorList.getRolesFromOTP(userCode);
+					String userCode = userCodeText.getText().strip(); // OTP entered by the user
 
-				    if (roles == null || roles.length == 0) {
-				        System.out.println("Invalid or expired invite code");
-				        return; // Exit if the OTP is invalid
-				    }
+					String[] roles = oneTimePasswordGeneratorList.getRolesFromOTP(userCode);
 
-				    try {
-				        // Register user with email and password
-				        databaseHelper.registerWithInviteCode(username, password, roles);
-				    } catch (Exception e) {
-				        e.printStackTrace();
-				    }
+					if (roles == null || roles.length == 0) {
+						System.out.println("Invalid or expired invite code");
+						return; // Exit if the OTP is invalid
+					}
+
+					try {
+						// Register user with email and password
+						databaseHelper.registerWithInviteCode(username, password, roles);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 
 					login(primaryStage);
 
@@ -754,7 +760,7 @@ public class helpSystemStart extends Application {
 					// password fields.
 
 					System.out.println(username + "HERE");
-					
+
 					// ADD account info to user and then go to right page
 				}
 			}
@@ -823,8 +829,8 @@ public class helpSystemStart extends Application {
 
 	private void chooseRole(Stage primaryStage, String UserName) {
 
-		//WORK ON THIS CHECK WHICH ROLES USER IS
-		
+		// WORK ON THIS CHECK WHICH ROLES USER IS
+
 		boolean isStudent = true;
 		boolean isTeacher = true;
 		boolean isAdmin = true;
@@ -1054,7 +1060,7 @@ public class helpSystemStart extends Application {
 		Button deleteUserButton = new Button("Delete User Account");
 		Button listUsersButton = new Button("List User Accounts");
 		Button addRoleButton = new Button("Add/Remove Role");
-		
+
 		Button createArticle = new Button("Create Article");
 		Button deleteArticle = new Button("Delete Aritcle");
 		Button listArticles = new Button("List Articles");
@@ -1074,7 +1080,7 @@ public class helpSystemStart extends Application {
 		listUsersButton.setStyle("-fx-font-size: 1.8em;");
 		addRoleButton.setStyle("-fx-font-size: 1.8em;");
 		logoutButton.setStyle("-fx-font-size: 1.8em;");
-		
+
 		createArticle.setStyle("-fx-font-size: 1.8em;");
 		deleteArticle.setStyle("-fx-font-size: 1.8em;");
 		listArticles.setStyle("-fx-font-size: 1.8em;");
@@ -1087,7 +1093,7 @@ public class helpSystemStart extends Application {
 		createArticle.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
+
 				createArticle(primaryStage);
 			}
 		});
@@ -1196,9 +1202,9 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
 		// Middle Pane
-		
-		HBox middleTopTop = new HBox(createArticle,deleteArticle,listArticles,backupArticles,RestoreArticles);
-		
+
+		HBox middleTopTop = new HBox(createArticle, deleteArticle, listArticles, backupArticles, RestoreArticles);
+
 		HBox middleTopPane = new HBox(inviteUserButton, resetUserButton, deleteUserButton);
 		HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 120));
 		HBox.setMargin(resetUserButton, new Insets(50, 50, 80, 0));
@@ -1426,8 +1432,8 @@ public class helpSystemStart extends Application {
 					// Generate the one-time code and expiration time
 					String code = generateOneTimeCode();
 					long expirationTime = System.currentTimeMillis() + (24 * 60 * 60 * 1000); // Valid for 24 hours from
-																							  // now
-					oneTimePasswordGeneratorList.addPasswordForReset(code, expirationTime); //code added into list
+																								// now
+					oneTimePasswordGeneratorList.addPasswordForReset(code, expirationTime); // code added into list
 
 					Alert alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("Sent Code");
@@ -1718,25 +1724,22 @@ public class helpSystemStart extends Application {
 		removeButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
+
 				if (userText.getText().isEmpty()) {
 					userText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
 				} else {
 					userText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
-		        String usernameToDeleteFrom = userText.getText();
+				String usernameToDeleteFrom = userText.getText();
 
 				if (!studentAccount.isSelected() && !teacherAccount.isSelected() && !adminAccount.isSelected()) {
 					noClick.setVisible(true);
 				} else {
 					noClick.setVisible(false);
-					
+
 					databaseHelper.doesUserExist(userText.getText().strip());
-					
-					 if (user != null) {
-			                
-			                
-			               
+
+					if (user != null) {
 
 						Alert alert = new Alert(AlertType.CONFIRMATION);
 						alert.setTitle("Roles Changed");
@@ -1798,9 +1801,9 @@ public class helpSystemStart extends Application {
 		primaryStage.setScene(welcomeScene);
 
 	}
-	
+
 	public void forgotPassword(Stage primaryStage) {
-		
+
 		// Labels and buttons
 		Label welcome = new Label("Reset Password");
 		Label userName = new Label("Enter Username: ");
@@ -1832,40 +1835,38 @@ public class helpSystemStart extends Application {
 		loginButton.setStyle("-fx-font-size: 2em;");
 		quitButton.setStyle("-fx-font-size: 1.5em;");
 
-
 		// Login button action
-				loginButton.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent event) {
-												
-						// Check username length
-						if (databaseHelper.doesUserExist(userNameText.getText().strip())) {
-							invUserName.setVisible(true);
-						} else {
-							invUserName.setVisible(false);
-						}
+		loginButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
 
-						// holds whether the password is valid
-						String otpCode = passwordText.getText().trim();
-						boolean validPassword = oneTimePasswordGeneratorList.validatePassword(otpCode);
-						System.out.println(validPassword);
+				// Check username length
+				if (databaseHelper.doesUserExist(userNameText.getText().strip())) {
+					invUserName.setVisible(true);
+				} else {
+					invUserName.setVisible(false);
+				}
 
-						if (validPassword==true) {
-							password.setVisible(false); // valid
-						} else {
-							password.setVisible(true); // OTP is invalid
-						}
-						
-						
-						if (validPassword&& databaseHelper.doesUserExist(userNameText.getText().strip())) {
-							System.out.println("here2");
-							// ADD USER TO LIST
-							resetPasswordPage(primaryStage, userNameText.getText().trim()); //enter only if the OTP is corrent
-						}
-						
-					}
-				});
-		
+				// holds whether the password is valid
+				String otpCode = passwordText.getText().trim();
+				boolean validPassword = oneTimePasswordGeneratorList.validatePassword(otpCode);
+				System.out.println(validPassword);
+
+				if (validPassword == true) {
+					password.setVisible(false); // valid
+				} else {
+					password.setVisible(true); // OTP is invalid
+				}
+
+				if (validPassword && databaseHelper.doesUserExist(userNameText.getText().strip())) {
+					System.out.println("here2");
+					// ADD USER TO LIST
+					resetPasswordPage(primaryStage, userNameText.getText().trim()); // enter only if the OTP is corrent
+				}
+
+			}
+		});
+
 		// Quit button action
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -1919,70 +1920,70 @@ public class helpSystemStart extends Application {
 		// Set the scene
 		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
 		primaryStage.setScene(welcomeScene);
-		
+
 	}
-	
-	
+
 	public void resetPasswordPage(Stage primaryStage, String username) {
 		// Labels and buttons
-				Label welcome = new Label("Create a New Password");
-				Label newPassword = new Label("New Password: ");
-				Label confirmPassword = new Label("Confirm Password: ");
-				Label mismatchPassword = new Label("Passwords do not match!");
+		Label welcome = new Label("Create a New Password");
+		Label newPassword = new Label("New Password: ");
+		Label confirmPassword = new Label("Confirm Password: ");
+		Label mismatchPassword = new Label("Passwords do not match!");
 
-				TextField newPasswordText = new TextField();
-				TextField confirmPasswordText = new TextField();
+		TextField newPasswordText = new TextField();
+		TextField confirmPasswordText = new TextField();
 
-				Button resetButton = new Button("Reset Password");
-				Button quitButton = new Button("Quit");
+		Button resetButton = new Button("Reset Password");
+		Button quitButton = new Button("Quit");
 
-				// Label design
-				welcome.setFont(new Font("Arial", 36));
-				newPassword.setFont(new Font("Arial", 20));
-				confirmPassword.setFont(new Font("Arial", 20));
+		// Label design
+		welcome.setFont(new Font("Arial", 36));
+		newPassword.setFont(new Font("Arial", 20));
+		confirmPassword.setFont(new Font("Arial", 20));
 
-				mismatchPassword.setFont(new Font("Arial", 20));
-				mismatchPassword.setStyle("-fx-text-fill: red;");
-				mismatchPassword.setVisible(false);
+		mismatchPassword.setFont(new Font("Arial", 20));
+		mismatchPassword.setStyle("-fx-text-fill: red;");
+		mismatchPassword.setVisible(false);
 
-				// Button design
-				resetButton.setStyle("-fx-font-size: 2em;");
-				quitButton.setStyle("-fx-font-size: 1.5em;");
+		// Button design
+		resetButton.setStyle("-fx-font-size: 2em;");
+		quitButton.setStyle("-fx-font-size: 1.5em;");
 
-				// Reset button action
-				resetButton.setOnAction(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent event) {
-						// Check if both passwords match
-						if (newPasswordText.getText().equals(confirmPasswordText.getText())) {
-							mismatchPassword.setVisible(false);
-							// Save the new password in the system for the user
-							
-							//databaseHelper.resetPassword();
-							//databaseHelper.changeUserPassword();
-							
-							// After successful reset, return to the login page
-							login(primaryStage);
-						} else {
-							mismatchPassword.setVisible(true);
-						}
-					}
-				});
+		// Reset button action
+		resetButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// Check if both passwords match
+				if (newPasswordText.getText().equals(confirmPasswordText.getText())) {
+					mismatchPassword.setVisible(false);
+					// Save the new password in the system for the user
 
-				// Layout for the reset password scene
-				VBox resetLayout = new VBox(10, welcome, newPassword, newPasswordText, confirmPassword, confirmPasswordText, mismatchPassword, resetButton, quitButton);
-				resetLayout.setAlignment(Pos.CENTER);
-				
-				Scene resetScene = new Scene(resetLayout, 400, 400);
-				primaryStage.setScene(resetScene);
-				primaryStage.show();
+					// databaseHelper.resetPassword();
+					// databaseHelper.changeUserPassword();
+
+					// After successful reset, return to the login page
+					login(primaryStage);
+				} else {
+					mismatchPassword.setVisible(true);
+				}
+			}
+		});
+
+		// Layout for the reset password scene
+		VBox resetLayout = new VBox(10, welcome, newPassword, newPasswordText, confirmPassword, confirmPasswordText,
+				mismatchPassword, resetButton, quitButton);
+		resetLayout.setAlignment(Pos.CENTER);
+
+		Scene resetScene = new Scene(resetLayout, 400, 400);
+		primaryStage.setScene(resetScene);
+		primaryStage.show();
 	}
-	
+
 	private void createArticle(Stage primaryStage) {
 
 		// Labels and buttons
 		Label welcome = new Label("Create Article");
-		
+
 		Label email = new Label("Title: ");
 		Label firstName = new Label("Author: ");
 		Label confFirstName = new Label("Abstract: ");
@@ -2000,14 +2001,13 @@ public class helpSystemStart extends Application {
 
 		Button conButton = new Button("Confirm");
 		Button quitButton = new Button("Quit");
-		
+
 		ChoiceBox<String> getLevel = new ChoiceBox<>();
 
 		getLevel.getItems().add("Beginner");
 		getLevel.getItems().add("Intermediate");
 		getLevel.getItems().add("Advanced");
 		getLevel.getItems().add("Expert");
-
 
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
@@ -2056,34 +2056,33 @@ public class helpSystemStart extends Application {
 				} else {
 					lastNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
-				
+
 				if (referencesText.getText().isEmpty()) {
 					referencesText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
 				} else {
 					referencesText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
-				
+
 				if (getLevel.getValue() == null) {
-				    getLevel.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+					getLevel.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
 				} else {
-				    getLevel.setStyle(""); // Reset style if there’s a valid selection
+					getLevel.setStyle(""); // Reset style if there’s a valid selection
 				}
 
 				if (!emailText.getText().isEmpty() && !firstNameText.getText().isEmpty()
 						&& !confFirstNameText.getText().isEmpty() && !middleNameText.getText().isEmpty()
 						&& !lastNameText.getText().isEmpty() && !referencesText.getText().isEmpty()
-						&& !databaseHelper.doesUserExist(emailText.getText()) 
-						&& getLevel.getValue() != null ){
-					
+						&& !databaseHelper.doesUserExist(emailText.getText()) && getLevel.getValue() != null) {
+
 					char[] title = emailText.getText().toCharArray();
 					char[] author = firstNameText.getText().toCharArray();
 					char[] abstract1 = confFirstNameText.getText().toCharArray();
 					char[] keywords = middleNameText.getText().toCharArray();
 					char[] body = lastNameText.getText().toCharArray();
 					char[] references = referencesText.getText().toCharArray();
-					char[] level = getLevel.getValue().toCharArray();			
+					char[] level = getLevel.getValue().toCharArray();
 					try {
-						databaseHelper1.register(title, author, abstract1, keywords, body, references,level);
+						databaseHelper1.register(title, author, abstract1, keywords, body, references, level);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2119,14 +2118,13 @@ public class helpSystemStart extends Application {
 		VBox.setMargin(email, new Insets(20, 20, 20, 40));
 		VBox.setMargin(level, new Insets(20, 20, 20, 40));
 
-
-		VBox middleTwo = new VBox(firstNameText, middleNameText, emailText,getLevel);
+		VBox middleTwo = new VBox(firstNameText, middleNameText, emailText, getLevel);
 		VBox.setMargin(firstNameText, new Insets(50, 20, 20, 40));
 		VBox.setMargin(middleNameText, new Insets(20, 20, 20, 40));
 		VBox.setMargin(emailText, new Insets(20, 20, 20, 40));
 		VBox.setMargin(getLevel, new Insets(20, 20, 20, 40));
 
-		VBox middleThree = new VBox(confFirstName, lastName,references);
+		VBox middleThree = new VBox(confFirstName, lastName, references);
 		VBox.setMargin(confFirstName, new Insets(50, 20, 20, 40));
 		VBox.setMargin(lastName, new Insets(20, 20, 20, 40));
 		VBox.setMargin(references, new Insets(20, 20, 20, 40));
@@ -2157,7 +2155,7 @@ public class helpSystemStart extends Application {
 		primaryStage.setScene(welcomeScene);
 
 	}
-	
+
 	public void listArticles(Stage primaryStage) throws Exception {
 
 		// Labels, buttons, textfield, alert, and checkBox
@@ -2166,7 +2164,7 @@ public class helpSystemStart extends Application {
 
 		Button quitButton = new Button("Quit");
 		Button searchGroup = new Button("Search by Level");
-		
+
 		ChoiceBox<String> level = new ChoiceBox<>();
 
 		level.getItems().addAll("Beginner", "Intermediate", "Advanced", "Expert", "All");
@@ -2187,15 +2185,14 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
-		
+
 		searchGroup.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
+
 				if (level.getValue() == null) {
-				    level.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-				} 
-				else if(level.getValue().compareTo("All") == 0) {
+					level.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+				} else if (level.getValue().compareTo("All") == 0) {
 					try {
 						printList.setText(databaseHelper1.displayArticles());
 					} catch (Exception e) {
@@ -2203,19 +2200,18 @@ public class helpSystemStart extends Application {
 						e.printStackTrace();
 					}
 				}
-				
+
 				else {
-				    level.setStyle("");
-				    try {
+					level.setStyle("");
+					try {
 						printList.setText(databaseHelper1.displayGroupedArticles(level.getValue()));
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				    
+
 				}
-				
-				
+
 			}
 		});
 
@@ -2277,7 +2273,6 @@ public class helpSystemStart extends Application {
 		quitButton.setStyle("-fx-font-size: 1.5em;");
 		deletedButton.setStyle("-fx-font-size: 2em;");
 
-
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -2316,7 +2311,6 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
-
 
 		// Top pane for welcome label
 		HBox topPane = new HBox(welcome);
@@ -2367,7 +2361,6 @@ public class helpSystemStart extends Application {
 		quitButton.setStyle("-fx-font-size: 1.5em;");
 		deletedButton.setStyle("-fx-font-size: 2em;");
 
-
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -2400,7 +2393,6 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
-
 
 		// Top pane for welcome label
 		HBox topPane = new HBox(welcome);
@@ -2450,7 +2442,6 @@ public class helpSystemStart extends Application {
 		quitButton.setStyle("-fx-font-size: 1.5em;");
 		deletedButton.setStyle("-fx-font-size: 2em;");
 
-
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -2461,8 +2452,8 @@ public class helpSystemStart extends Application {
 				} else {
 					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 					try {
-						databaseHelper1.restore(fileNameText.getText().strip()); //restores articles with old file
-						
+						databaseHelper1.restore(fileNameText.getText().strip()); // restores articles with old file
+
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2484,7 +2475,6 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
-
 
 		// Top pane for welcome label
 		HBox topPane = new HBox(welcome);
@@ -2514,5 +2504,5 @@ public class helpSystemStart extends Application {
 		primaryStage.setScene(welcomeScene);
 
 	}
-	
+
 }
