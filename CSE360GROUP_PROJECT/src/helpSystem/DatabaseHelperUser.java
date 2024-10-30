@@ -83,6 +83,45 @@ class DatabaseHelperUser {
 		}
 	}
 
+	
+	
+	public void updateUserRoles(String username, boolean[] roles) throws Exception {
+	    // Define the SQL update statements for each role
+	    String deleteRoleSql = "UPDATE cse360users SET isAdmin = ?, isStudent = ?, isInstructor = ? WHERE username = ?";
+	    boolean deleteAdmin = false;
+	    boolean deleteStudent = false;
+	    boolean deleteInstructor = false;
+	    	
+	    if(roles[0]==true) {
+	    	deleteAdmin = true;
+	    }
+	    if(roles[1]==true) {
+	    	deleteStudent = true;
+	    }
+	    if(roles[3]==true) {
+	    	deleteInstructor = true;
+	    }
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(deleteRoleSql)) {
+	        // Set the roles to false if they are to be deleted. MUST PUT IN IF STATEMENTS TO SEE IF THEY WERE ALTERED IN THE FIRST PLACE. 
+	    	//eg, DONT SET ROLES TO TRUE IF THEY NEVER HAD THEM IN THE FIRST PLACE
+	        if(deleteAdmin) {
+	        	pstmt.setBoolean(1, !deleteAdmin); // Remove admin role if true, set to false
+	        }
+	    	if(deleteStudent) {	    		
+	    		pstmt.setBoolean(2, !deleteStudent); // Remove student role if true, set to false
+	    	}
+	    	if(deleteInstructor) {	    		
+	    		pstmt.setBoolean(3, !deleteInstructor); // Remove instructor role if true, set to false
+	    	}
+	        pstmt.setString(4, username);
+
+	        // Execute the update
+	        pstmt.executeUpdate();
+	    }
+	}
+
+	
 	public void deleteUser(String username) throws SQLException {
 		if (doesUserExist(username)) {
 

@@ -1760,7 +1760,7 @@ public class helpSystemStart extends Application {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Remove");
-		Label user = new Label("Email Address: ");
+		Label user = new Label("Username: ");
 		Label noClick = new Label("Please choose roles to remove:");
 
 		TextField userText = new TextField();
@@ -1800,23 +1800,30 @@ public class helpSystemStart extends Application {
 					userText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
 				String usernameToDeleteFrom = userText.getText();
-
+				boolean[] roles = new boolean[3];
+				
 				if (!studentAccount.isSelected() && !teacherAccount.isSelected() && !adminAccount.isSelected()) {
 					noClick.setVisible(true);
 				} else {
 					noClick.setVisible(false);
-
-					databaseHelper.doesUserExist(userText.getText().strip());
-
-					if (user != null) {
-
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Roles Changed");
-						alert.setHeaderText("Success"); // Optional: No header text
-						alert.setContentText("Roles have changed for User: " + userText.getText());
-
-						alert.showAndWait();
+					
+					if(adminAccount.isSelected()) {
+						roles[0]=true;
 					}
+					if(studentAccount.isSelected()) {
+						roles[1]=true;
+					}
+					if(teacherAccount.isSelected()) {
+						roles[2]=true; 
+					}
+
+					try {
+						databaseHelper.updateUserRoles(userText.getText().strip(), roles);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				}
 			}
 		});
@@ -1844,10 +1851,10 @@ public class helpSystemStart extends Application {
 		HBox.setMargin(user, new Insets(80, 80, 0, 130));
 		HBox.setMargin(userText, new Insets(80, 80, 0, 0));
 
-		HBox middleBottomPane = new HBox(studentAccount, teacherAccount, adminAccount, noClick);
-		HBox.setMargin(studentAccount, new Insets(80, 40, 0, 60));
+		HBox middleBottomPane = new HBox(adminAccount, studentAccount, teacherAccount, noClick);
+		HBox.setMargin(adminAccount, new Insets(80, 40, 0, 60));
+		HBox.setMargin(studentAccount, new Insets(80, 40, 0, 0));
 		HBox.setMargin(teacherAccount, new Insets(80, 40, 0, 0));
-		HBox.setMargin(adminAccount, new Insets(80, 40, 0, 0));
 		HBox.setMargin(noClick, new Insets(80, 0, 0, 0));
 
 		VBox middlePane = new VBox(middleTopPane, middleBottomPane);
