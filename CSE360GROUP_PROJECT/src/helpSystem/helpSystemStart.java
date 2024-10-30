@@ -2550,7 +2550,12 @@ public class helpSystemStart extends Application {
 					return;
 				} else {
 					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
-					databaseHelper1.mergeData(fileNameText.getText().strip()); // Merge both files
+					try {
+						databaseHelper1.mergeData(fileNameText.getText().strip());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} // Merge both files
 				}
 
 			}
