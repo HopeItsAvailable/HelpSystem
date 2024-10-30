@@ -758,8 +758,61 @@ public class helpSystemStart extends Application {
 					// inputting these
 					// details. At this point, user nodes only have date in their username and
 					// password fields.
+					
+					databaseHelper.updateUserAccountInfo(
+			                username,
+			                emailText.getText(),
+			                firstNameText.getText(),
+			                confFirstNameText.getText(),  // Assuming this is the preferred first name
+			                middleNameText.getText(),
+			                lastNameText.getText()
+			            );
 
-					System.out.println(username + "HERE");
+					System.out.println(username + "done adding");
+					boolean[] roles = new boolean[3];
+					
+					try {
+						roles = databaseHelper.getUserRoles(username);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+
+					if (roles != null) {
+						int roleCount = 0;
+						String roleToRedirect = "";
+
+						if (roles[0]) {
+							roleCount++;
+							roleToRedirect = "Admin";
+						}
+						if (roles[1]) {
+							roleCount++;
+							roleToRedirect = "Student";
+						}
+						if (roles[2]) {
+							roleCount++;
+							roleToRedirect = "Instructor";
+						}
+
+						if (roleCount == 1) {
+							// Redirect to the role page directly if only one role exists
+							if (roleToRedirect.equals("Admin")) {
+								// Redirect to admin page
+								adminPage(primaryStage);
+							} else if (roleToRedirect.equals("Student")) {
+								// Redirect to student page
+								studentPage(primaryStage);
+							} else if (roleToRedirect.equals("Instructor")) {
+								// Redirect to instructor page
+								teacherPage(primaryStage);
+							}
+						} else if (roleCount > 1) {
+							// Redirect to a page where user can choose their role
+							chooseRole(primaryStage, username);
+						}
+					}
 
 					// ADD account info to user and then go to right page
 				}

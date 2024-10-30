@@ -275,6 +275,31 @@ class DatabaseHelperUser {
 		}
 	}
 	
+	
+	
+	public void updateUserAccountInfo(String username, String email, String firstName, String preferredFirstName, String middleName, String lastName) {
+	    String updateQuery = "UPDATE cse360users SET email = ?, firstName = ?, preferredFirstName = ?, middleName = ?, lastName = ? WHERE username = ?";
+
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+	        pstmt.setString(1, email);
+	        pstmt.setString(2, firstName);
+	        pstmt.setString(3, preferredFirstName);
+	        pstmt.setString(4, middleName);
+	        pstmt.setString(5, lastName);
+	        pstmt.setString(6, username);
+
+	        int affectedRows = pstmt.executeUpdate();
+	        if (affectedRows > 0) {
+	            System.out.println("User account info updated successfully.");
+	        } else {
+	            System.out.println("No user found with the given username.");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	
 	public boolean doesUserExist(String username) {
 	    String query = "SELECT 1 FROM cse360users WHERE username = ? LIMIT 1"; // Check for existence
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
