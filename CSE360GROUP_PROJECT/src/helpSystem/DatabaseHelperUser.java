@@ -59,6 +59,25 @@ class DatabaseHelperUser {
 	    statement.execute(userTable);
 	}
 	
+	public boolean[] getUserRoles(String email) throws SQLException {
+	    String query = "SELECT isAdmin, isStudent, isInstructor FROM cse360users WHERE email = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, email);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                boolean[] roles = new boolean[3];
+	                roles[0] = rs.getBoolean("isAdmin");        // Admin role
+	                roles[1] = rs.getBoolean("isStudent");      // Student role
+	                roles[2] = rs.getBoolean("isInstructor");   // Instructor role
+	                return roles;
+	            } else {
+	                return null;
+	            }
+	        }
+	    }
+	}
+
+	
 	public void deleteUser(String email) throws SQLException {
 		if(doesUserExist(email)) {
 			
