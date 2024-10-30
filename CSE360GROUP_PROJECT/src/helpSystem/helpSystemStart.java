@@ -1035,9 +1035,11 @@ public class helpSystemStart extends Application {
 		role.setFont(new Font("Arial", 20));
 
 		Button quitButton = new Button("Log Out");
+		Button viewArt = new Button("View Articles");
 
 		// Button design
 		quitButton.setStyle("-fx-font-size: 1.5em;");
+		viewArt.setStyle("-fx-font-size: 1.5em;");
 
 		// Quit button action
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1051,11 +1053,29 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
+		
+		// Quit button action
+		viewArt.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					listArticles(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 
 		// Top pane for welcome label
 		HBox topPane = new HBox(role, welcome);
 		HBox.setMargin(role, new Insets(20, 0, 0, 20));
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 130));
+		
+		//Middle pane for button
+		HBox middlePane = new HBox(viewArt);
+		middlePane.setAlignment(Pos.CENTER);
+		
 
 		// Bottom pane for exit
 		HBox bottomPane = new HBox(quitButton);
@@ -1064,6 +1084,7 @@ public class helpSystemStart extends Application {
 
 		BorderPane adminCreateScreen = new BorderPane();
 		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
 		adminCreateScreen.setBottom(bottomPane);
 		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
 
@@ -1080,6 +1101,10 @@ public class helpSystemStart extends Application {
 		Label role = new Label("Role: Teacher");
 
 		Button quitButton = new Button("Log Out");
+		Button createArt = new Button("Create Article");
+		Button deleteArt = new Button("Delete Article");
+		Button updateArt = new Button("Update Article");
+		Button viewArt = new Button("View Articles");
 
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
@@ -1087,6 +1112,10 @@ public class helpSystemStart extends Application {
 
 		// Button design
 		quitButton.setStyle("-fx-font-size: 1.5em;");
+		createArt.setStyle("-fx-font-size: 2em;");
+		deleteArt.setStyle("-fx-font-size: 2em;");
+		updateArt.setStyle("-fx-font-size: 2em;");
+		viewArt.setStyle("-fx-font-size: 2em;");
 
 		// Quit button action
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1101,10 +1130,68 @@ public class helpSystemStart extends Application {
 			}
 		});
 
+		// Quit button action
+		createArt.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					createArticle(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		// Quit button action
+		deleteArt.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					deleteArticle(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		// Quit button action
+		viewArt.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					listArticles(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		// Quit button action
+		updateArt.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					updateArticle(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
 		// Top pane for welcome label
 		HBox topPane = new HBox(role, welcome);
 		HBox.setMargin(role, new Insets(20, 0, 0, 20));
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 130));
+		
+		HBox middlePane = new HBox(createArt, deleteArt, viewArt, updateArt);
+		HBox.setMargin(createArt, new Insets(20, 20, 20, 20));
+		HBox.setMargin(deleteArt, new Insets(20, 20, 20, 20));
+		HBox.setMargin(viewArt, new Insets(20, 20, 20, 20));
+		HBox.setMargin(updateArt, new Insets(20, 20, 20, 20));
 
 		// Bottom pane for exit
 		HBox bottomPane = new HBox(quitButton);
@@ -1113,6 +1200,7 @@ public class helpSystemStart extends Application {
 
 		BorderPane adminCreateScreen = new BorderPane();
 		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
 		adminCreateScreen.setBottom(bottomPane);
 		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
 
@@ -1136,6 +1224,7 @@ public class helpSystemStart extends Application {
 		Button listArticles = new Button("List Articles");
 		Button backupArticles = new Button("Back up Articles");
 		Button RestoreArticles = new Button("Restore Articles");
+		Button updateArt = new Button("Update Article");
 
 		Button logoutButton = new Button("Log Out");
 
@@ -1151,12 +1240,13 @@ public class helpSystemStart extends Application {
 		addRoleButton.setStyle("-fx-font-size: 1.8em;");
 		logoutButton.setStyle("-fx-font-size: 1.8em;");
 
-		createArticle.setStyle("-fx-font-size: 1.8em;");
-		deleteArticle.setStyle("-fx-font-size: 1.8em;");
-		listArticles.setStyle("-fx-font-size: 1.8em;");
+		createArticle.setStyle("-fx-font-size: 1.5em;");
+		deleteArticle.setStyle("-fx-font-size: 1.5em;");
+		listArticles.setStyle("-fx-font-size: 1.5em;");
 
-		backupArticles.setStyle("-fx-font-size: 1.8em;");
-		RestoreArticles.setStyle("-fx-font-size: 1.8em;");
+		backupArticles.setStyle("-fx-font-size: 1.5em;");
+		RestoreArticles.setStyle("-fx-font-size: 1.5em;");
+		updateArt.setStyle("-fx-font-size: 1.5em;");
 		logoutButton.setStyle("-fx-font-size: 1.8em;");
 
 		// Set buttons actions using EventHandler
@@ -1196,6 +1286,19 @@ public class helpSystemStart extends Application {
 			public void handle(ActionEvent event) {
 
 				backupArticles(primaryStage);
+			}
+		});
+		
+		// Quit button action
+		updateArt.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					updateArticle(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -1273,7 +1376,8 @@ public class helpSystemStart extends Application {
 
 		// Middle Pane
 
-		HBox middleTopTop = new HBox(createArticle, deleteArticle, listArticles, backupArticles, RestoreArticles);
+		HBox middleTopTop = new HBox(createArticle, deleteArticle, listArticles, 
+				backupArticles, RestoreArticles,updateArt);
 
 		HBox middleTopPane = new HBox(inviteUserButton, resetUserButton, deleteUserButton);
 		HBox.setMargin(inviteUserButton, new Insets(50, 50, 80, 120));
@@ -2588,6 +2692,99 @@ public class helpSystemStart extends Application {
 		bottomPane.setAlignment(Pos.CENTER);
 		HBox.setMargin(mergeButton, new Insets(0, 0, 80, 0));
 		HBox.setMargin(deletedButton, new Insets(0, 120, 80, 280));
+		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+
+		// BorderPane stuff
+		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setTop(topPane);
+		adminCreateScreen.setCenter(middlePane);
+		adminCreateScreen.setBottom(bottomPane);
+		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+
+		// Set the scene
+		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+		primaryStage.setScene(welcomeScene);
+
+	}
+	
+	public void updateArticle(Stage primaryStage) {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("Update an Article");
+		Label username = new Label("Username: ");
+		Label noExist = new Label("Article does not exist");
+
+		TextField usernameText = new TextField();
+
+		Button deletedButton = new Button("Delete");
+		Button quitButton = new Button("Quit");
+
+		// Label design
+		welcome.setFont(new Font("Arial", 36));
+		username.setFont(new Font("Arial", 20));
+
+		noExist.setFont(new Font("Arial", 20));
+		noExist.setStyle("-fx-text-fill: red;");
+		noExist.setVisible(false);
+
+		// Button design
+		quitButton.setStyle("-fx-font-size: 1.5em;");
+		deletedButton.setStyle("-fx-font-size: 2em;");
+
+		// Send button action
+		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				if (usernameText.getText().isEmpty()) {
+					usernameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+					return;
+				} else {
+					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+
+				if (databaseHelper1.doesArticleExist(usernameText.getText().strip())) {
+					noExist.setVisible(false);
+					try {
+						databaseHelper1.deleteArticle(usernameText.getText().strip());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					noExist.setVisible(true);
+
+				}
+			}
+		});
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					start(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+		// Top pane for welcome label
+		HBox topPane = new HBox(welcome);
+		topPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+
+		// Middle Pane
+		HBox middlePane = new HBox(username, usernameText, noExist);
+		HBox.setMargin(username, new Insets(80, 80, 0, 130));
+		HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
+		HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
+
+		// Bottom pane for login button
+		HBox bottomPane = new HBox(deletedButton, quitButton);
+		bottomPane.setAlignment(Pos.CENTER);
+		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
 		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
 
 		// BorderPane stuff

@@ -325,6 +325,12 @@ class DatabaseHelperArticle {
             return false;
         }
     }
+	
+	public boolean updateArticle(String title) {
+		
+		
+		
+	}
 
 
 	public void closeConnection() {
