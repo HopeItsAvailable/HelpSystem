@@ -1,11 +1,13 @@
 package helpSystem;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.util.Base64;
+import java.util.Scanner;
 
 import org.bouncycastle.util.Arrays;
 
@@ -252,6 +254,23 @@ class DatabaseHelperArticle {
 		}
 
 	}
+	
+//	public void restoreArticlesFromFile(String fileName) throws SQLException, IOException {
+//		// Clear current articles
+//		String deleteQuery = "DELETE FROM articles";
+//		statement.executeUpdate(deleteQuery);
+//
+//		// Load the backup SQL statements from the file
+//		try (Scanner scanner = new Scanner(new FileReader(fileName))) {
+//			while (scanner.hasNextLine()) {
+//				String sql = scanner.nextLine();
+//				statement.executeUpdate(sql);
+//			}
+//			System.out.println("Restore completed successfully from file: " + fileName);
+//		} catch (IOException e) {
+//			System.out.println("Error reading from file: " + e.getMessage());
+//		}
+//	}
 	
 	public boolean mergeData(String backupFileName) throws Exception {
 		

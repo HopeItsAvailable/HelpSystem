@@ -2529,6 +2529,7 @@ public class helpSystemStart extends Application {
 					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 					try {
 						databaseHelper1.restore(fileNameText.getText().strip()); // restores articles with old file
+						//databaseHelper1.restore(fileNameText.getText().strip());
 
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
