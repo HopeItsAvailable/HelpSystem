@@ -52,8 +52,8 @@ class DatabaseHelperArticle {
 				+ "paper_abstract VARCHAR(255),"
 				+ "keywords VARCHAR(255),"
 				+ "body VARCHAR(255),"
-				+ "references VARCHAR(255))"
-				+ "level VARCHAR(255),";
+				+ "references VARCHAR(255),"
+				+ "level VARCHAR(255))";
 		statement.execute(userTable);
 	}
 
