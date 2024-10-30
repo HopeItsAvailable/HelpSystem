@@ -2061,11 +2061,18 @@ public class helpSystemStart extends Application {
 				} else {
 					referencesText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
+				
+				if (getLevel.getValue() == null) {
+				    getLevel.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+				} else {
+				    getLevel.setStyle(""); // Reset style if there’s a valid selection
+				}
 
 				if (!emailText.getText().isEmpty() && !firstNameText.getText().isEmpty()
 						&& !confFirstNameText.getText().isEmpty() && !middleNameText.getText().isEmpty()
 						&& !lastNameText.getText().isEmpty() && !referencesText.getText().isEmpty()
-						&& !databaseHelper.doesUserExist(emailText.getText())) {
+						&& !databaseHelper.doesUserExist(emailText.getText()) 
+						&& getLevel.getValue() != null ){
 					
 					char[] title = emailText.getText().toCharArray();
 					char[] author = firstNameText.getText().toCharArray();
@@ -2073,8 +2080,7 @@ public class helpSystemStart extends Application {
 					char[] keywords = middleNameText.getText().toCharArray();
 					char[] body = lastNameText.getText().toCharArray();
 					char[] references = referencesText.getText().toCharArray();
-					char[] level = referencesText.getText().toCharArray();
-					
+					char[] level = getLevel.getValue().toCharArray();			
 					try {
 						databaseHelper1.register(title, author, abstract1, keywords, body, references,level);
 					} catch (Exception e) {
@@ -2158,6 +2164,11 @@ public class helpSystemStart extends Application {
 		Label printList = new Label(databaseHelper1.displayArticles());
 
 		Button quitButton = new Button("Quit");
+		Button searchGroup = new Button("Search by Level");
+		
+		ChoiceBox<String> level = new ChoiceBox<>();
+
+		level.getItems().addAll("Beginner", "Intermediate", "Advanced", "Expert", "All");
 
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
@@ -2175,6 +2186,37 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
+		
+		searchGroup.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+				if (level.getValue() == null) {
+				    level.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+				} 
+				else if(level.getValue().compareTo("All") == 0) {
+					try {
+						printList.setText(databaseHelper1.displayArticles());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				else {
+				    level.setStyle("");
+				    try {
+						printList.setText(databaseHelper1.displayGroupedArticles(level.getValue()));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				    
+				}
+				
+				
+			}
+		});
 
 		// Button design
 		quitButton.setStyle("-fx-font-size: 2em;");
@@ -2184,15 +2226,18 @@ public class helpSystemStart extends Application {
 		topPane.setAlignment(Pos.CENTER);
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
-		// Top pane for welcome label
+		// Middle pane for welcome label
 		HBox middlePane = new HBox(printList);
 		middlePane.setAlignment(Pos.CENTER);
 		HBox.setMargin(printList, new Insets(50, 0, 20, 0));
 
-		// Top pane for welcome label
-		HBox bottomPane = new HBox(quitButton);
+		// Bottom pane for search button
+		HBox bottomPane = new HBox(level, searchGroup, quitButton);
 		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(quitButton, new Insets(50, 0, 20, 0));
+
+		HBox.setMargin(level, new Insets(0, 100, 0, 30));
+		HBox.setMargin(searchGroup, new Insets(0, 150, 0, 100));
+		HBox.setMargin(quitButton, new Insets(0, 80, 0, 70));
 
 		// BorderPane stuff
 		BorderPane adminCreateScreen = new BorderPane();

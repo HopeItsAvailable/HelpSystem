@@ -89,7 +89,7 @@ class DatabaseHelperArticle {
 			pstmt.setString(4, keywordsStr);
 			pstmt.setString(5, bodyStr);
 			pstmt.setString(6, referencesStr);
-			pstmt.setString(6, levelStr);
+			pstmt.setString(7, levelStr);
 			pstmt.executeUpdate();
 		}
 	}
