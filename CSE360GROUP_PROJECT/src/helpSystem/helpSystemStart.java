@@ -1920,11 +1920,8 @@ public class helpSystemStart extends Application {
 							mismatchPassword.setVisible(false);
 							// Save the new password in the system for the user
 							
-<<<<<<< HEAD
-							//databaseHelper.resetPassword();
-=======
-							//databaseHelper.changeUserPassword();
->>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
+							databaseHelper.resetPassword();
+							databaseHelper.changeUserPassword();
 							
 							// After successful reset, return to the login page
 							login(primaryStage);
