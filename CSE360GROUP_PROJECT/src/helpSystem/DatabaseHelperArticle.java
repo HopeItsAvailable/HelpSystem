@@ -337,6 +337,8 @@ class DatabaseHelperArticle {
 	            pstmt.setString(1, newBody);
 	            pstmt.setString(2, title); // Where clause to match the title
 	            
+	            int rowsAffected = pstmt.executeUpdate();
+	            
 	            return true;
 	        }
 	    } else {

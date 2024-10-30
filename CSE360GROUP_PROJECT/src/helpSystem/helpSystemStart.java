@@ -2724,6 +2724,7 @@ public class helpSystemStart extends Application {
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
 		articleName.setFont(new Font("Arial", 20));
+		bodyAsk.setFont(new Font("Arial", 20));
 
 		noExist.setFont(new Font("Arial", 20));
 		noExist.setStyle("-fx-text-fill: red;");
