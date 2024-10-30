@@ -2711,17 +2711,19 @@ public class helpSystemStart extends Application {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Update an Article");
-		Label username = new Label("Username: ");
+		Label articleName = new Label("Article Name: ");
+		Label bodyAsk = new Label("New Body: ");
 		Label noExist = new Label("Article does not exist");
 
 		TextField usernameText = new TextField();
+		TextField bodyText = new TextField();
 
-		Button deletedButton = new Button("Delete");
+		Button updateArticle = new Button("Update Article");
 		Button quitButton = new Button("Quit");
 
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
-		username.setFont(new Font("Arial", 20));
+		articleName.setFont(new Font("Arial", 20));
 
 		noExist.setFont(new Font("Arial", 20));
 		noExist.setStyle("-fx-text-fill: red;");
@@ -2729,10 +2731,10 @@ public class helpSystemStart extends Application {
 
 		// Button design
 		quitButton.setStyle("-fx-font-size: 1.5em;");
-		deletedButton.setStyle("-fx-font-size: 2em;");
+		updateArticle.setStyle("-fx-font-size: 2em;");
 
 		// Send button action
-		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
+		updateArticle.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				if (usernameText.getText().isEmpty()) {
@@ -2745,7 +2747,7 @@ public class helpSystemStart extends Application {
 				if (databaseHelper1.doesArticleExist(usernameText.getText().strip())) {
 					noExist.setVisible(false);
 					try {
-						databaseHelper1.deleteArticle(usernameText.getText().strip());
+						databaseHelper1.updateArticleBody(usernameText.getText().strip(), bodyText.getText());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -2775,16 +2777,26 @@ public class helpSystemStart extends Application {
 		topPane.setAlignment(Pos.CENTER);
 		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
-		// Middle Pane
-		HBox middlePane = new HBox(username, usernameText, noExist);
-		HBox.setMargin(username, new Insets(80, 80, 0, 130));
+		// Middle Top Pane
+		HBox middleTopPane = new HBox(articleName, usernameText, noExist);
+		HBox.setMargin(articleName, new Insets(80, 80, 0, 130));
 		HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
 		HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
+		
+		// Middle Bottom Pane
+		HBox middleBottomPane = new HBox(bodyAsk, bodyText);
+		HBox.setMargin(bodyAsk, new Insets(80, 80, 0, 130));
+		HBox.setMargin(bodyText, new Insets(80, 80, 0, 0));
+		
+		//Middle Pane
+		VBox middlePane = new VBox(middleTopPane,middleBottomPane);
+		middlePane.setAlignment(Pos.CENTER);
+		
 
 		// Bottom pane for login button
-		HBox bottomPane = new HBox(deletedButton, quitButton);
+		HBox bottomPane = new HBox(updateArticle, quitButton);
 		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
+		HBox.setMargin(updateArticle, new Insets(0, 220, 80, 280));
 		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
 
 		// BorderPane stuff

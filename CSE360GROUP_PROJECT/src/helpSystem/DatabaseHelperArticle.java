@@ -326,10 +326,23 @@ class DatabaseHelperArticle {
         }
     }
 	
-	public boolean updateArticle(String title) {
-		
-		
-		
+	public boolean updateArticleBody(String title, String newBody) throws SQLException {
+	    // Check if the article exists before attempting to update
+	    if (doesArticleExist(title)) {
+	        // SQL statement to update only the body field based on the title
+	        String updateSQL = "UPDATE cse360Articles SET body = ? WHERE title = ?";
+
+	        try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
+	            // Set the new value for the body field
+	            pstmt.setString(1, newBody);
+	            pstmt.setString(2, title); // Where clause to match the title
+	            
+	            return true;
+	        }
+	    } else {
+	        System.out.println("Article with title '" + title + "' does not exist.");
+	        return false;
+	    }
 	}
 
 
