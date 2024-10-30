@@ -253,7 +253,7 @@ class DatabaseHelperArticle {
 
 	}
 	
-	public boolean mergeData(String backupFileName) {
+	public boolean mergeData(String backupFileName) throws Exception {
 		
         backupFileName += ".mv.db"; 
 
@@ -290,14 +290,9 @@ class DatabaseHelperArticle {
                         // Insert the record if it doesn't exist
                         String insertQuery = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level) VALUES (?, ?, ?, ?, ?, ?, ?)";
                         try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
-                            insertStmt.setString(1, title);
-                            insertStmt.setString(2, author);
-                            insertStmt.setString(3, paperAbstract);
-                            insertStmt.setString(4, keywords);
-                            insertStmt.setString(5, body);
-                            insertStmt.setString(6, references);
-                            insertStmt.setString(7, level);
-                            insertStmt.executeUpdate();
+                        	register(title.toCharArray(), author.toCharArray(), paperAbstract.toCharArray(), 
+                                    keywords.toCharArray(), body.toCharArray(), references.toCharArray(), 
+                                    level.toCharArray());
                         }
                     } 
                 }
