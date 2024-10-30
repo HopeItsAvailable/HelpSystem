@@ -1493,7 +1493,7 @@ public class helpSystemStart extends Application {
 					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
 
-				if (databaseHelper.doesUserExist(usernameText.getText().trim())) {
+				if (!databaseHelper.doesUserExist(usernameText.getText().trim())) {
 					noExist.setVisible(true);
 				} else {
 					noExist.setVisible(false);
