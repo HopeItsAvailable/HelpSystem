@@ -1920,8 +1920,8 @@ public class helpSystemStart extends Application {
 							mismatchPassword.setVisible(false);
 							// Save the new password in the system for the user
 							
-							databaseHelper.resetPassword();
-							databaseHelper.changeUserPassword();
+							//databaseHelper.resetPassword();
+							//databaseHelper.changeUserPassword();
 							
 							// After successful reset, return to the login page
 							login(primaryStage);
