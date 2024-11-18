@@ -12,6 +12,11 @@ import org.bouncycastle.util.Arrays;
 import Encryption.EncryptionHelper;
 import Encryption.EncryptionUtils;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 class DatabaseHelperUser {
 
 	// JDBC driver name and database URL 
@@ -25,6 +30,8 @@ class DatabaseHelperUser {
 	private Connection connection = null;
 	private Statement statement = null; 
 	//	PreparedStatement pstmt
+	
+	private Gson gson = new Gson();
 	
 	private EncryptionHelper encryptionHelper;
 	
@@ -58,9 +65,19 @@ class DatabaseHelperUser {
 	            + "preferredFirstName VARCHAR(50), "      // Preferred first name, optional
 	            + "isAdmin BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is an admin
 	            + "isStudent BOOLEAN DEFAULT FALSE, "  // Boolean indicating if the user is a student
-	            + "isInstructor BOOLEAN DEFAULT FALSE)";
+	            + "isInstructor BOOLEAN DEFAULT FALSE,"
+	            + "userGroups VARCHAR(255))";		// ArrayList that stores groups
 	           
 	    statement.execute(userTable);
+	}
+
+	private String serializeUserGroups(ArrayList<String> userGroups) {
+	    return gson.toJson(userGroups);
+	}
+
+	private ArrayList<String> deserializeUserGroups(String json) {
+	    Type listType = new TypeToken<ArrayList<String>>() {}.getType();
+	    return gson.fromJson(json, listType);
 	}
 	
 	public boolean[] getUserRoles(String username) throws SQLException {
@@ -468,7 +485,63 @@ class DatabaseHelperUser {
 	        return userCount == 0;
 	    }
 	}
+	
+	public void addUserToGroup(String username, String group) throws SQLException {
+	    String query = "SELECT userGroups FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                String jsonGroups = rs.getString("userGroups");
+	                ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
+	                if (!userGroups.contains(group)) {
+	                    userGroups.add(group);
+	                    updateUserGroups(username, userGroups);
+	                }
+	            }
+	        }
+	    }
+	}
 
+	public void removeUserFromGroup(String username, String group) throws SQLException {
+	    String query = "SELECT userGroups FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                String jsonGroups = rs.getString("userGroups");
+	                ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
+	                if (userGroups.contains(group)) {
+	                    userGroups.remove(group);
+	                    updateUserGroups(username, userGroups);
+	                }
+	            }
+	        }
+	    }
+	}
+
+	public ArrayList<String> getUserGroups(String username) throws SQLException {
+	    String query = "SELECT userGroups FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                String jsonGroups = rs.getString("userGroups");
+	                return (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
+	            }
+	        }
+	    }
+	    return new ArrayList<>();
+	}
+
+	private void updateUserGroups(String username, ArrayList<String> userGroups) throws SQLException {
+	    String query = "UPDATE cse360users SET userGroups = ? WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, serializeUserGroups(userGroups));
+	        pstmt.setString(2, username);
+	        pstmt.executeUpdate();
+	    }
+	}
 
 	public void closeConnection() {
 		try{ 
