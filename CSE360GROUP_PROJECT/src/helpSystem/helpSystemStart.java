@@ -2852,6 +2852,3 @@ public class helpSystemStart extends Application {
 	}
 
 }
-
-
-
