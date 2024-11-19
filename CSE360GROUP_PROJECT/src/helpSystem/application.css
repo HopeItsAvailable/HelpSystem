@@ -2,19 +2,20 @@
 
 #startBackground {
     -fx-background-image: url("img/startBackground.png");
-    -fx-background-size: 900 600;
-    -fx-background-position: center center;
-    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); 
+    -fx-background-size: cover; /* Ensures the background image covers the entire window */
+    -fx-background-position: center center; /* Centers the background image */
+    -fx-background-repeat: no-repeat; /* Prevents repeating the background image */
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); /* Optional shadow effect */
 }
 #lineDetails {
-	-fx-stroke: black; 
-    -fx-stroke-width: 2; 
+    -fx-stroke: black;
+    -fx-stroke-width: 2;
 }
 #buttonStart {
     -fx-pref-width: 200; /* Button width */
-    -fx-pref-height: 30; /* Button width */
+    -fx-pref-height: 30; /* Button height */
     -fx-background-color: black; /* Button background color */
     -fx-text-fill: white; /* Text color */
     -fx-font-size: 1.5em; /* Font size */
-    -fx-font-family: "Montserrat";
+    -fx-font-family: "Montserrat"; /* Font style */
 }

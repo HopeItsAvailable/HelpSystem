@@ -1,6 +1,8 @@
 package helpSystem;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +23,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -59,105 +66,114 @@ public class helpSystemStart extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		// Initialize the linked list if empty
-		if (size == 0) {
-			// linkedList = new LinkedList();
-			oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is
-																				// created
-			size++;
-		}
+	    // Initialize the linked list if empty
+	    if (size == 0) {
+	        oneTimePasswordGeneratorList = new oneTimePasswordGeneratorList(); // Holds the roles for when an invite is created
+	        size++;
+	    }
 
-		databaseHelper = new DatabaseHelperUser();
-		databaseHelper1 = new DatabaseHelperArticle();
+	    databaseHelper = new DatabaseHelperUser();
+	    databaseHelper1 = new DatabaseHelperArticle();
 
-		try {
-			databaseHelper.connectToDatabase();
-			databaseHelper1.connectToDatabase();
+	    try {
+	        databaseHelper.connectToDatabase();
+	        databaseHelper1.connectToDatabase();
 
-			primaryStage.setTitle("Help System");
+	        primaryStage.setTitle("Help System");
 
-			// Label
-			Label welcome = new Label("Welcome to our Help System");
-			welcome.setFont(new Font("Montserrat", 45));
+	        // Label
+	        Label welcome = new Label("Welcome to our Help System");
+	        welcome.setFont(new Font("Montserrat", 45));
 
-			// Line for header
-			Line line = new Line(0, 0, 600, 0);
-			line.setId("lineDetails");
+	     // Dynamically change font size based on window height
+	        primaryStage.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+	            double newFontSize = 0.08 * newHeight.doubleValue(); // Convert to double before multiplying
+	            welcome.setFont(new Font("Montserrat", newFontSize)); // Apply the new font size
+	        });
 
-			// Logo
-			ImageView logoImageView = new ImageView();
-			logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
-			logoImageView.setFitWidth(200);
-			logoImageView.setFitHeight(200);
 
-			// Create the login button
-			Button startButton = new Button("Start");
-			startButton.setId("buttonStart");
+	        // Line for header
+	        Line line = new Line(0, 0, 600, 0);
+	        line.setId("lineDetails");
 
-			// Set the action for when the login button is clicked
-			startButton.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
-					// Create the welcome scene
-					try {
-						if (databaseHelper.isDatabaseEmpty()) { // if there is no admin, make one
+	        // Logo
+	        ImageView logoImageView = new ImageView();
+	        logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
 
-							createAdmin(primaryStage);
+	        // Dynamically resize logo based on stage width and height
+	        logoImageView.fitWidthProperty().bind(primaryStage.widthProperty().multiply(0.2)); // 20% of the window width
+	        logoImageView.fitHeightProperty().bind(primaryStage.heightProperty().multiply(0.2)); // 20% of the window height
 
-						} else {
+	        // Create the Start button
+	        Button startButton = new Button("Start");
 
-							login(primaryStage);
+	        // Dynamically resize button based on stage width and height
+	        startButton.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.2)); // 20% of the window width
+	        startButton.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.1)); // 10% of the window height
 
-						}
-					} catch (SQLException e) {
+	        // Set the action for when the login button is clicked
+	        startButton.setOnAction(new EventHandler<ActionEvent>() {
+	            @Override
+	            public void handle(ActionEvent event) {
+	                try {
+	                    if (databaseHelper.isDatabaseEmpty()) {
+	                        createAdmin(primaryStage);
+	                    } else {
+	                        login(primaryStage);
+	                    }
+	                } catch (SQLException e) {
+	                    System.err.println("Database error: " + e.getMessage());
+	                    e.printStackTrace();
+	                }
+	            }
+	        });
 
-						System.err.println("Database error: " + e.getMessage());
-						e.printStackTrace();
+	        // Top Pane (VBox for the welcome label and line)
+	        VBox topPane = new VBox();
+	        topPane.getChildren().addAll(welcome, line);
+	        topPane.setAlignment(Pos.CENTER);
+	        VBox.setMargin(welcome, new Insets(50, 0, 5, 0));
 
-					}
-				}
-			});
+	        // Center Pane (HBox for the logo)
+	        HBox middlePane = new HBox();
+	        middlePane.getChildren().addAll(logoImageView);
+	        middlePane.setAlignment(Pos.CENTER);
 
-			// Top Pane (VBox for the welcome label and line)
-			VBox topPane = new VBox();
-			topPane.getChildren().addAll(welcome, line);
-			topPane.setAlignment(Pos.CENTER);
-			VBox.setMargin(welcome, new Insets(50, 0, 5, 0));
+	        // Bottom Pane (HBox for the Start button)
+	        HBox bottomPane = new HBox(startButton);
+	        bottomPane.setAlignment(Pos.CENTER);
+	        HBox.setMargin(startButton, new Insets(0, 0, 80, 0));
 
-			// Center Pane (HBox for the logo)
-			HBox middlePane = new HBox();
-			middlePane.getChildren().addAll(logoImageView);
-			middlePane.setAlignment(Pos.CENTER);
+	        // Main layout with BorderPane
+	        BorderPane starterScreen = new BorderPane();
+	        starterScreen.setId("startBackground");  // Use CSS for background
+	        starterScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-			// Bottom Pane (HBox for the Start button)
-			HBox bottomPane = new HBox(startButton);
-			bottomPane.setAlignment(Pos.CENTER);
-			HBox.setMargin(startButton, new Insets(0, 0, 80, 0));
+	        // Set the location of elements in the BorderPane
+	        starterScreen.setTop(topPane);
+	        starterScreen.setCenter(middlePane);
+	        starterScreen.setBottom(bottomPane);
 
-			// Main layout with BorderPane
-			BorderPane starterScreen = new BorderPane();
-			starterScreen.setId("startBackground");
-			starterScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	        // Store the initial scene
+	        Scene loginScene = new Scene(starterScreen, 900, 600);
 
-			// Set the location of elements in the BorderPane
-			starterScreen.setTop(topPane);
-			starterScreen.setCenter(middlePane);
-			starterScreen.setBottom(bottomPane);
+	        // Set the scene and show the stage
+	        primaryStage.setScene(loginScene);
 
-			// Store the initial scene
-			Scene loginScene = new Scene(starterScreen, 900, 600);
+	        // Ensure layout is recalculated after resizing
+	        primaryStage.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+	            starterScreen.requestLayout(); // Forces layout recalculation
+	        });
 
-			// Set the scene and show the stage
-			primaryStage.setScene(loginScene);
-			primaryStage.show();
-		}
+	        primaryStage.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+	            starterScreen.requestLayout(); // Forces layout recalculation
+	        });
 
-		catch (SQLException e) {
-
-			System.err.println("Database error: " + e.getMessage());
-			e.printStackTrace();
-		}
-
+	        primaryStage.show();
+	    } catch (SQLException e) {
+	        System.err.println("Database error: " + e.getMessage());
+	        e.printStackTrace();
+	    }
 	}
 
 	private void createAdmin(Stage primaryStage) {

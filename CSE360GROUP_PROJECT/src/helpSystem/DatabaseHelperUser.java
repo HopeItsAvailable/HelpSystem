@@ -71,6 +71,7 @@ class DatabaseHelperUser {
 	    statement.execute(userTable);
 	}
 
+	
 	private String serializeUserGroups(ArrayList<String> userGroups) {
 	    return gson.toJson(userGroups);
 	}
