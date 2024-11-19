@@ -55,7 +55,8 @@ class DatabaseHelperArticle {
 				+ "keywords VARCHAR(255),"
 				+ "body VARCHAR(255),"
 				+ "references VARCHAR(255),"
-				+ "level VARCHAR(255))";
+				+ "level VARCHAR(255),"
+				+ "articleGroup VARCHAR(255))"; //holds group that the article is assigned to
 		statement.execute(userTable);
 	}
 
@@ -69,9 +70,15 @@ class DatabaseHelperArticle {
 		}
 		return true;
 	}
+<<<<<<< HEAD
 	
     //encryption 
 	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level) throws Exception {
+=======
+		
+	
+	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level, char[] group) throws Exception {
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
 		
 		/*//Convert char to strings
 		String titleStr = new String(title);
@@ -81,9 +88,11 @@ class DatabaseHelperArticle {
 	    String bodyStr = new String(body);
 	    String referencesStr = new String(references);
 	    String levelStr = new String(level);
+	    String articleGroup = new String(group);
 
 		
 		
+<<<<<<< HEAD
 		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		*/
 		    String titleStr = new String(title);
@@ -129,6 +138,19 @@ class DatabaseHelperArticle {
 		        e.printStackTrace();
 		        throw new RuntimeException("Error while registering the article");
 		    }
+=======
+		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level, articleGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
+			pstmt.setString(1, titleStr);
+			pstmt.setString(2, authorStr);
+			pstmt.setString(3, abstractStr);
+			pstmt.setString(4, keywordsStr);
+			pstmt.setString(5, bodyStr);
+			pstmt.setString(6, referencesStr);
+			pstmt.setString(7, levelStr);
+			pstmt.setString(8, articleGroup);
+			pstmt.executeUpdate();
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
 		}
 	
 	public boolean doesArticleExist(String title) {
@@ -338,6 +360,7 @@ class DatabaseHelperArticle {
                     String body = rsBackup.getString("body");
                     String references = rsBackup.getString("references");
                     String level = rsBackup.getString("level");
+                    String group = rsBackup.getString("group");
 
                     // Check if the article with the same title already exists in the original database
                     if (!doesArticleExist(title)) {
@@ -346,7 +369,7 @@ class DatabaseHelperArticle {
                         try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
                         	register(title.toCharArray(), author.toCharArray(), paperAbstract.toCharArray(), 
                                     keywords.toCharArray(), body.toCharArray(), references.toCharArray(), 
-                                    level.toCharArray());
+                                    level.toCharArray(), group.toCharArray());
                         }
                     } 
                 }
@@ -370,7 +393,7 @@ class DatabaseHelperArticle {
 	        try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
 	            // Set the new value for the body field
 	            pstmt.setString(1, newBody);
-	            pstmt.setString(2, title); // Where clause to match the title
+	            pstmt.setString(2, title); 
 	            
 	            int rowsAffected = pstmt.executeUpdate();
 	            
