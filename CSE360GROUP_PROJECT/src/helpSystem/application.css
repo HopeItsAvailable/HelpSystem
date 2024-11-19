@@ -19,3 +19,15 @@
     -fx-font-size: 1.5em; /* Font size */
     -fx-font-family: "Montserrat"; /* Font style */
 }
+#buttonDesign {
+    -fx-background-color: black; /* Button background color */
+    -fx-text-fill: white; /* Text color */
+    -fx-font-size: 1.5em; /* Font size */
+    -fx-font-family: "Montserrat"; /* Font style */
+}
+#buttonDesign2 {
+    -fx-background-color: black; /* Button background color */
+    -fx-text-fill: white; /* Text color */
+    -fx-font-size: 1.2em; /* Font size */
+    -fx-font-family: "Montserrat"; /* Font style */
+}
