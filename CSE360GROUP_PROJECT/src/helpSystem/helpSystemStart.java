@@ -1,4 +1,4 @@
-package helpSystem;
+​​package helpSystem;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -2284,12 +2284,6 @@ public class helpSystemStart extends Application {
 				} else {
 					getLevel.setStyle(""); // Reset style if there’s a valid selection
 				}
-				if (getGroup.getValue() == null) {
-					getGroup.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-				} else {
-					getGroup.setStyle(""); // Reset style if there’s a valid selection
-				}
-				
 
 				if (!emailText.getText().isEmpty() && !firstNameText.getText().isEmpty()
 						&& !confFirstNameText.getText().isEmpty() && !middleNameText.getText().isEmpty()
@@ -2303,9 +2297,8 @@ public class helpSystemStart extends Application {
 					char[] body = lastNameText.getText().toCharArray();
 					char[] references = referencesText.getText().toCharArray();
 					char[] level = getLevel.getValue().toCharArray();
-					char[] group = getLevel.getValue().toCharArray();
 					try {
-						databaseHelper1.register(title, author, abstract1, keywords, body, references, level, group);
+						databaseHelper1.register(title, author, abstract1, keywords, body, references, level);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
