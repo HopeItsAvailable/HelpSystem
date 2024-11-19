@@ -55,7 +55,8 @@ class DatabaseHelperArticle {
 				+ "keywords VARCHAR(255),"
 				+ "body VARCHAR(255),"
 				+ "references VARCHAR(255),"
-				+ "level VARCHAR(255))";
+				+ "level VARCHAR(255),"
+				+ "articleGroup VARCHAR(255))"; //holds group that the article is assigned to
 		statement.execute(userTable);
 	}
 
@@ -70,20 +71,53 @@ class DatabaseHelperArticle {
 		return true;
 	}
 
-	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level) throws Exception {
+	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level, char[] group) throws Exception {
 		
-		//Convert char to strings
-		String titleStr = new String(title);
-	    String authorStr = new String(author);
-	    String abstractStr = new String(paper_abstract);
-	    String keywordsStr = new String(keywords);
-	    String bodyStr = new String(body);
-	    String referencesStr = new String(references);
-	    String levelStr = new String(level);
+	} /*
+		    String titleStr = new String(title);
+		    String authorStr = new String(author);
+		    String abstractStr = new String(paper_abstract);
+		    String keywordsStr = new String(keywords);
+		    String bodyStr = new String(body);
+		    String referencesStr = new String(references);
+		    String levelStr = new String(level);
 
-		
-		
-		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		    // Encryption setup
+		    EncryptionHelper encryptionHelper = new EncryptionHelper();
+		    byte[] iv = new byte[16]; // Initialization vector (16 bytes for AES)
+		    new java.security.SecureRandom().nextBytes(iv); // Generate a secure random IV
+
+		    // Encrypt fields
+		    String encryptedTitle = Base64.getEncoder().encodeToString(encryptionHelper.encrypt(titleStr.getBytes(), iv));
+		    String encryptedAuthor = Base64.getEncoder().encodeToString(encryptionHelper.encrypt(authorStr.getBytes(), iv));
+		    String encryptedAbstract = Base64.getEncoder().encodeToString(encryptionHelper.encrypt(abstractStr.getBytes(), iv));
+		    String encryptedKeywords = Base64.getEncoder().encodeToString(encryptionHelper.encrypt(keywordsStr.getBytes(), iv));
+		    String encryptedBody = Base64.getEncoder().encodeToString(encryptionHelper.encrypt(bodyStr.getBytes(), iv));
+		    String encryptedReferences = Base64.getEncoder().encodeToString(encryptionHelper.encrypt(referencesStr.getBytes(), iv));
+
+		    // SQL to insert the article into the database
+		    String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level, iv) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+		    try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
+		        // Set encrypted fields
+		        pstmt.setString(1, encryptedTitle);
+		        pstmt.setString(2, encryptedAuthor);
+		        pstmt.setString(3, encryptedAbstract);
+		        pstmt.setString(4, encryptedKeywords);
+		        pstmt.setString(5, encryptedBody);
+		        pstmt.setString(6, encryptedReferences);
+		        pstmt.setString(7, levelStr);
+
+		        // Store the IV (Base64-encoded for readability/storage convenience)
+		        pstmt.setString(8, Base64.getEncoder().encodeToString(iv));
+
+		        // Execute the SQL statement
+		        pstmt.executeUpdate();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        throw new RuntimeException("Error while registering the article");
+		    }
+		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level, articleGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, titleStr);
 			pstmt.setString(2, authorStr);
@@ -92,9 +126,11 @@ class DatabaseHelperArticle {
 			pstmt.setString(5, bodyStr);
 			pstmt.setString(6, referencesStr);
 			pstmt.setString(7, levelStr);
+			pstmt.setString(8, articleGroup);
 			pstmt.executeUpdate();
+		*/
 		}
-	}
+		
 	
 	public boolean doesArticleExist(String title) {
 	    String query = "SELECT COUNT(*) FROM cse360Articles WHERE title = ?";
@@ -186,7 +222,7 @@ class DatabaseHelperArticle {
 	}
 	
 	
-	
+
 	public void deleteArticle(String title) throws SQLException {
 		if(doesArticleExist(title)) {
 			
@@ -303,6 +339,7 @@ class DatabaseHelperArticle {
                     String body = rsBackup.getString("body");
                     String references = rsBackup.getString("references");
                     String level = rsBackup.getString("level");
+                    String group = rsBackup.getString("group");
 
                     // Check if the article with the same title already exists in the original database
                     if (!doesArticleExist(title)) {
@@ -311,7 +348,7 @@ class DatabaseHelperArticle {
                         try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
                         	register(title.toCharArray(), author.toCharArray(), paperAbstract.toCharArray(), 
                                     keywords.toCharArray(), body.toCharArray(), references.toCharArray(), 
-                                    level.toCharArray());
+                                    level.toCharArray(), group.toCharArray());
                         }
                     } 
                 }
@@ -335,7 +372,7 @@ class DatabaseHelperArticle {
 	        try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
 	            // Set the new value for the body field
 	            pstmt.setString(1, newBody);
-	            pstmt.setString(2, title); // Where clause to match the title
+	            pstmt.setString(2, title); 
 	            
 	            int rowsAffected = pstmt.executeUpdate();
 	            

@@ -11,14 +11,21 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Bouncy Castle"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/H2"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/neftaligarcia/gson-2.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/BouncyCastle"/>
+<<<<<<< HEAD
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/H2"/>
+=======
+<<<<<<< HEAD
+	<classpathentry kind="lib" path="/Users/cisco/gson-2.10.jar"/>
+=======
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gson"/>
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
 	<classpathentry kind="output" path="bin"/>
 </classpath>
