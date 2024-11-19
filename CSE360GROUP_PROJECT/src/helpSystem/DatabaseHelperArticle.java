@@ -70,31 +70,10 @@ class DatabaseHelperArticle {
 		}
 		return true;
 	}
-<<<<<<< HEAD
-	
-    //encryption 
-	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level) throws Exception {
-=======
-		
-	
-	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level, char[] group) throws Exception {
->>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
-		
-		/*//Convert char to strings
-		String titleStr = new String(title);
-	    String authorStr = new String(author);
-	    String abstractStr = new String(paper_abstract);
-	    String keywordsStr = new String(keywords);
-	    String bodyStr = new String(body);
-	    String referencesStr = new String(references);
-	    String levelStr = new String(level);
-	    String articleGroup = new String(group);
 
+	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body, char[] references, char[] level, char[] group) throws Exception {
 		
-		
-<<<<<<< HEAD
-		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		*/
+	} /*
 		    String titleStr = new String(title);
 		    String authorStr = new String(author);
 		    String abstractStr = new String(paper_abstract);
@@ -138,7 +117,6 @@ class DatabaseHelperArticle {
 		        e.printStackTrace();
 		        throw new RuntimeException("Error while registering the article");
 		    }
-=======
 		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level, articleGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
 			pstmt.setString(1, titleStr);
@@ -150,8 +128,9 @@ class DatabaseHelperArticle {
 			pstmt.setString(7, levelStr);
 			pstmt.setString(8, articleGroup);
 			pstmt.executeUpdate();
->>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem
+		*/
 		}
+		
 	
 	public boolean doesArticleExist(String title) {
 	    String query = "SELECT COUNT(*) FROM cse360Articles WHERE title = ?";
