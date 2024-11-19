@@ -1,4 +1,4 @@
-​​package helpSystem;
+package helpSystem;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -39,9 +39,6 @@ import java.util.*;
 import javafx.scene.image.Image;
 import java.sql.SQLException;
 import java.util.Scanner;
-
-import helpSystem.DatabaseHelperUser;
-import helpSystem.DatabaseHelperArticle;
 
 public class helpSystemStart extends Application {
 
@@ -2852,3 +2849,5 @@ public class helpSystemStart extends Application {
 	}
 
 }
+
+
