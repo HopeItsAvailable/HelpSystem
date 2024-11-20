@@ -53,6 +53,24 @@ public class DatabaseHelperArticle {
 				+ "articleGroup VARCHAR(255))";
 		statement.execute(userTable);
 	}
+	
+	
+	
+	public boolean isSpecialGroupByID(int ID) throws SQLException {
+	    String query = "SELECT articleGroup FROM cse360Articles WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, ID); // Set the article ID
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                String group = rs.getString("articleGroup"); // Get the article group
+	                return !"default".equalsIgnoreCase(group); // Return true if the group is not "default"
+	            } else {
+	                throw new IllegalArgumentException("Article with ID " + ID + " does not exist.");
+	            }
+	        }
+	    }
+	}
+
 
 	public String getArticleGroupByID(int ID) throws SQLException {
 	    String query = "SELECT articleGroup FROM cse360Articles WHERE id = ?";
