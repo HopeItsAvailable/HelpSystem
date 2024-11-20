@@ -949,7 +949,6 @@ public class helpSystemStart extends Application {
 		adminCreateScreen.setTop(topPane);
 		adminCreateScreen.setCenter(middlePane);
 		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
 
 		// Set the scene
 		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
@@ -1698,25 +1697,26 @@ public class helpSystemStart extends Application {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Reset User");
-		Label username = new Label("Username: ");
 		Label noExist = new Label("Username does not exist");
 
 		TextField usernameText = new TextField();
+		usernameText.setPromptText("Username");  // Set placeholder for username
+		usernameText.setPrefWidth(300);  // Set the preferred width
+		usernameText.setMaxWidth(300);   
 
 		Button sendButton = new Button("Send");
 		Button quitButton = new Button("Quit");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		username.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
 
-		noExist.setFont(new Font("Arial", 20));
+		noExist.setFont(new Font("Montserrat", 12));
 		noExist.setStyle("-fx-text-fill: red;");
 		noExist.setVisible(false);
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		sendButton.setStyle("-fx-font-size: 2em;");
+		sendButton.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign");
 
 		// Send button action
 		sendButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1753,41 +1753,64 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
+	
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, usernameText, noExist);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, sendButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Middle Pane
-		HBox middlePane = new HBox(username, usernameText, noExist);
-		HBox.setMargin(username, new Insets(80, 80, 0, 130));
-		HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
-		HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
 
-		// Bottom pane for login button
-		HBox bottomPane = new HBox(sendButton, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(sendButton, new Insets(0, 220, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
@@ -1807,35 +1830,29 @@ public class helpSystemStart extends Application {
 		Button quitButton = new Button("Quit");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		username.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
+		username.setFont(new Font("Montserrat", 20));
 
-		askDelete.setFont(new Font("Arial", 20));
+		askDelete.setFont(new Font("Montserrat", 12));
 		askDelete.setVisible(false);
 
-		noExist.setFont(new Font("Arial", 20));
+		noExist.setFont(new Font("Montserrat", 12));
 		noExist.setStyle("-fx-text-fill: red;");
 		noExist.setVisible(false);
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		deletedButton.setStyle("-fx-font-size: 2em;");
+		deletedButton.setId("buttonDesign"); 
+		declineDelete.setId("buttonDesign"); 
+		confirmDelete.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign"); 
 
-		confirmDelete.setStyle("-fx-font-size: 2em;");
 		confirmDelete.setVisible(false);
-
-		declineDelete.setStyle("-fx-font-size: 2em;");
 		declineDelete.setVisible(false);
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if (usernameText.getText().isEmpty()) {
-					usernameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
-				} else {
-					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
-				}
 
 				if (!databaseHelper.doesUserExist(usernameText.getText().trim())) {
 					noExist.setVisible(true);
@@ -1856,7 +1873,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1886,52 +1903,71 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				deletedButton.setVisible(false);
-				declineDelete.setVisible(true);
-				confirmDelete.setVisible(true);
-				askDelete.setVisible(true);
+				deletedButton.setVisible(true);
+				declineDelete.setVisible(false);
+				confirmDelete.setVisible(false);
+				askDelete.setVisible(false);
 
 			}
 		});
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, usernameText, noExist);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// Middle Pane
-		HBox middlePane = new HBox(username, usernameText, noExist);
-		HBox.setMargin(username, new Insets(80, 80, 0, 130));
-		HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
-		HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
+	    // Center the buttons in the HBox
+	    HBox choicePane = new HBox(20,declineDelete,confirmDelete);
+	    HBox bottomTopPane = new HBox(20, deletedButton, quitButton);
+	    choicePane.setAlignment(Pos.CENTER);
+	    bottomTopPane.setAlignment(Pos.CENTER);
+	    
+	    VBox bottomPane = new VBox(20, bottomTopPane, choicePane,askDelete);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Bottom pane for login button
-		HBox bottomTopPane = new HBox(deletedButton);
-		bottomTopPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(deletedButton, new Insets(0, 0, 30, 0));
 
-		HBox bottomMiddlePane = new HBox(askDelete);
-		bottomMiddlePane.setAlignment(Pos.CENTER);
-		HBox.setMargin(askDelete, new Insets(0, 0, 30, 0));
 
-		HBox bottomBottomPane = new HBox(confirmDelete, declineDelete, quitButton);
-		bottomBottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(confirmDelete, new Insets(0, 0, 30, 260));
-		HBox.setMargin(declineDelete, new Insets(0, 0, 30, 40));
-		HBox.setMargin(quitButton, new Insets(0, 0, 30, 180));
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
 
-		VBox bottomPane = new VBox(bottomTopPane, bottomMiddlePane, bottomBottomPane);
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
@@ -1994,9 +2030,10 @@ public class helpSystemStart extends Application {
 	public void changeRoles(Stage primaryStage) {
 
 		// Labels, buttons, textfield, alert, and checkBox
-		Label welcome = new Label("Remove");
+		Label welcome = new Label("Remove role");
 		Label user = new Label("Username: ");
-		Label noClick = new Label("Please choose roles to remove:");
+		Label noExist = new Label("Username does not exist");
+		Label noClick = new Label("Please choose roles to remove");
 
 		TextField userText = new TextField();
 
@@ -2008,31 +2045,35 @@ public class helpSystemStart extends Application {
 		CheckBox adminAccount = new CheckBox("Admin");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		user.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
+		user.setFont(new Font("Montserrat", 20));
+		
+		noExist.setFont(new Font("Montserrat", 12));
+		noExist.setStyle("-fx-text-fill: red;");
+		noExist.setVisible(false);
 
-		noClick.setFont(new Font("Arial", 20));
+		noClick.setFont(new Font("Montserrat", 12));
 		noClick.setStyle("-fx-text-fill: red;");
 		noClick.setVisible(false);
 
 		// CheckBox design
-		studentAccount.setFont(new Font("Arial", 20));
-		teacherAccount.setFont(new Font("Arial", 20));
-		adminAccount.setFont(new Font("Arial", 20));
+		studentAccount.setFont(new Font("Montserrat", 20));
+		teacherAccount.setFont(new Font("Montserrat", 20));
+		adminAccount.setFont(new Font("Montserrat", 20));
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		removeButton.setStyle("-fx-font-size: 2em;");
+		removeButton.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign");
 
 		// Send button action
 		removeButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 
-				if (userText.getText().isEmpty()) {
-					userText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				if (databaseHelper.doesUserExist(userText.getText())) {
+					noExist.setVisible(false);
 				} else {
-					userText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+					noExist.setVisible(true);
 				}
 				String usernameToDeleteFrom = userText.getText();
 				boolean[] roles = new boolean[3];
@@ -2066,7 +2107,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2076,38 +2117,59 @@ public class helpSystemStart extends Application {
 
 		// Top pane for welcome label
 		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+		HBox checkStuff = new HBox(20, adminAccount,studentAccount,teacherAccount);
+		checkStuff.setAlignment(Pos.CENTER);
+	
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, userText, noExist, checkStuff,noClick);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// Middle Pane
-		HBox middleTopPane = new HBox(user, userText);
-		HBox.setMargin(user, new Insets(80, 80, 0, 130));
-		HBox.setMargin(userText, new Insets(80, 80, 0, 0));
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, removeButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		HBox middleBottomPane = new HBox(adminAccount, studentAccount, teacherAccount, noClick);
-		HBox.setMargin(adminAccount, new Insets(80, 40, 0, 60));
-		HBox.setMargin(studentAccount, new Insets(80, 40, 0, 0));
-		HBox.setMargin(teacherAccount, new Insets(80, 40, 0, 0));
-		HBox.setMargin(noClick, new Insets(80, 0, 0, 0));
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
 
-		VBox middlePane = new VBox(middleTopPane, middleBottomPane);
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
 
-		// Bottom pane for login button
-		HBox bottomPane = new HBox(removeButton, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(removeButton, new Insets(0, 220, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
@@ -2319,18 +2381,19 @@ public class helpSystemStart extends Application {
 		getLevel.getItems().add("Expert");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		email.setFont(new Font("Arial", 20));
-		firstName.setFont(new Font("Arial", 20));
-		confFirstName.setFont(new Font("Arial", 20));
-		middleName.setFont(new Font("Arial", 20));
-		lastName.setFont(new Font("Arial", 20));
-		references.setFont(new Font("Arial", 20));
-		level.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
+		email.setFont(new Font("Montserrat", 20));
+		firstName.setFont(new Font("Montserrat", 20));
+		confFirstName.setFont(new Font("Montserrat", 20));
+		middleName.setFont(new Font("Montserrat", 20));
+		lastName.setFont(new Font("Montserrat", 20));
+		references.setFont(new Font("Montserrat", 20));
+		level.setFont(new Font("Montserrat", 20));
 
 		// Button design
-		conButton.setStyle("-fx-font-size: 2em;");
-		quitButton.setStyle("-fx-font-size: 1.5em;");
+		conButton.setId("buttonDesign");  // Set the ID for styling
+	    quitButton.setId("buttonDesign");  // Set the ID for styling
+
 
 		// Con button action
 		conButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -2405,7 +2468,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2416,9 +2479,16 @@ public class helpSystemStart extends Application {
 		// Layout setup
 
 		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
+		HBox topTop = new HBox(quitButton);
+		topTop.setAlignment(Pos.CENTER_RIGHT);
+		topTop.setPadding(new Insets(20, 20, 0, 0));
+
+		HBox topBottom = new HBox(welcome);
+		topBottom.setAlignment(Pos.CENTER);
+		topBottom.setPadding(new Insets(0, 0, 30, 0));
+				
+		VBox topPane = new VBox(20,topTop, topBottom);
 		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
 		// Middle VBoxs
 		VBox middleOne = new VBox(firstName, middleName, email, level);
@@ -2445,20 +2515,21 @@ public class helpSystemStart extends Application {
 
 		// Combine VBoxs
 		HBox middlePane = new HBox(middleOne, middleTwo, middleThree, middleFour);
+		middlePane.setAlignment(Pos.TOP_CENTER);
 
 		// Bottom pane for login button
-		HBox bottomPane = new HBox(conButton, quitButton);
+		HBox bottomPane = new HBox(conButton);
 		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(conButton, new Insets(0, 220, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+		bottomPane.setPadding(new Insets(0, 0, 50, 0));;
 
 		// BorderPane layout
 		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setId("startBackground");
+		adminCreateScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		adminCreateScreen.setTop(topPane);
 		adminCreateScreen.setCenter(middlePane);
 		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
-
+		
 		// Set the scene
 		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
 		primaryStage.setScene(welcomeScene);
@@ -2561,38 +2632,32 @@ public class helpSystemStart extends Application {
 	public void deleteArticle(Stage primaryStage) {
 
 		// Labels, buttons, textfield, alert, and checkBox
-		Label welcome = new Label("Delete an Article");
-		Label username = new Label("Username: ");
-		Label noExist = new Label("Username does not exist");
+		Label welcome = new Label("Delete Article");
+		Label noExist = new Label("Article does not exist");
 
 		TextField usernameText = new TextField();
+		usernameText.setPromptText("Username");  // Set placeholder for username
+		usernameText.setPrefWidth(300);  // Set the preferred width
+		usernameText.setMaxWidth(300);   
 
-		Button deletedButton = new Button("Delete");
 		Button quitButton = new Button("Quit");
+		Button deletedButton = new Button("Delete");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		username.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
 
-		noExist.setFont(new Font("Arial", 20));
+		noExist.setFont(new Font("Montserrat", 12));
 		noExist.setStyle("-fx-text-fill: red;");
 		noExist.setVisible(false);
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		deletedButton.setStyle("-fx-font-size: 2em;");
+		quitButton.setId("buttonDesign"); 
+		deletedButton.setId("buttonDesign");
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if (usernameText.getText().isEmpty()) {
-					usernameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
-					return;
-				} else {
-					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
-				}
-
 				if (databaseHelper1.doesArticleExist(usernameText.getText().strip())) {
 					noExist.setVisible(false);
 					try {
@@ -2613,7 +2678,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2621,33 +2686,56 @@ public class helpSystemStart extends Application {
 			}
 		});
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, usernameText, noExist);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// Middle Pane
-		HBox middlePane = new HBox(username, usernameText, noExist);
-		HBox.setMargin(username, new Insets(80, 80, 0, 130));
-		HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
-		HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, deletedButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Bottom pane for login button
-		HBox bottomPane = new HBox(deletedButton, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
@@ -2658,17 +2746,20 @@ public class helpSystemStart extends Application {
 		Label username = new Label("File name: ");
 
 		TextField fileNameText = new TextField();
+		fileNameText.setPromptText("Username");  // Set placeholder for username
+		fileNameText.setPrefWidth(300);  // Set the preferred width
+		fileNameText.setMaxWidth(300);   
 
 		Button deletedButton = new Button("Backup");
 		Button quitButton = new Button("Quit");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		username.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
+		username.setFont(new Font("Montserrat", 20));
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		deletedButton.setStyle("-fx-font-size: 2em;");
+		deletedButton.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign");
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -2695,7 +2786,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2703,32 +2794,56 @@ public class helpSystemStart extends Application {
 			}
 		});
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, fileNameText);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// Middle Pane
-		HBox middlePane = new HBox(username, fileNameText);
-		HBox.setMargin(username, new Insets(80, 80, 0, 130));
-		HBox.setMargin(fileNameText, new Insets(80, 80, 0, 0));
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, deletedButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Bottom pane for login button
-		HBox bottomPane = new HBox(deletedButton, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(deletedButton, new Insets(0, 220, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(20,middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
@@ -2736,22 +2851,23 @@ public class helpSystemStart extends Application {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Restore Articles");
-		Label username = new Label("File name: ");
 
 		TextField fileNameText = new TextField();
+		fileNameText.setPromptText("Filename");  // Set placeholder for username
+		fileNameText.setPrefWidth(300);  // Set the preferred width
+		fileNameText.setMaxWidth(300);   
 
 		Button deletedButton = new Button("Restore");
 		Button mergeButton = new Button("Merge");
 		Button quitButton = new Button("Quit");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		username.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		deletedButton.setStyle("-fx-font-size: 2em;");
-		mergeButton.setStyle("-fx-font-size: 2em;");
+		deletedButton.setId("buttonDesign"); 
+		mergeButton.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign");	
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -2800,7 +2916,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2808,33 +2924,56 @@ public class helpSystemStart extends Application {
 			}
 		});
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, fileNameText);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// Middle Pane
-		HBox middlePane = new HBox(username, fileNameText);
-		HBox.setMargin(username, new Insets(80, 80, 0, 130));
-		HBox.setMargin(fileNameText, new Insets(80, 80, 0, 0));
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, deletedButton, mergeButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Bottom pane for login button
-		HBox bottomPane = new HBox(mergeButton, deletedButton, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(mergeButton, new Insets(0, 0, 80, 0));
-		HBox.setMargin(deletedButton, new Insets(0, 120, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(20, middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 	
@@ -2842,40 +2981,37 @@ public class helpSystemStart extends Application {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Update an Article");
-		Label articleName = new Label("Article Name: ");
-		Label bodyAsk = new Label("New Body: ");
 		Label noExist = new Label("Article does not exist");
 
 		TextField usernameText = new TextField();
+		usernameText.setPromptText("Article Name");  // Set placeholder for username
+		usernameText.setPrefWidth(300);  // Set the preferred width
+		usernameText.setMaxWidth(300);   
+		
 		TextField bodyText = new TextField();
+		bodyText.setPromptText("New Body");  // Set placeholder for username
+		bodyText.setPrefWidth(300);  // Set the preferred width
+		bodyText.setMaxWidth(300);   
 
 		Button updateArticle = new Button("Update Article");
 		Button quitButton = new Button("Quit");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		articleName.setFont(new Font("Arial", 20));
-		bodyAsk.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
 
-		noExist.setFont(new Font("Arial", 20));
+		noExist.setFont(new Font("Montserrat", 12));
 		noExist.setStyle("-fx-text-fill: red;");
 		noExist.setVisible(false);
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		updateArticle.setStyle("-fx-font-size: 2em;");
+		updateArticle.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign");
 
 		// Send button action
 		updateArticle.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if (usernameText.getText().isEmpty()) {
-					usernameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
-					return;
-				} else {
-					usernameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
-				}
-
+				
 				if (databaseHelper1.doesArticleExist(usernameText.getText().strip())) {
 					noExist.setVisible(false);
 					try {
@@ -2896,7 +3032,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2904,43 +3040,56 @@ public class helpSystemStart extends Application {
 			}
 		});
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, usernameText, noExist, bodyText);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// Middle Top Pane
-		HBox middleTopPane = new HBox(articleName, usernameText, noExist);
-		HBox.setMargin(articleName, new Insets(80, 80, 0, 130));
-		HBox.setMargin(usernameText, new Insets(80, 80, 0, 0));
-		HBox.setMargin(noExist, new Insets(80, 80, 0, 0));
-		
-		// Middle Bottom Pane
-		HBox middleBottomPane = new HBox(bodyAsk, bodyText);
-		HBox.setMargin(bodyAsk, new Insets(80, 80, 0, 130));
-		HBox.setMargin(bodyText, new Insets(80, 80, 0, 0));
-		
-		//Middle Pane
-		VBox middlePane = new VBox(middleTopPane,middleBottomPane);
-		middlePane.setAlignment(Pos.CENTER);
-		
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, updateArticle, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Bottom pane for login button
-		HBox bottomPane = new HBox(updateArticle, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(updateArticle, new Insets(0, 220, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(20, middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
