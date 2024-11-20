@@ -6,11 +6,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Scanner;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+
 
 import org.bouncycastle.util.Arrays;
 
+import helpSystem.DatabaseHelperUser;
 import Encryption.EncryptionHelper;
 import Encryption.EncryptionUtils;
 
@@ -54,7 +61,73 @@ public class DatabaseHelperArticle {
 		statement.execute(userTable);
 	}
 	
+	public int getNumberOfArticles() throws SQLException {
+	    String query = "SELECT COUNT(*) AS rowCount FROM cse360Articles";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query);
+	         ResultSet rs = pstmt.executeQuery()) {
+	        if (rs.next()) {
+	            return rs.getInt("rowCount");
+	        } else {
+	            return 0;
+	        }
+	    }
+	}
 	
+	//METHODS TO MAKE:
+	//print all (unencrypted and encrypted)
+	//print by group (unencrypted and encrypted)
+	//get number of rows in a table
+	
+	
+	
+	public ResultSet searchArticles(String username, String searchQuery, String groupFilter, boolean viewAll) throws Exception {
+	    DatabaseHelperUser userHelper = new DatabaseHelperUser();
+	    userHelper.connectToDatabase();
+	    
+	    ArrayList<String> userGroups = userHelper.getUserGroups(username);
+	    String query = "SELECT * FROM cse360Articles WHERE (title LIKE ? OR author LIKE ? OR paper_abstract LIKE ?)";
+	    
+	    if (viewAll == false) {
+	        if (groupFilter != null && !groupFilter.isEmpty()) {
+	            if (userGroups.contains(groupFilter)) {
+	                query += " AND articleGroup = ?";
+	            } else {
+	                System.out.println("You do not have access to this group.");
+	                return null;
+	            }
+	        } else {
+	            query += " AND articleGroup IN (" + String.join(",", userGroups.stream().map(g -> "?").toList()) + ")";
+	        }
+	    }
+
+	    // Prepare statement and set parameters
+	    PreparedStatement pstmt = connection.prepareStatement(query);
+	    pstmt.setString(1, "%" + searchQuery + "%");
+	    pstmt.setString(2, "%" + searchQuery + "%");
+	    pstmt.setString(3, "%" + searchQuery + "%");
+
+	    int parameterIndex = 4;
+	    if (viewAll == false) {
+	        if (groupFilter != null && !groupFilter.isEmpty()) {
+	            pstmt.setString(4, groupFilter);
+	        } else {
+	            for (String group : userGroups) {
+	                pstmt.setString(parameterIndex++, group);
+	            }
+	        }
+	    }
+
+	    // Execute query and return the ResultSet
+	    return pstmt.executeQuery();
+	}
+
+	
+	
+	
+	
+	
+	
+
 	
 	public boolean isSpecialGroupByID(int ID) throws SQLException {
 	    String query = "SELECT articleGroup FROM cse360Articles WHERE id = ?";
@@ -70,6 +143,7 @@ public class DatabaseHelperArticle {
 	        }
 	    }
 	}
+	
 
 
 	public String getArticleGroupByID(int ID) throws SQLException {
