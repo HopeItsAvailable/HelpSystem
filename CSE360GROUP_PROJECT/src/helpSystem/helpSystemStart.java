@@ -1276,8 +1276,8 @@ public class helpSystemStart extends Application {
 	private void adminPage(Stage primaryStage) {
 		
 		Label welcome = new Label("Welcome Admin");
-		Label articleButtons = new Label("Article Stuff");
-		Label userButtons = new Label("User/Group Stuff");
+		Label articleButtons = new Label("Article Commands");
+		Label userButtons = new Label("User/Group Commands");
 
 		Button inviteUserButton = new Button("Invite User");
 		Button resetUserButton = new Button("Reset User");
@@ -1287,7 +1287,7 @@ public class helpSystemStart extends Application {
 		Button createGroup = new Button("Create Group");
 
 		Button createArticle = new Button("Create Article");
-		Button deleteArticle = new Button("Delete Aritcle");
+		Button deleteArticle = new Button("Delete Article");
 		Button listArticles = new Button("List Articles");
 		Button backupArticles = new Button("Back up Articles");
 		Button RestoreArticles = new Button("Restore Articles");
