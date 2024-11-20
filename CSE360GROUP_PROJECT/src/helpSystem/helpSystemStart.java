@@ -18,6 +18,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -38,6 +39,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import java.util.*;
 import javafx.scene.image.Image;
+
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -2614,6 +2617,7 @@ public class helpSystemStart extends Application {
 		ChoiceBox<String> level = new ChoiceBox<>();
 
 		level.getItems().addAll("Beginner", "Intermediate", "Advanced", "Expert", "All");
+		
 
 		// Label design
 		welcome.setFont(new Font("Arial", 36));
@@ -3664,6 +3668,8 @@ public class helpSystemStart extends Application {
 	public void manageGroup(Stage primaryStage, String userName) {
 		
 	}
+
+
 }
 
 
