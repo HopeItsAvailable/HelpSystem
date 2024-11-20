@@ -2454,7 +2454,7 @@ public class helpSystemStart extends Application {
 					char[] references = referencesText.getText().toCharArray();
 					char[] level = getLevel.getValue().toCharArray();
 					try {
-						databaseHelper1.register(title, author, abstract1, keywords, body, references, level);
+						//databaseHelper1.register(title, author, abstract1, keywords, body, references, level);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
