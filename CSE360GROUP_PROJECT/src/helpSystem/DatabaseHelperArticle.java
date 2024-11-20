@@ -54,6 +54,35 @@ public class DatabaseHelperArticle {
 		statement.execute(userTable);
 	}
 
+	public String getArticleGroupByID(int ID) throws SQLException {
+	    String query = "SELECT articleGroup FROM cse360Articles WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, ID); // Set the ID parameter
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getString("articleGroup"); // Return the article group if the record exists
+	            } else {
+	                return null; // Return null if no record is found
+	            }
+	        }
+	    }
+	}
+	
+	public String getArticleGroupByTitle(String title) throws SQLException {
+	    String query = "SELECT articleGroup FROM cse360Articles WHERE title = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, title); // Set the ID parameter
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getString("articleGroup"); // Return the article group if the record exists
+	            } else {
+	                return null; // Return null if no record is found
+	            }
+	        }
+	    }
+	}
+
+	
 	// Check if the database is empty
 	public boolean isDatabaseEmpty() throws SQLException {
 		String query = "SELECT COUNT(*) AS count FROM cse360Articles";
