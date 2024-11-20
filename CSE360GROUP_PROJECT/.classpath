@@ -19,5 +19,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/cisco/gson-2.10.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Bouncy Castle"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gson"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
