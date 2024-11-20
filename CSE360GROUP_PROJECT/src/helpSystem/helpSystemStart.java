@@ -41,6 +41,9 @@ import javafx.scene.image.Image;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import helpSystem.DatabaseHelperUser;
+import helpSystem.DatabaseHelperArticle;
+
 public class helpSystemStart extends Application {
 
 	private static DatabaseHelperUser databaseHelper;
