@@ -81,6 +81,48 @@ public class DatabaseHelperUser {
 	    return gson.fromJson(json, listType);
 	}
 	
+	public boolean isStudent(String username) throws SQLException {
+	    String query = "SELECT isStudent FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getBoolean("isStudent"); 
+	            } else {
+	                return false; 
+	            }
+	        }
+	    }
+	}
+	
+	public boolean isInstructor(String username) throws SQLException {
+	    String query = "SELECT isInstructor FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getBoolean("isInstructor"); 
+	            } else {
+	                return false; 
+	            }
+	        }
+	    }
+	}
+
+	public boolean isAdmin(String username) throws SQLException {
+	    String query = "SELECT isAdmin FROM cse360users WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                return rs.getBoolean("isAdmin");
+	            } else {
+	                return false; 
+	            }
+	        }
+	    }
+	}
+	
 	public boolean[] getUserRoles(String username) throws SQLException {
 	    String query = "SELECT isAdmin, isStudent, isInstructor FROM cse360users WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
