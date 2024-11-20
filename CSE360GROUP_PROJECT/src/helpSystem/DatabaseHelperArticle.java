@@ -14,7 +14,7 @@ import org.bouncycastle.util.Arrays;
 import Encryption.EncryptionHelper;
 import Encryption.EncryptionUtils;
 
-class DatabaseHelperArticle {
+public class DatabaseHelperArticle {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
