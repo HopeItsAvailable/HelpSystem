@@ -56,7 +56,7 @@ public class DatabaseHelperArticle {
 	private void createTables() throws SQLException {
 		String userTable = "CREATE TABLE IF NOT EXISTS cse360Articles (" + "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "title VARCHAR(255) UNIQUE, " + "author VARCHAR(255), " + "paper_abstract VARCHAR(255),"
-				+ "keywords VARCHAR(255)," + "body VARCHAR(255)," + "references VARCHAR(255)," + "level VARCHAR(255)"
+				+ "keywords VARCHAR(255)," + "body VARCHAR(255)," + "references VARCHAR(255)," + "level VARCHAR(255),"
 				+ "articleGroup VARCHAR(255))";
 		statement.execute(userTable);
 	}
