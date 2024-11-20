@@ -3662,8 +3662,170 @@ public class helpSystemStart extends Application {
 	}
 	
 	public void manageGroup(Stage primaryStage, String userName) {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("Manage Group");
+		Label chooseGroup = new Label("Choose Group");
+
+		TextField fileNameText = new TextField();
+		fileNameText.setPromptText("Inssructor Account");  // Set placeholder for username
+		fileNameText.setPrefWidth(300);  // Set the preferred width
+		fileNameText.setMaxWidth(300);   
+
+		Button addInButton = new Button("Add Instructor");
+		Button deleteInButton = new Button("Delete Instructor");
+		Button quitButton = new Button("Quit");
 		
+		ChoiceBox<String> getGroup = new ChoiceBox<>();
+
+		// Label design
+		welcome.setFont(new Font("Montserrat", 36));
+		
+		chooseGroup.setFont(new Font("Montserrat", 12));
+		chooseGroup.setStyle("-fx-text-fill: red;");
+		chooseGroup.setVisible(false);
+
+		// Button design
+		addInButton.setId("buttonDesign"); 
+		deleteInButton.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign");	
+
+		// Send button action
+		addInButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+				if (getGroup.getValue() == null) 
+				{
+					chooseGroup.setVisible(true);
+				} 
+				
+				else 
+				{
+					chooseGroup.setVisible(false);
+				}
+				
+				
+				if (fileNameText.getText().isEmpty()) 
+				{
+					fileNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} 
+				
+				else 
+				{
+					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+				
+				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
+					
+					//TODO Add Instruct into Group	
+					
+				}
+
+			}
+		});
+		
+		// Send button action
+		deleteInButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+				if (getGroup.getValue() == null) 
+				{
+					chooseGroup.setVisible(true);
+				} 
+				
+				else 
+				{
+					chooseGroup.setVisible(false);
+				}
+				
+				
+				if (fileNameText.getText().isEmpty()) 
+				{
+					fileNameText.setStyle("-fx-border-color: red; -fx-border-width: 2;");
+				} 
+				
+				else 
+				{
+					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
+				}
+				
+				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
+					
+					//TODO Delete Instruct from Group
+					
+				}
+
+			}
+		});
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					login(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, fileNameText,getGroup,chooseGroup);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
+
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, addInButton, deleteInButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
+
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
+
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
+
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(20, middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
+
 	}
+
 }
 
 
