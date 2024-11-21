@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Scanner;
 import javafx.scene.control.TableView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -121,14 +123,6 @@ public class DatabaseHelperArticle {
 	    return pstmt.executeQuery();
 	}
 
-	
-	
-	
-	
-	
-	
-
-	
 	public boolean isSpecialGroupByID(int ID) throws SQLException {
 	    String query = "SELECT articleGroup FROM cse360Articles WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -229,7 +223,7 @@ public class DatabaseHelperArticle {
 		return false; // If an error occurs, assume user doesn't exist
 	}
 
-	public String displayArticles() throws Exception {
+	/*public String displayArticles() throws Exception {
 		String sql = "SELECT * FROM cse360Articles";
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery(sql);
@@ -258,6 +252,29 @@ public class DatabaseHelperArticle {
 
 		return allArticles.toString();
 
+	}*/
+	
+	public ObservableList<Article> displayArticles() throws SQLException {
+	    String sql = "SELECT * FROM cse360Articles";
+	    Statement stmt = connection.createStatement();
+	    ResultSet rs = stmt.executeQuery(sql);
+
+	    ObservableList<Article> articles = FXCollections.observableArrayList();
+
+	    while (rs.next()) {
+	        int id = rs.getInt("id");
+	        String title = rs.getString("title");
+	        String author = rs.getString("author");
+	        String paperAbstract = rs.getString("paper_abstract");
+	        String keywords = rs.getString("keywords");
+	        String body = rs.getString("body");
+	        String references = rs.getString("references");
+	        String level = rs.getString("level");
+
+	        articles.add(new Article(id, title, author, paperAbstract, keywords, body, references, level));
+	    }
+
+	    return articles;
 	}
 
 	public String displayGroupedArticles(String group) throws Exception {
