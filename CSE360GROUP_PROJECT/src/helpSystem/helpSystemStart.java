@@ -3953,7 +3953,7 @@ public class helpSystemStart extends Application {
 		Button mergeButton = new Button("Merge");
 		Button quitButton = new Button("Quit");
 		
-		ChoiceBox<String> getGroup = new ChoiceBox<>();
+		//ChoiceBox<String> getGroup = new ChoiceBox<>();
 		
 		ArrayList<String> userGroups = null;
 		try {
@@ -3962,10 +3962,10 @@ public class helpSystemStart extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // Get groups for user
-        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+        //getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
 
         if (userGroups.isEmpty()) {
-            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+            //getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
         }
 
 		// Label design
@@ -3985,15 +3985,6 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				
-				if (getGroup.getValue() == null) 
-				{
-					chooseGroup.setVisible(true);
-				} 
-				
-				else 
-				{
-					chooseGroup.setVisible(false);
-				}
 				
 				
 				if (fileNameText.getText().isEmpty()) 
@@ -4006,12 +3997,15 @@ public class helpSystemStart extends Application {
 					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
 				
-				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
+				if (!fileNameText.getText().isEmpty()) {
 					
 					//TODO Restore Group
 					try {
 						databaseHelper2.restoreArticleGroups(fileNameText.getText().strip());
 					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -4026,15 +4020,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				
-				if (getGroup.getValue() == null) 
-				{
-					chooseGroup.setVisible(true);
-				} 
 				
-				else 
-				{
-					chooseGroup.setVisible(false);
-				}
 				
 				
 				if (fileNameText.getText().isEmpty()) 
@@ -4047,7 +4033,7 @@ public class helpSystemStart extends Application {
 					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 				}
 				
-				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
+				if (!fileNameText.getText().isEmpty()) {
 					
 					//TODO Merge Group
 					
@@ -4070,7 +4056,7 @@ public class helpSystemStart extends Application {
 		});
 
 		// Center the elements in the VBox
-	    VBox middleMiddlePane = new VBox(10, welcome, fileNameText,getGroup,chooseGroup);
+	    VBox middleMiddlePane = new VBox(10, welcome, fileNameText,chooseGroup);
 	    middleMiddlePane.setAlignment(Pos.CENTER);
 	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
 	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));

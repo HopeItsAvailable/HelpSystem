@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import helpSystem.DatabaseHelperUser;
 
 public class DatabaseHelperArticleGroups {
+	
+	
 
     // JDBC driver name and database URL
 	
@@ -185,8 +187,11 @@ public class DatabaseHelperArticleGroups {
         connectToDatabase(); // Reconnect to the database
     }
     
-    public boolean restoreArticleGroups(String fileName) throws SQLException {
-        closeConnection(); // Close the current database connection
+    public boolean restoreArticleGroups(String fileName) throws Exception {
+    	databaseHelper = new DatabaseHelperUser();
+        databaseHelper.connectToDatabase();
+    	
+    	closeConnection(); // Close the current database connection
 
         fileName += ".mv.db"; // Ensure the file has .mv.db extension
 
@@ -210,6 +215,7 @@ public class DatabaseHelperArticleGroups {
             
             // Reconnect to the database
             connectToDatabase();
+            databaseHelper.restoreAdminAccessToAllGroups();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
