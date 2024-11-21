@@ -1,57 +1,74 @@
 package helpSystem;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Junit {
+public class Junit{
 
     private Article article;
 
     @BeforeEach
-    public void setUp() {
-        // Create a sample Article object before each test
-        article = new Article(1, "Test Title", "Author Name", "Test Abstract", 
-                              "Test Keywords", "Test Body", "Test References", "Intermediate");
+    void setUp() {
+        // Set up the test article instance before each test
+        article = new Article(
+                1,
+                "The Future of AI in Healthcare",
+                "Jane Doe, John Smith",
+                "This paper explores the potential of AI in healthcare and its applications.",
+                "AI, Healthcare, Future, Technology",
+                "The body of the article would contain detailed content about the future of AI in healthcare.",
+                "Doe, J. (2023). The Future of AI. Journal of AI Research.",
+                "Advanced"
+        );
     }
 
     @Test
-    public void testGetId() {
+    void testGetId() {
+        // Test that the getId method returns the correct value
         assertEquals(1, article.getId());
     }
 
     @Test
-    public void testGetTitle() {
-        assertEquals("Test Title", article.getTitle());
+    void testGetTitle() {
+        // Test that the getTitle method returns the correct value
+        assertEquals("The Future of AI in Healthcare", article.getTitle());
     }
 
     @Test
-    public void testGetAuthor() {
-        assertEquals("Author Name", article.getAuthor());
+    void testGetAuthor() {
+        // Test that the getAuthor method returns the correct value
+        assertEquals("Jane Doe, John Smith", article.getAuthor());
     }
 
     @Test
-    public void testGetPaperAbstract() {
-        assertEquals("Test Abstract", article.getPaperAbstract());
+    void testGetPaperAbstract() {
+        // Test that the getPaperAbstract method returns the correct value
+        assertEquals("This paper explores the potential of AI in healthcare and its applications.", article.getPaperAbstract());
     }
 
     @Test
-    public void testGetKeywords() {
-        assertEquals("Test Keywords", article.getKeywords());
+    void testGetKeywords() {
+        // Test that the getKeywords method returns the correct value
+        assertEquals("AI, Healthcare, Future, Technology", article.getKeywords());
     }
 
     @Test
-    public void testGetBody() {
-        assertEquals("Test Body", article.getBody());
+    void testGetBody() {
+        // Test that the getBody method returns the correct value
+        assertEquals("The body of the article would contain detailed content about the future of AI in healthcare.", article.getBody());
     }
 
     @Test
-    public void testGetReferences() {
-        assertEquals("Test References", article.getReferences());
+    void testGetReferences() {
+        // Test that the getReferences method returns the correct value
+        assertEquals("Doe, J. (2023). The Future of AI. Journal of AI Research.", article.getReferences());
     }
 
     @Test
-    public void testGetLevel() {
-        assertEquals("Intermediate", article.getLevel());
+    void testGetLevel() {
+        // Test that the getLevel method returns the correct value
+        assertEquals("Advanced", article.getLevel());
     }
 }

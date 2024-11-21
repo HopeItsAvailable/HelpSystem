@@ -227,7 +227,10 @@ public class DatabaseHelperUser {
 	
 	// Method to register the first user (admin) without an invite code
 	public void registerFirstUser(String username, String password) throws Exception {
-	    // Check if table is empty
+	    
+		addUserToGroup(username, "Default");
+		
+		// Check if table is empty
 	    String countQuery = "SELECT COUNT(*) FROM cse360users";
 	    try (Statement stmt = connection.createStatement();
 	         ResultSet rs = stmt.executeQuery(countQuery)) {

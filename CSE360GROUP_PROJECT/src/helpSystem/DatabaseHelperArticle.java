@@ -42,7 +42,7 @@ public class DatabaseHelperArticle {
 	public DatabaseHelperArticle() throws Exception {
 		encryptionHelper = new EncryptionHelper();
 	}
-
+	
 	public void connectToDatabase() throws SQLException {
 		try {
 			Class.forName(JDBC_DRIVER); // Load the JDBC driver

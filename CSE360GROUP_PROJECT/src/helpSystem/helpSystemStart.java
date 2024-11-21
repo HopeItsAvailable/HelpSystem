@@ -88,6 +88,7 @@ public class helpSystemStart extends Application {
 	    databaseHelper = new DatabaseHelperUser();
 	    databaseHelper1 = new DatabaseHelperArticle();
 	    databaseHelper2 = new DatabaseHelperArticleGroups();
+	    
 
 	    try {
 	        databaseHelper.connectToDatabase();
@@ -105,7 +106,8 @@ public class helpSystemStart extends Application {
 	            double newFontSize = 0.08 * newHeight.doubleValue(); // Convert to double before multiplying
 	            welcome.setFont(new Font("Montserrat", newFontSize)); // Apply the new font size
 	        });
-
+	        
+	        databaseHelper2.addArticleGroup("Default");
 	        // Line for header
 	        Line line = new Line();
 	        line.setId("lineDetails");
