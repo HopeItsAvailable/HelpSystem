@@ -3505,6 +3505,21 @@ public class helpSystemStart extends Application {
 			public void handle(ActionEvent event) {
 				
 				//TODO CHECK if GROUP EXIST THEN delete
+				boolean found = false;
+				try {
+					found = databaseHelper2.doesGroupExist(usernameText.getText().strip());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (found) {
+					try {
+						databaseHelper2.deleteArticleGroup(usernameText.getText().trim().strip());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 
@@ -3610,14 +3625,14 @@ public class helpSystemStart extends Application {
 		try {
 			userGroups = databaseHelper.getUserGroups(userName);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} // Get groups for user
-        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+		getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
 
-        if (userGroups.isEmpty()) {
-            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
-        }
+		if (userGroups.isEmpty()) {
+			getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+		}
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -3648,6 +3663,15 @@ public class helpSystemStart extends Application {
 				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
 					
 					//TODO BackUp Group
+					try {
+						databaseHelper2.backupArticleGroups(fileNameText.getText().strip());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 				}
 
@@ -3792,6 +3816,12 @@ public class helpSystemStart extends Application {
 				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
 					
 					//TODO Restore Group
+					try {
+						databaseHelper2.restoreArticleGroups(fileNameText.getText().strip());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 				}
 
