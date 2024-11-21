@@ -57,7 +57,8 @@ public class DatabaseHelperArticleGroups {
     }
 
     // Method to insert a new group into the cse360ArticleGroups table
-    public void addArticleGroup(String groupName) throws SQLException {
+    public void addArticleGroup(String groupName) throws Exception {
+    	databaseHelper = new DatabaseHelperUser();
         String query = "INSERT INTO cse360ArticleGroups (groupName) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, groupName);

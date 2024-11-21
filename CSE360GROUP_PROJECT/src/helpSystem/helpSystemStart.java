@@ -53,6 +53,8 @@ public class helpSystemStart extends Application {
 	private static DatabaseHelperUser databaseHelper;
 	private static DatabaseHelperArticle databaseHelper1;
 	private static DatabaseHelperArticleGroups databaseHelper2;
+
+
 	
 
 	private Scene loginScene; // To store the initial login scene
@@ -3359,7 +3361,7 @@ public class helpSystemStart extends Application {
 					// TODO Create function to create group
 					try {
 						databaseHelper2.addArticleGroup(fileNameText.getText());
-					} catch (SQLException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
