@@ -3870,7 +3870,7 @@ public class helpSystemStart extends Application {
 		Label chooseGroup = new Label("Choose Group");
 
 		TextField fileNameText = new TextField();
-		fileNameText.setPromptText("Inssructor Account");  // Set placeholder for username
+		fileNameText.setPromptText("Instructor Account");  // Set placeholder for username
 		fileNameText.setPrefWidth(300);  // Set the preferred width
 		fileNameText.setMaxWidth(300);   
 
