@@ -61,6 +61,7 @@ public class DatabaseHelperArticleGroups {
     // Method to insert a new group into the cse360ArticleGroups table
     public void addArticleGroup(String groupName) throws Exception {
         databaseHelper = new DatabaseHelperUser();
+        databaseHelper.connectToDatabase();
         
         // Check if the group already exists
         if (doesGroupExist(groupName)) {
