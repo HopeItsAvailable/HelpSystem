@@ -1156,6 +1156,8 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				
+				sendMes(primaryStage);
+				
 			}
 		});
 		
@@ -1163,6 +1165,8 @@ public class helpSystemStart extends Application {
 		reviewMessages.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				
+				reviewMes(primaryStage);
 				
 			}
 		});
@@ -3781,7 +3785,6 @@ public class helpSystemStart extends Application {
 	    primaryStage.setScene(welcomeScene);
 
 	}
-
 		
 	public void backupGroup(Stage primaryStage, String userName) {
 
@@ -4330,5 +4333,216 @@ public class helpSystemStart extends Application {
 	    primaryStage.setScene(welcomeScene);
 
 	}
+
+	public void sendMes(Stage primaryStage) {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("Send Message to Admin");
+		Label noExist = new Label("No input, please add question");
+
+		TextField usernameText = new TextField();
+		usernameText.setPromptText("Message");  // Set placeholder for username
+		usernameText.setPrefWidth(300);  // Set the preferred width
+		usernameText.setMaxWidth(300);   
+
+		Button quitButton = new Button("Quit");
+		Button sendGen = new Button("General Message");
+		Button sendSpec = new Button("Specific Message");
+
+		// Label design
+		welcome.setFont(new Font("Montserrat", 36));
+
+		noExist.setFont(new Font("Montserrat", 12));
+		noExist.setStyle("-fx-text-fill: red;");
+		noExist.setVisible(false);
+
+		// Button design
+		quitButton.setId("buttonDesign"); 
+		sendGen.setId("buttonDesign");
+		sendSpec.setId("buttonDesign");
+
+		// Send button action
+		sendGen.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+				if(usernameText.getText().isEmpty()) {
+					noExist.setVisible(true);
+
+				}
+				else {
+					noExist.setVisible(false);
+
+				}
+				
+			}
+		});
+		
+		// Send button action
+		sendSpec.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+				if(usernameText.getText().isEmpty()) {
+					noExist.setVisible(true);
+
+				}
+				else {
+					noExist.setVisible(false);
+
+				}
+				
+			}
+		});
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					login(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, usernameText, noExist);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
+
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, sendGen,sendSpec, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
+
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
+
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
+
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
+
+	}
+	
+	public void reviewMes(Stage primaryStage) {
+
+		// Labels, buttons, textfield, alert, and checkBox
+		Label welcome = new Label("Review Messages");
+		
+		Label mess = new Label("ALL MESSAGVES GO HERE");
+
+		Button quitButton = new Button("Quit");
+
+		// Label design
+		welcome.setFont(new Font("Montserrat", 36));
+
+
+		// Button design
+		quitButton.setId("buttonDesign"); 
+
+		// Quit button action
+		quitButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				try {
+					login(primaryStage);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, mess);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
+
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
+
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
+
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
+
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
+
+	}
+
+
 }
 
