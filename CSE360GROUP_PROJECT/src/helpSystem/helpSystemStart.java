@@ -485,10 +485,10 @@ public class helpSystemStart extends Application {
 										adminPage(userNameText.getText().strip(),primaryStage);
 									} else if (roleToRedirect.equals("Student")) {
 										// Redirect to student page
-										studentPage(primaryStage);
+										studentPage(primaryStage,userNameText.getText().strip());
 									} else if (roleToRedirect.equals("Instructor")) {
 										// Redirect to instructor page
-										teacherPage(primaryStage);
+										teacherPage(primaryStage,userNameText.getText().strip());
 									}
 								} else if (roleCount > 1) {
 									// Redirect to a page where user can choose their role
@@ -868,10 +868,10 @@ public class helpSystemStart extends Application {
 								adminPage(username, primaryStage);
 							} else if (roleToRedirect.equals("Student")) {
 								// Redirect to student page
-								studentPage(primaryStage);
+								studentPage(primaryStage, username);
 							} else if (roleToRedirect.equals("Instructor")) {
 								// Redirect to instructor page
-								teacherPage(primaryStage);
+								teacherPage(primaryStage, username);
 							}
 						} else if (roleCount > 1) {
 							// Redirect to a page where user can choose their role
@@ -1031,7 +1031,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if (isStudent == true) {
-					studentPage(primaryStage);
+					studentPage(primaryStage, UserName);
 				}
 			}
 		});
@@ -1042,7 +1042,7 @@ public class helpSystemStart extends Application {
 			public void handle(ActionEvent event) {
 
 				if (isTeacher == true) {
-					teacherPage(primaryStage);
+					teacherPage(primaryStage, UserName);
 				}
 			}
 		});
@@ -1088,31 +1088,38 @@ public class helpSystemStart extends Application {
 
 	}
 
-	private void studentPage(Stage primaryStage) {
+	private void studentPage(Stage primaryStage, String userName) {
 
 		// Labels and buttons
-		Label welcome = new Label("Welcome");
-		Label role = new Label("Role: Student");
+		Label welcome = new Label("Welcome Student");
 
 		// Label design
-	    welcome.setFont(new Font("Montserrat", 30));
+	    welcome.setFont(new Font("Montserrat", 36));
 	    welcome.setStyle("-fx-font-weight: bold;");
 	    
-		role.setFont(new Font("Montserrat", 20));
-
 		Button quitButton = new Button("Log Out");
 		Button viewArt = new Button("View Articles");
+		Button sendMessages = new Button("Send Messages");
+		Button reviewMessages = new Button("Review Messages");
 
 		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		viewArt.setStyle("-fx-font-size: 1.5em;");
+		quitButton.setId("buttonDesign");
+		viewArt.setId("buttonDesign");
+		sendMessages.setId("buttonDesign");
+		reviewMessages.setId("buttonDesign");
+		
+		final double BUTTON_WIDTH = 175.0; 
+
+		viewArt.setPrefWidth(BUTTON_WIDTH);
+		sendMessages.setPrefWidth(BUTTON_WIDTH);
+		reviewMessages.setPrefWidth(BUTTON_WIDTH);
 
 		// Quit button action
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1132,106 +1139,159 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
-
-		// Top pane for welcome label
-		HBox topPane = new HBox(role, welcome);
-		HBox.setMargin(role, new Insets(20, 0, 0, 20));
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 130));
 		
-		//Middle pane for button
-		HBox middlePane = new HBox(viewArt);
-		middlePane.setAlignment(Pos.CENTER);
+		// Quit button action
+		sendMessages.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+			}
+		});
 		
+		// Quit button action
+		reviewMessages.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				
+			}
+		});
 
-		// Bottom pane for exit
-		HBox bottomPane = new HBox(quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(quitButton, new Insets(0, 0, 70, 0));
+		HBox topTop = new HBox(quitButton);
+		topTop.setAlignment(Pos.CENTER_RIGHT);
+		topTop.setPadding(new Insets(20, 20, 0, 0));
+
+		HBox topBottom = new HBox(welcome);
+		topBottom.setAlignment(Pos.CENTER);
+		topBottom.setPadding(new Insets(0, 0, 170, 0));
+		
+		VBox topPane = new VBox(20,topTop, topBottom);
+		topPane.setAlignment(Pos.CENTER);
+
+		HBox middlePane = new HBox(30, viewArt, sendMessages, reviewMessages);
+		middlePane.setAlignment(Pos.TOP_CENTER);
 
 		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setId("startBackground");
+		adminCreateScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		adminCreateScreen.setTop(topPane);
 		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
 
-		// Set the scene
 		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
 		primaryStage.setScene(welcomeScene);
 
 	}
 
-	private void teacherPage(Stage primaryStage) {
+	private void teacherPage(Stage primaryStage, String userName) {
 
-		// Labels and buttons
-		Label welcome = new Label("Welcome");
-		Label role = new Label("Role: Teacher");
+		Label welcome = new Label("Welcome Teacher");
+		Label articleButtons = new Label("Article Commands");
+		Label userButtons = new Label("User/Group Commands");
 
-		Button quitButton = new Button("Log Out");
-		Button createArt = new Button("Create Article");
-		Button deleteArt = new Button("Delete Article");
+		Button inviteUserButton = new Button("Invite User");
+		Button deleteUserButton = new Button("Delete User");
+		Button createGroup = new Button("Create Group");
+		Button backupGroup = new Button("Backup Group");
+		Button restoreGroup = new Button("Restore Group");
+		Button deleteGroup = new Button("Delete Group");
+		Button manageGroup = new Button("Manage Groups");
+
+
+		Button createArticle = new Button("Create Article");
+		Button deleteArticle = new Button("Delete Article");
+		Button listArticles = new Button("List Articles");
+		Button backupArticles = new Button("Back up Articles");
+		Button RestoreArticles = new Button("Restore Articles");
 		Button updateArt = new Button("Update Article");
-		Button viewArt = new Button("View Articles");
 
-		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		role.setFont(new Font("Arial", 20));
+		Button logoutButton = new Button("Log Out");
 
-		// Button design
-		quitButton.setStyle("-fx-font-size: 1.5em;");
-		createArt.setStyle("-fx-font-size: 2em;");
-		deleteArt.setStyle("-fx-font-size: 2em;");
-		updateArt.setStyle("-fx-font-size: 2em;");
-		viewArt.setStyle("-fx-font-size: 2em;");
+		// Label Design
+	    welcome.setFont(new Font("Montserrat", 36));
+	    welcome.setStyle("-fx-font-weight: bold;");
+	    
+	    articleButtons.setFont(new Font("Montserrat", 26));
+	    articleButtons.setStyle("-fx-font-weight: bold;");
 
-		// Quit button action
-		quitButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					start(primaryStage);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+	    userButtons.setFont(new Font("Montserrat", 26));
+	    userButtons.setStyle("-fx-font-weight: bold;");
 
-		// Quit button action
-		createArt.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				try {
-					createArticle(primaryStage);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+
+	    
+		// Button Design
+		inviteUserButton.setId("buttonDesign");
+		manageGroup.setId("buttonDesign");
+		deleteUserButton.setId("buttonDesign");
+		createGroup.setId("buttonDesign");
+		backupGroup.setId("buttonDesign");
+		restoreGroup.setId("buttonDesign");
+		deleteGroup.setId("buttonDesign");
+
+
+		createArticle.setId("buttonDesign");
+		deleteArticle.setId("buttonDesign");
+		listArticles.setId("buttonDesign");
+		backupArticles.setId("buttonDesign");
+		RestoreArticles.setId("buttonDesign");
+		updateArt.setId("buttonDesign");
 		
-		// Quit button action
-		deleteArt.setOnAction(new EventHandler<ActionEvent>() {
+		logoutButton.setId("buttonDesign");
+		
+		final double BUTTON_WIDTH = 175.0; 
+
+		inviteUserButton.setPrefWidth(BUTTON_WIDTH);
+		backupGroup.setPrefWidth(BUTTON_WIDTH);
+		manageGroup.setPrefWidth(BUTTON_WIDTH);
+		restoreGroup.setPrefWidth(BUTTON_WIDTH);
+		deleteUserButton.setPrefWidth(BUTTON_WIDTH);
+		createGroup.setPrefWidth(BUTTON_WIDTH);
+		deleteGroup.setPrefWidth(BUTTON_WIDTH);
+
+		createArticle.setPrefWidth(BUTTON_WIDTH);
+		deleteArticle.setPrefWidth(BUTTON_WIDTH);
+		listArticles.setPrefWidth(BUTTON_WIDTH);
+		backupArticles.setPrefWidth(BUTTON_WIDTH);
+		RestoreArticles.setPrefWidth(BUTTON_WIDTH);
+		updateArt.setPrefWidth(BUTTON_WIDTH);
+
+
+
+		// Set buttons actions using EventHandler
+		createArticle.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				try {
-					deleteArticle(primaryStage);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
+				createArticle(primaryStage);
 			}
 		});
-		
-		// Quit button action
-		viewArt.setOnAction(new EventHandler<ActionEvent>() {
+
+		deleteArticle.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+
+				deleteArticle(primaryStage);
+
+			}
+		});
+
+		listArticles.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
 				try {
 					listArticles(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+			}
+		});
+
+		backupArticles.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				backupArticles(primaryStage);
 			}
 		});
 		
@@ -1248,29 +1308,127 @@ public class helpSystemStart extends Application {
 			}
 		});
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(role, welcome);
-		HBox.setMargin(role, new Insets(20, 0, 0, 20));
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 130));
+		RestoreArticles.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO : ADD NEW PAGE
+
+				restoreArticles(primaryStage);
+
+			}
+		});
+
+		// Set button actions using EventHandler
+		inviteUserButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				//
+				sendCode(primaryStage);
+			}
+		});
+
+		deleteUserButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				deleteUser(primaryStage);
+
+			}
+		});
 		
-		HBox middlePane = new HBox(createArt, deleteArt, viewArt, updateArt);
-		HBox.setMargin(createArt, new Insets(20, 20, 20, 20));
-		HBox.setMargin(deleteArt, new Insets(20, 20, 20, 20));
-		HBox.setMargin(viewArt, new Insets(20, 20, 20, 20));
-		HBox.setMargin(updateArt, new Insets(20, 20, 20, 20));
+		createGroup.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				//TODO
+				createGroup(primaryStage);
+			}
+		});
+		
+		backupGroup.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				//TODO
+				backupGroup(primaryStage, userName);
+			}
+		});
+		
+		deleteGroup.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				//TODO
+				deleteGroup(primaryStage, userName);
+			}
+		});
 
-		// Bottom pane for exit
-		HBox bottomPane = new HBox(quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(quitButton, new Insets(0, 0, 70, 0));
+		restoreGroup.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				//TODO
+				restoreGroup(primaryStage, userName);
+			}
+		});
+		
+		manageGroup.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				//TODO
+				manageGroup(primaryStage, userName);
+			}
+		});
+		
+		logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				login(primaryStage); // Log out and go back to login
+			}
+		});
+		
+		
 
+		// Top Pane
+		HBox topTop = new HBox(logoutButton);
+		topTop.setAlignment(Pos.CENTER_RIGHT);
+		topTop.setPadding(new Insets(20, 20, 0, 0));
+
+		HBox topBottom = new HBox(welcome);
+		topBottom.setAlignment(Pos.CENTER);
+		topBottom.setPadding(new Insets(0, 0, 34, 0));
+
+		VBox topPane = new VBox(20, topTop, topBottom);
+		topPane.setAlignment(Pos.CENTER);
+
+		// Left Pane
+		VBox leftRow1 = new VBox(30, createArticle, deleteArticle, listArticles);
+		VBox leftRow2 = new VBox(30, backupArticles, RestoreArticles, updateArt);
+
+		HBox leftRows = new HBox(30, leftRow1, leftRow2);
+		leftRows.setAlignment(Pos.TOP_CENTER);
+
+		VBox leftSide = new VBox(40, articleButtons, leftRows);
+		leftSide.setAlignment(Pos.TOP_CENTER);
+
+		// Right Pane
+		VBox rightRow1 = new VBox(30, inviteUserButton, createGroup, backupGroup,deleteGroup);
+		VBox rightRow2 = new VBox(30, deleteUserButton, restoreGroup,manageGroup);
+
+		HBox rightRows = new HBox(30, rightRow1, rightRow2);
+		rightRows.setAlignment(Pos.TOP_CENTER);
+
+		VBox rightSide = new VBox(40, userButtons, rightRows);
+		rightSide.setAlignment(Pos.TOP_CENTER);
+
+		// Middle Pane
+		HBox middlePane = new HBox(40, leftSide, rightSide);
+		middlePane.setAlignment(Pos.TOP_CENTER);
+
+		// Main Layout
 		BorderPane adminCreateScreen = new BorderPane();
+		adminCreateScreen.setId("startBackground");
+		adminCreateScreen.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		adminCreateScreen.setTop(topPane);
 		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
 
-		// Set the scene
+		// Scene Setup
 		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
 		primaryStage.setScene(welcomeScene);
 
@@ -3829,11 +3987,5 @@ public class helpSystemStart extends Application {
 	    primaryStage.setScene(welcomeScene);
 
 	}
-
-<<<<<<< HEAD
-=======
-
->>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem.git
 }
-
 
