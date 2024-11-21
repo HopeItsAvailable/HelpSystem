@@ -591,6 +591,8 @@ public class DatabaseHelperUser {
 	    }
 	    return new ArrayList<>();
 	}
+	
+
 
 	private void updateUserGroups(String username, ArrayList<String> userGroups) throws SQLException {
 	    String query = "UPDATE cse360users SET userGroups = ? WHERE username = ?";
@@ -612,6 +614,34 @@ public class DatabaseHelperUser {
 		} catch(SQLException se){ 
 			se.printStackTrace(); 
 		} 
+	}
+
+	public void removeGroupFromAllUsers(String groupName) throws SQLException {
+		// TODO Auto-generated method stub
+		// Query to select all users
+	    String query = "SELECT username, userGroups FROM cse360users";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(query);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String username = rs.getString("username");
+	            String jsonGroups = rs.getString("userGroups");
+
+	            // Deserialize the user's groups from JSON
+	            ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
+
+	            // Check if the group is part of the user's groups
+	            if (userGroups.contains(groupName)) {
+	                // Remove the group if it exists
+	                userGroups.remove(groupName);
+	                System.out.println("Group: " + groupName + " removed from user: " + username);
+
+	                // Update the user record with the new list of groups
+	                updateUserGroups(username, userGroups);
+	            }
+	        }
+	    }
 	}
 
 	

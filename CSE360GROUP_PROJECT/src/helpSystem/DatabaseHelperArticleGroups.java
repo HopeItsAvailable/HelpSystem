@@ -94,8 +94,11 @@ public class DatabaseHelperArticleGroups {
         }
     }
     
-    public boolean deleteArticleGroup(String groupName) throws SQLException {
-        // Check if the group exists before attempting to delete it
+    public boolean deleteArticleGroup(String groupName) throws Exception {
+    	databaseHelper = new DatabaseHelperUser();
+        databaseHelper.connectToDatabase();
+    	
+    	// Check if the group exists before attempting to delete it
         if (!doesGroupExist(groupName)) {
             System.out.println("Group '" + groupName + "' does not exist. Cannot delete.");
             return false;
@@ -105,6 +108,7 @@ public class DatabaseHelperArticleGroups {
         try (PreparedStatement pstmt = connection.prepareStatement(deleteQuery)) {
             pstmt.setString(1, groupName); // Set the group name to the prepared statement
             int rowsAffected = pstmt.executeUpdate(); // Execute the delete statement
+            databaseHelper.removeGroupFromAllUsers(groupName);
 
             if (rowsAffected > 0) {
                 System.out.println("Group '" + groupName + "' deleted successfully.");
