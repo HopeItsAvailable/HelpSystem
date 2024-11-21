@@ -559,6 +559,34 @@ public class DatabaseHelperUser {
 	        }
 	    }
 	}
+	
+	public void restoreAdminAccessToAllGroups() throws SQLException {
+	    // Query to find the admin users
+	    String query = "SELECT username FROM cse360users WHERE isAdmin = TRUE";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(query);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String adminUsername = rs.getString("username");
+
+	            // Get all the groups from the article groups table
+	            String groupQuery = "SELECT groupName FROM cse360ArticleGroups";
+	            try (PreparedStatement groupPstmt = connection.prepareStatement(groupQuery);
+	                 ResultSet groupRs = groupPstmt.executeQuery()) {
+
+	                ArrayList<String> allGroups = new ArrayList<>();
+	                while (groupRs.next()) {
+	                    String groupName = groupRs.getString("groupName");
+	                    allGroups.add(groupName);
+	                }
+
+	                // Update the admin's userGroups with all groups
+	                updateUserGroups(adminUsername, allGroups);
+	            }
+	        }
+	    }
+	}
 
 	public void removeUserFromGroup(String username, String group) throws SQLException {
 	    String query = "SELECT userGroups FROM cse360users WHERE username = ?";
