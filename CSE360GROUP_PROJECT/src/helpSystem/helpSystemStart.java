@@ -3695,6 +3695,21 @@ public class helpSystemStart extends Application {
 			public void handle(ActionEvent event) {
 				
 				//TODO CHECK if GROUP EXIST THEN delete
+				boolean found = false;
+				try {
+					found = databaseHelper2.doesGroupExist(usernameText.getText().strip());
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (found) {
+					try {
+						databaseHelper2.deleteArticleGroup(usernameText.getText().trim().strip());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 
@@ -3800,14 +3815,14 @@ public class helpSystemStart extends Application {
 		try {
 			userGroups = databaseHelper.getUserGroups(userName);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} // Get groups for user
-        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+		getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
 
-        if (userGroups.isEmpty()) {
-            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
-        }
+		if (userGroups.isEmpty()) {
+			getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+		}
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -3838,6 +3853,15 @@ public class helpSystemStart extends Application {
 				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
 					
 					//TODO BackUp Group
+					try {
+						databaseHelper2.backupArticleGroups(fileNameText.getText().strip());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 				}
 
@@ -3982,6 +4006,12 @@ public class helpSystemStart extends Application {
 				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
 					
 					//TODO Restore Group
+					try {
+						databaseHelper2.restoreArticleGroups(fileNameText.getText().strip());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					
 				}
 
@@ -4100,8 +4130,8 @@ public class helpSystemStart extends Application {
 		fileNameText.setPrefWidth(300);  // Set the preferred width
 		fileNameText.setMaxWidth(300);   
 
-		Button addInButton = new Button("Add Instructor");
-		Button deleteInButton = new Button("Delete Instructor");
+		Button addInButton = new Button("Add User");
+		Button deleteInButton = new Button("Delete User");
 		Button quitButton = new Button("Quit");
 		
 		ChoiceBox<String> getGroup = new ChoiceBox<>();
@@ -4161,6 +4191,21 @@ public class helpSystemStart extends Application {
 				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
 					
 					//TODO Add Instruct into Group	
+					try {
+		                databaseHelper.addUserToGroup(fileNameText.getText(),getGroup.getValue());
+		                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		                alert.setTitle("Success");
+		                alert.setHeaderText(null);
+		                alert.setContentText("User added to the group successfully.");
+		                alert.showAndWait();
+		            } catch (SQLException e) {
+		                e.printStackTrace();
+		                Alert alert = new Alert(Alert.AlertType.ERROR);
+		                alert.setTitle("Error");
+		                alert.setHeaderText(null);
+		                alert.setContentText("Failed to add the user to the group.");
+		                alert.showAndWait();
+		            }
 					
 				}
 
@@ -4196,6 +4241,21 @@ public class helpSystemStart extends Application {
 				if (getGroup.getValue() != null && !fileNameText.getText().isEmpty()) {
 					
 					//TODO Delete Instruct from Group
+					try {
+		                databaseHelper.removeUserFromGroup(fileNameText.getText(),getGroup.getValue());
+		                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		                alert.setTitle("Success");
+		                alert.setHeaderText(null);
+		                alert.setContentText("User removed from the group successfully.");
+		                alert.showAndWait();
+		            } catch (SQLException e) {
+		                e.printStackTrace();
+		                Alert alert = new Alert(Alert.AlertType.ERROR);
+		                alert.setTitle("Error");
+		                alert.setHeaderText(null);
+		                alert.setContentText("Failed to remove the user from the group.");
+		                alert.showAndWait();
+		            }
 					
 				}
 

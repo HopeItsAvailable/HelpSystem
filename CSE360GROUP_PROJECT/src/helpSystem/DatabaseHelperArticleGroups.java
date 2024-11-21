@@ -7,7 +7,12 @@ import Encryption.EncryptionHelper;
 import Encryption.EncryptionUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import helpSystem.DatabaseHelperUser;
@@ -88,10 +93,32 @@ public class DatabaseHelperArticleGroups {
             }
         }
     }
-
     
-    
+    public boolean deleteArticleGroup(String groupName) throws SQLException {
+        // Check if the group exists before attempting to delete it
+        if (!doesGroupExist(groupName)) {
+            System.out.println("Group '" + groupName + "' does not exist. Cannot delete.");
+            return false;
+        }
 
+        String deleteQuery = "DELETE FROM cse360ArticleGroups WHERE groupName = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(deleteQuery)) {
+            pstmt.setString(1, groupName); // Set the group name to the prepared statement
+            int rowsAffected = pstmt.executeUpdate(); // Execute the delete statement
+
+            if (rowsAffected > 0) {
+                System.out.println("Group '" + groupName + "' deleted successfully.");
+                return true;
+            } else {
+                System.out.println("Group deletion failed.");
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     // Method to get all groups from the cse360ArticleGroups table
     public ResultSet getAllGroups() throws SQLException {
         String query = "SELECT * FROM cse360ArticleGroups";
@@ -121,4 +148,71 @@ public class DatabaseHelperArticleGroups {
             }
         }
     }
+    
+    public void closeConnection() {
+		try{ 
+			if(statement!=null) statement.close(); 
+		} catch(SQLException se2) { 
+			se2.printStackTrace();
+		} 
+		try { 
+			if(connection!=null) connection.close(); 
+		} catch(SQLException se){ 
+			se.printStackTrace(); 
+		} 
+	}
+    
+    public void backupArticleGroups(String fileName) throws SQLException, IOException {
+        closeConnection(); // Close the current database connection
+
+        fileName += ".mv.db"; // Ensure the file has .mv.db extension
+
+        // Define paths for the original and backup database files
+        String originalDBPath = Paths.get(System.getProperty("user.home"), "articleDatabase.mv.db").toString();
+        String backupFilePath = Paths.get(System.getProperty("user.home"), fileName).toString();
+
+        try {
+            Files.copy(Paths.get(originalDBPath), Paths.get(backupFilePath), StandardCopyOption.REPLACE_EXISTING); // Copy the entire database file
+            System.out.println("Backup successful!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        connectToDatabase(); // Reconnect to the database
+    }
+    
+    public boolean restoreArticleGroups(String fileName) throws SQLException {
+        closeConnection(); // Close the current database connection
+
+        fileName += ".mv.db"; // Ensure the file has .mv.db extension
+
+        // Define paths for the backup and original database files
+        String backupFilePath = Paths.get(System.getProperty("user.home"), fileName).toString();
+        String originalPath = Paths.get(System.getProperty("user.home"), "articleDatabase.mv.db").toString();
+
+        // Check if the backup file exists
+        if (!Files.exists(Paths.get(backupFilePath))) {
+            System.out.println("Could not find backup file.");
+            return false;
+        }
+
+        try {
+            // Delete the old database file if it exists
+            Files.deleteIfExists(Paths.get(originalPath));
+
+            // Copy the backup file to replace the original database file
+            Files.copy(Paths.get(backupFilePath), Paths.get(originalPath), StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("Restore successful!");
+            
+            // Reconnect to the database
+            connectToDatabase();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            connectToDatabase(); // Reconnect even on failure
+            return false;
+        }
+    }
+
+
 }
