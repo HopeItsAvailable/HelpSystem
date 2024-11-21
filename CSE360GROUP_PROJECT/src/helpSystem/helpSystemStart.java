@@ -2,6 +2,7 @@ package helpSystem;
 
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableList;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,8 +21,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -1139,7 +1143,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					listArticles(primaryStage);
+					listArticles(primaryStage, userName);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1285,7 +1289,7 @@ public class helpSystemStart extends Application {
 			public void handle(ActionEvent event) {
 
 				try {
-					listArticles(primaryStage);
+					listArticles(primaryStage, userName);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1547,7 +1551,7 @@ public class helpSystemStart extends Application {
 			public void handle(ActionEvent event) {
 
 				try {
-					listArticles(primaryStage);
+					listArticles(primaryStage, userName);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2770,30 +2774,60 @@ public class helpSystemStart extends Application {
 
 	}
 
-	public void listArticles(Stage primaryStage) throws Exception {
+	public void listArticles(Stage primaryStage, String userName) throws Exception {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("List Articles");
-		Label printList = new Label(databaseHelper1.displayArticles());
+		
+		TextField keyWord = new TextField();
 
 		Button quitButton = new Button("Quit");
-		Button searchGroup = new Button("Search by Level");
+		Button searchLevel = new Button("Search by Level");
+		Button searchGroup = new Button("Search by group");
+		Button searchKeyWord = new Button("Search by key word");
 
 		ChoiceBox<String> level = new ChoiceBox<>();
+		ChoiceBox<String> group = new ChoiceBox<>();
 
 		level.getItems().addAll("Beginner", "Intermediate", "Advanced", "Expert", "All");
 		
+		// Fetch data
+        ObservableList<Article> articles = databaseHelper1.displayArticles();
 
+        // Create TableView
+        TableView<Article> articleTable = new TableView<>(articles);
+
+        // Define columns
+        TableColumn<Article, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Article, String> titleColumn = new TableColumn<>("Title");
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+
+        TableColumn<Article, String> authorColumn = new TableColumn<>("Author");
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+
+        TableColumn<Article, String> abstractColumn = new TableColumn<>("Abstract");
+        abstractColumn.setCellValueFactory(new PropertyValueFactory<>("paperAbstract"));
+
+        // Add columns to the table
+        articleTable.getColumns().addAll(idColumn, titleColumn, authorColumn, abstractColumn);
+	    
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		printList.setFont(new Font("Arial", 15));
+		welcome.setFont(new Font("Montserrat", 36));
+		
+		//Button Design
+		quitButton.setId("buttonDesign");
+		searchLevel.setId("buttonDesign2");
+		searchGroup.setId("buttonDesign2");
+		searchKeyWord.setId("buttonDesign2");
 
 		// Quit button action
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				try {
-					start(primaryStage);
+					login(primaryStage);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -2805,62 +2839,65 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 
-				if (level.getValue() == null) {
-					level.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-				} else if (level.getValue().compareTo("All") == 0) {
-					try {
-						printList.setText(databaseHelper1.displayArticles());
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				else {
-					level.setStyle("");
-					try {
-						printList.setText(databaseHelper1.displayGroupedArticles(level.getValue()));
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				}
+				
 
 			}
 		});
+		
+		VBox middle1 = new VBox(30, level, group, keyWord);
+		middle1.setAlignment(Pos.CENTER);
 
-		// Button design
-		quitButton.setStyle("-fx-font-size: 2em;");
+		VBox middle2 = new VBox(30, searchLevel, searchGroup, searchKeyWord);
+		middle2.setAlignment(Pos.CENTER);
 
-		// Top pane for welcome label
-		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
 
-		// Middle pane for welcome label
-		HBox middlePane = new HBox(printList);
-		middlePane.setAlignment(Pos.CENTER);
-		HBox.setMargin(printList, new Insets(50, 0, 20, 0));
 
-		// Bottom pane for search button
-		HBox bottomPane = new HBox(level, searchGroup, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
+		// Center the elements in the VBox
+		HBox middleMiddlePane1 = new HBox(40, middle1, middle2);
+	    middleMiddlePane1.setAlignment(Pos.CENTER);
 
-		HBox.setMargin(level, new Insets(0, 100, 0, 30));
-		HBox.setMargin(searchGroup, new Insets(0, 150, 0, 100));
-		HBox.setMargin(quitButton, new Insets(0, 80, 0, 70));
+		VBox middleMiddlePane = new VBox(40, welcome, middleMiddlePane1);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// BorderPane stuff
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
+
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, articleTable);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(articleTable, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
@@ -3537,8 +3574,7 @@ public class helpSystemStart extends Application {
 
 	}
 
-	
-	
+		
 	public void backupGroup(Stage primaryStage, String userName) {
 
 		// Labels, buttons, textfield, alert, and checkBox
@@ -3569,6 +3605,19 @@ public class helpSystemStart extends Application {
 		// Button design
 		deletedButton.setId("buttonDesign"); 
 		quitButton.setId("buttonDesign");
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -3688,6 +3737,19 @@ public class helpSystemStart extends Application {
 		Button quitButton = new Button("Quit");
 		
 		ChoiceBox<String> getGroup = new ChoiceBox<>();
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Label design
 		welcome.setFont(new Font("Montserrat", 36));
@@ -3844,7 +3906,7 @@ public class helpSystemStart extends Application {
 		Label chooseGroup = new Label("Choose Group");
 
 		TextField fileNameText = new TextField();
-		fileNameText.setPromptText("Inssructor Account");  // Set placeholder for username
+		fileNameText.setPromptText("Instructor Account");  // Set placeholder for username
 		fileNameText.setPrefWidth(300);  // Set the preferred width
 		fileNameText.setMaxWidth(300);   
 
@@ -3865,6 +3927,20 @@ public class helpSystemStart extends Application {
 		addInButton.setId("buttonDesign"); 
 		deleteInButton.setId("buttonDesign"); 
 		quitButton.setId("buttonDesign");	
+		
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Send button action
 		addInButton.setOnAction(new EventHandler<ActionEvent>() {

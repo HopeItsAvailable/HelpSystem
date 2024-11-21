@@ -47,6 +47,8 @@ public class DatabaseHelperArticleGroups {
             System.err.println("JDBC Driver not found: " + e.getMessage());
         }
     }
+    
+    
 
     // Method to create the table for storing article groups
     private void createTables() throws SQLException {
@@ -58,15 +60,22 @@ public class DatabaseHelperArticleGroups {
 
     // Method to insert a new group into the cse360ArticleGroups table
     public void addArticleGroup(String groupName) throws Exception {
-    	databaseHelper = new DatabaseHelperUser();
+        databaseHelper = new DatabaseHelperUser();
+        databaseHelper.connectToDatabase();
+        
+        // Check if the group already exists
+        if (doesGroupExist(groupName)) {
+            System.out.println("Group '" + groupName + "' already exists. Skipping insertion.");
+            return;
+        }
+
         String query = "INSERT INTO cse360ArticleGroups (groupName) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, groupName);
             pstmt.executeUpdate();
             System.out.println("Added Article Group");
-            
-            
-         // Get the username of the first admin
+
+            // Get the username of the first admin
             String adminUsername = databaseHelper.getFirstAdminUsername();
             if (adminUsername != null) {
                 System.out.println("Assigning group to first admin: " + adminUsername);
@@ -77,10 +86,9 @@ public class DatabaseHelperArticleGroups {
             } else {
                 System.out.println("No admin found to assign the group.");
             }
-            
-
         }
     }
+
     
     
 

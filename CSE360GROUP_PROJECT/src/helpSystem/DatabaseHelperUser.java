@@ -552,6 +552,7 @@ public class DatabaseHelperUser {
 	                ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
 	                if (!userGroups.contains(group)) {
 	                    userGroups.add(group);
+	                    System.out.println("Group: " + group+ " added to : " + username + "\n");
 	                    updateUserGroups(username, userGroups);
 	                }
 	            }
@@ -569,6 +570,7 @@ public class DatabaseHelperUser {
 	                ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
 	                if (userGroups.contains(group)) {
 	                    userGroups.remove(group);
+	                    System.out.println("Group: " + group+ " removed from : " + username + "\n");
 	                    updateUserGroups(username, userGroups);
 	                }
 	            }
