@@ -270,8 +270,9 @@ public class DatabaseHelperArticle {
 	        String body = rs.getString("body");
 	        String references = rs.getString("references");
 	        String level = rs.getString("level");
+	        String group = rs.getString("articleGroup");
 
-	        articles.add(new Article(id, title, author, paperAbstract, keywords, body, references, level));
+	        articles.add(new Article(id, title, author, paperAbstract, keywords, body, references, level, group));
 	    }
 
 	    return articles;

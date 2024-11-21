@@ -7,6 +7,12 @@
     -fx-background-repeat: no-repeat; /* Prevents repeating the background image */
     -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0); /* Optional shadow effect */
 }
+#Background {
+    -fx-background-image: url("img/startBackground.png");
+    -fx-background-size: cover; /* Ensures the background image covers the entire window */
+    -fx-background-position: center center; /* Centers the background image */
+    -fx-background-repeat: no-repeat; /* Prevents repeating the background image */
+}
 #lineDetails {
     -fx-stroke: black;
     -fx-stroke-width: 2;
