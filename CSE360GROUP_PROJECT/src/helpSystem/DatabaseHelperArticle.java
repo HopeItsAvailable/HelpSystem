@@ -185,7 +185,7 @@ public class DatabaseHelperArticle {
 		return true;
 	}
 
-	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body,
+	/*public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body,
 			char[] references, char[] level, char[] group) throws Exception {
 
 		// Convert char to strings
@@ -209,7 +209,79 @@ public class DatabaseHelperArticle {
 			pstmt.setString(7, levelStr);
 			pstmt.setString(8, articleGroup);
 			pstmt.executeUpdate();
+			
 		}
+	}*/
+	//encryps when article is created
+	public void register(char[] title, char[] author, char[] paper_abstract, char[] keywords, char[] body,
+            char[] references, char[] level, char[] group) throws Exception 
+    {
+
+		// Convert char arrays to Strings
+		String titleStr = new String(title);
+		String authorStr = new String(author);
+		String abstractStr = new String(paper_abstract);
+		String keywordsStr = new String(keywords);
+		String bodyStr = new String(body);
+		String referencesStr = new String(references);
+		String levelStr = new String(level);
+		String articleGroup = new String(group);
+
+		// Initialize encryption helper
+		EncryptionHelper encryptionHelper = new EncryptionHelper();
+
+		// Use a fixed initialization vector for simplicity (not recommended for real-world applications)
+		byte[] iv = new byte[16]; // 16 bytes for AES (128-bit block size)
+
+		// Encrypt only the body
+		byte[] encryptedBody = encryptionHelper.encrypt(bodyStr.getBytes(), iv);
+
+		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level, articleGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) 
+		{
+			pstmt.setString(1, titleStr);
+			pstmt.setString(2, authorStr);
+			pstmt.setString(3, abstractStr);
+			pstmt.setString(4, keywordsStr);
+			//encrypted body
+			pstmt.setBytes(5, encryptedBody);
+			pstmt.setString(6, referencesStr);
+			pstmt.setString(7, levelStr);
+			pstmt.setString(8, articleGroup);
+			pstmt.executeUpdate();
+		}
+}
+
+	public String decryptBody(int articleId) throws Exception 
+	{
+	    String selectQuery = "SELECT body FROM cse360Articles WHERE id = ?";
+	    String decryptedBody = null;
+
+	    // Initialize encryption helper
+	    EncryptionHelper encryptionHelper = new EncryptionHelper();
+
+	    // Use the same initialization vector (IV) that was used during encryption
+	    byte[] iv = new byte[16]; // 16 bytes for AES (128-bit block size)
+
+	    try (PreparedStatement pstmt = connection.prepareStatement(selectQuery)) 
+	    {
+	        pstmt.setInt(1, articleId);
+	        try (ResultSet rs = pstmt.executeQuery()) 
+	        {
+	            if (rs.next()) 
+	            {
+	                byte[] encryptedBody = rs.getBytes("body");
+	                if (encryptedBody != null) 
+	                {
+	                    // Decrypt the body
+	                    byte[] decryptedBytes = encryptionHelper.decrypt(encryptedBody, iv);
+	                    decryptedBody = new String(decryptedBytes);
+	                }
+	            }
+	        }
+	    }
+
+	    return decryptedBody;
 	}
 
 	public boolean doesArticleExist(String title) {
