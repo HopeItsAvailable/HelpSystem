@@ -66,24 +66,21 @@ public class DatabaseHelperArticleGroups {
             
             
          // Get the username of the first admin
-            String adminQuery = "SELECT username FROM cse360users WHERE isAdmin = TRUE ORDER BY id ASC LIMIT 1";
-            try (Statement stmt = connection.createStatement();
-                 ResultSet rs = stmt.executeQuery(adminQuery)) {
-                if (rs.next()) {
-                    String adminUsername = rs.getString("username");
-                    System.out.println("Assigning group to first admin: " + adminUsername);
+            String adminUsername = databaseHelper.getFirstAdminUsername();
+            if (adminUsername != null) {
+                System.out.println("Assigning group to first admin: " + adminUsername);
 
-                    // Add the new group to the admin's userGroups
-                    databaseHelper.addUserToGroup(adminUsername, groupName);
-                    System.out.println("Group '" + groupName + "' assigned to admin: " + adminUsername);
-                } else {
-                    System.out.println("No admin found to assign the group.");
-                }
+                // Add the new group to the admin's userGroups
+                databaseHelper.addUserToGroup(adminUsername, groupName);
+                System.out.println("Group '" + groupName + "' assigned to admin: " + adminUsername);
+            } else {
+                System.out.println("No admin found to assign the group.");
             }
             
 
         }
     }
+    
     
 
     // Method to get all groups from the cse360ArticleGroups table
