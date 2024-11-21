@@ -3010,7 +3010,7 @@ public class helpSystemStart extends Application {
 	public void openArt(Stage primaryStage, String userName, String id) {
 		
 		// Labels, buttons, textfield, alert, and checkBox
-		Label welcome = new Label("Delete Article");
+		Label welcome = new Label("Read Article");
 		Label noAccess = new Label("Do not have access to article");
 		Label article = new Label("THE ARTICLE GOES HERE");
 
