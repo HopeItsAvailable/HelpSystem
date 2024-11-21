@@ -50,11 +50,16 @@ import java.util.Scanner;
 
 import helpSystem.DatabaseHelperUser;
 import helpSystem.DatabaseHelperArticle;
+import helpSystem.DatabaseHelperArticleGroups;
 
 public class helpSystemStart extends Application {
 
 	private static DatabaseHelperUser databaseHelper;
 	private static DatabaseHelperArticle databaseHelper1;
+	private static DatabaseHelperArticleGroups databaseHelper2;
+
+
+	
 
 	private Scene loginScene; // To store the initial login scene
 	// private LinkedList linkedList; // Declare LinkedList
@@ -82,10 +87,12 @@ public class helpSystemStart extends Application {
 
 	    databaseHelper = new DatabaseHelperUser();
 	    databaseHelper1 = new DatabaseHelperArticle();
+	    databaseHelper2 = new DatabaseHelperArticleGroups();
 
 	    try {
 	        databaseHelper.connectToDatabase();
 	        databaseHelper1.connectToDatabase();
+	        databaseHelper2.connectToDatabase();
 
 	        primaryStage.setTitle("Help System");
 
@@ -3389,6 +3396,13 @@ public class helpSystemStart extends Application {
 					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 					
 					// TODO Create function to create group
+					try {
+						databaseHelper2.addArticleGroup(fileNameText.getText());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		
 				}
 
 			}
@@ -3591,6 +3605,19 @@ public class helpSystemStart extends Application {
 		// Button design
 		deletedButton.setId("buttonDesign"); 
 		quitButton.setId("buttonDesign");
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -3710,6 +3737,19 @@ public class helpSystemStart extends Application {
 		Button quitButton = new Button("Quit");
 		
 		ChoiceBox<String> getGroup = new ChoiceBox<>();
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Label design
 		welcome.setFont(new Font("Montserrat", 36));
@@ -3866,7 +3906,7 @@ public class helpSystemStart extends Application {
 		Label chooseGroup = new Label("Choose Group");
 
 		TextField fileNameText = new TextField();
-		fileNameText.setPromptText("Inssructor Account");  // Set placeholder for username
+		fileNameText.setPromptText("Instructor Account");  // Set placeholder for username
 		fileNameText.setPrefWidth(300);  // Set the preferred width
 		fileNameText.setMaxWidth(300);   
 
@@ -3887,6 +3927,20 @@ public class helpSystemStart extends Application {
 		addInButton.setId("buttonDesign"); 
 		deleteInButton.setId("buttonDesign"); 
 		quitButton.setId("buttonDesign");	
+		
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Send button action
 		addInButton.setOnAction(new EventHandler<ActionEvent>() {

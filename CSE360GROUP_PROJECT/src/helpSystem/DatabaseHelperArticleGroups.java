@@ -1,10 +1,22 @@
 package helpSystem;
 
 import java.sql.*;
+import java.util.ArrayList;
+
+import Encryption.EncryptionHelper;
+import Encryption.EncryptionUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
+import helpSystem.DatabaseHelperUser;
 
 public class DatabaseHelperArticleGroups {
 
     // JDBC driver name and database URL
+	
+	private static DatabaseHelperUser databaseHelper;
     static final String JDBC_DRIVER = "org.h2.Driver";
     static final String DB_URL = "jdbc:h2:~/articleDatabase";
 
@@ -14,13 +26,17 @@ public class DatabaseHelperArticleGroups {
 
     private Connection connection = null;
     private Statement statement = null;
+    
+	private Gson gson = new Gson();
+    
+	private EncryptionHelper encryptionHelper;
 
-    public DatabaseHelperArticleGroups() throws SQLException {
-        connectToDatabase();
+    public DatabaseHelperArticleGroups() throws Exception {
+    	encryptionHelper = new EncryptionHelper();
     }
 
     // Establish connection to the database
-    private void connectToDatabase() throws SQLException {
+    public void connectToDatabase() throws SQLException {
         try {
             Class.forName(JDBC_DRIVER); // Load the JDBC driver
             System.out.println("Connecting to database...");
@@ -31,6 +47,8 @@ public class DatabaseHelperArticleGroups {
             System.err.println("JDBC Driver not found: " + e.getMessage());
         }
     }
+    
+    
 
     // Method to create the table for storing article groups
     private void createTables() throws SQLException {
@@ -41,13 +59,38 @@ public class DatabaseHelperArticleGroups {
     }
 
     // Method to insert a new group into the cse360ArticleGroups table
-    public void addArticleGroup(String groupName) throws SQLException {
+    public void addArticleGroup(String groupName) throws Exception {
+        databaseHelper = new DatabaseHelperUser();
+        databaseHelper.connectToDatabase();
+        
+        // Check if the group already exists
+        if (doesGroupExist(groupName)) {
+            System.out.println("Group '" + groupName + "' already exists. Skipping insertion.");
+            return;
+        }
+
         String query = "INSERT INTO cse360ArticleGroups (groupName) VALUES (?)";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, groupName);
             pstmt.executeUpdate();
+            System.out.println("Added Article Group");
+
+            // Get the username of the first admin
+            String adminUsername = databaseHelper.getFirstAdminUsername();
+            if (adminUsername != null) {
+                System.out.println("Assigning group to first admin: " + adminUsername);
+
+                // Add the new group to the admin's userGroups
+                databaseHelper.addUserToGroup(adminUsername, groupName);
+                System.out.println("Group '" + groupName + "' assigned to admin: " + adminUsername);
+            } else {
+                System.out.println("No admin found to assign the group.");
+            }
         }
     }
+
+    
+    
 
     // Method to get all groups from the cse360ArticleGroups table
     public ResultSet getAllGroups() throws SQLException {

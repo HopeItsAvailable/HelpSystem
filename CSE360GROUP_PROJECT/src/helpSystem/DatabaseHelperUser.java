@@ -108,6 +108,19 @@ public class DatabaseHelperUser {
 	        }
 	    }
 	}
+	
+	public String getFirstAdminUsername() throws SQLException {
+	    String adminQuery = "SELECT username FROM cse360users WHERE isAdmin = TRUE ORDER BY id ASC LIMIT 1";
+	    try (Statement stmt = connection.createStatement();
+	         ResultSet rs = stmt.executeQuery(adminQuery)) {
+	        if (rs.next()) {
+	            return rs.getString("username");
+	        } else {
+	            return null;
+	        }
+	    }
+	}
+
 
 	public boolean isAdmin(String username) throws SQLException {
 	    String query = "SELECT isAdmin FROM cse360users WHERE username = ?";
@@ -539,6 +552,7 @@ public class DatabaseHelperUser {
 	                ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
 	                if (!userGroups.contains(group)) {
 	                    userGroups.add(group);
+	                    System.out.println("Group: " + group+ " added to : " + username + "\n");
 	                    updateUserGroups(username, userGroups);
 	                }
 	            }
@@ -556,6 +570,7 @@ public class DatabaseHelperUser {
 	                ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
 	                if (userGroups.contains(group)) {
 	                    userGroups.remove(group);
+	                    System.out.println("Group: " + group+ " removed from : " + username + "\n");
 	                    updateUserGroups(username, userGroups);
 	                }
 	            }
