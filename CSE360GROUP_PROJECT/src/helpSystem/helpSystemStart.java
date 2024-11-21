@@ -3569,6 +3569,19 @@ public class helpSystemStart extends Application {
 		// Button design
 		deletedButton.setId("buttonDesign"); 
 		quitButton.setId("buttonDesign");
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Send button action
 		deletedButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -3688,6 +3701,19 @@ public class helpSystemStart extends Application {
 		Button quitButton = new Button("Quit");
 		
 		ChoiceBox<String> getGroup = new ChoiceBox<>();
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Label design
 		welcome.setFont(new Font("Montserrat", 36));
@@ -3865,6 +3891,20 @@ public class helpSystemStart extends Application {
 		addInButton.setId("buttonDesign"); 
 		deleteInButton.setId("buttonDesign"); 
 		quitButton.setId("buttonDesign");	
+		
+		
+		ArrayList<String> userGroups = null;
+		try {
+			userGroups = databaseHelper.getUserGroups(userName);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // Get groups for user
+        getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
+
+        if (userGroups.isEmpty()) {
+            getGroup.setDisable(true); // Disable ChoiceBox if no groups are available
+        }
 
 		// Send button action
 		addInButton.setOnAction(new EventHandler<ActionEvent>() {
