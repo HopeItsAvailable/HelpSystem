@@ -562,6 +562,34 @@ public class DatabaseHelperUser {
 	        }
 	    }
 	}
+	
+	public void restoreAdminAccessToAllGroups() throws SQLException {
+	    // Query to find the admin users
+	    String query = "SELECT username FROM cse360users WHERE isAdmin = TRUE";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(query);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String adminUsername = rs.getString("username");
+
+	            // Get all the groups from the article groups table
+	            String groupQuery = "SELECT groupName FROM cse360ArticleGroups";
+	            try (PreparedStatement groupPstmt = connection.prepareStatement(groupQuery);
+	                 ResultSet groupRs = groupPstmt.executeQuery()) {
+
+	                ArrayList<String> allGroups = new ArrayList<>();
+	                while (groupRs.next()) {
+	                    String groupName = groupRs.getString("groupName");
+	                    allGroups.add(groupName);
+	                }
+
+	                // Update the admin's userGroups with all groups
+	                updateUserGroups(adminUsername, allGroups);
+	            }
+	        }
+	    }
+	}
 
 	public void removeUserFromGroup(String username, String group) throws SQLException {
 	    String query = "SELECT userGroups FROM cse360users WHERE username = ?";
@@ -594,6 +622,8 @@ public class DatabaseHelperUser {
 	    }
 	    return new ArrayList<>();
 	}
+	
+
 
 	private void updateUserGroups(String username, ArrayList<String> userGroups) throws SQLException {
 	    String query = "UPDATE cse360users SET userGroups = ? WHERE username = ?";
@@ -615,6 +645,34 @@ public class DatabaseHelperUser {
 		} catch(SQLException se){ 
 			se.printStackTrace(); 
 		} 
+	}
+
+	public void removeGroupFromAllUsers(String groupName) throws SQLException {
+		// TODO Auto-generated method stub
+		// Query to select all users
+	    String query = "SELECT username, userGroups FROM cse360users";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(query);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String username = rs.getString("username");
+	            String jsonGroups = rs.getString("userGroups");
+
+	            // Deserialize the user's groups from JSON
+	            ArrayList<String> userGroups = (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
+
+	            // Check if the group is part of the user's groups
+	            if (userGroups.contains(groupName)) {
+	                // Remove the group if it exists
+	                userGroups.remove(groupName);
+	                System.out.println("Group: " + groupName + " removed from user: " + username);
+
+	                // Update the user record with the new list of groups
+	                updateUserGroups(username, userGroups);
+	            }
+	        }
+	    }
 	}
 
 	

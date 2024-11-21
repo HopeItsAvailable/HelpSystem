@@ -9,8 +9,9 @@ public class Article {
     private String body;
     private String references;
     private String level;
+    private String articleGroup;
 
-    public Article(int id, String title, String author, String paperAbstract, String keywords, String body, String references, String level) {
+    public Article(int id, String title, String author, String paperAbstract, String keywords, String body, String references, String level, String articleGroup) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -19,6 +20,7 @@ public class Article {
         this.body = body;
         this.references = references;
         this.level = level;
+        this.articleGroup = articleGroup;
     }
 
     public int getId() { return id; }
@@ -29,5 +31,6 @@ public class Article {
     public String getBody() { return body; }
     public String getReferences() { return references; }
     public String getLevel() { return level; }
+    public String getArticleGroup() { return articleGroup; }
 }
 
