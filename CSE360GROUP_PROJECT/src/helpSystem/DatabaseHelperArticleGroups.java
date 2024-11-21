@@ -215,7 +215,7 @@ public class DatabaseHelperArticleGroups {
             
             // Reconnect to the database
             connectToDatabase();
-            databaseHelper.restoreAdminAccessToAllGroups();
+            //databaseHelper.restoreAdminAccessToAllGroups();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
