@@ -2,6 +2,9 @@ package helpSystem;
 
 import java.sql.*;
 
+import Encryption.EncryptionHelper;
+import Encryption.EncryptionUtils;
+
 public class DatabaseHelperArticleGroups {
 
     // JDBC driver name and database URL
@@ -14,13 +17,15 @@ public class DatabaseHelperArticleGroups {
 
     private Connection connection = null;
     private Statement statement = null;
+    
+	private EncryptionHelper encryptionHelper;
 
-    public DatabaseHelperArticleGroups() throws SQLException {
-        connectToDatabase();
+    public DatabaseHelperArticleGroups() throws Exception {
+    	encryptionHelper = new EncryptionHelper();
     }
 
     // Establish connection to the database
-    private void connectToDatabase() throws SQLException {
+    public void connectToDatabase() throws SQLException {
         try {
             Class.forName(JDBC_DRIVER); // Load the JDBC driver
             System.out.println("Connecting to database...");

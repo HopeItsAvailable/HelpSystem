@@ -46,11 +46,14 @@ import java.util.Scanner;
 
 import helpSystem.DatabaseHelperUser;
 import helpSystem.DatabaseHelperArticle;
+import helpSystem.DatabaseHelperArticleGroups;
 
 public class helpSystemStart extends Application {
 
 	private static DatabaseHelperUser databaseHelper;
 	private static DatabaseHelperArticle databaseHelper1;
+	private static DatabaseHelperArticleGroups databaseHelper2;
+	
 
 	private Scene loginScene; // To store the initial login scene
 	// private LinkedList linkedList; // Declare LinkedList
@@ -78,10 +81,12 @@ public class helpSystemStart extends Application {
 
 	    databaseHelper = new DatabaseHelperUser();
 	    databaseHelper1 = new DatabaseHelperArticle();
+	    databaseHelper2 = new DatabaseHelperArticleGroups();
 
 	    try {
 	        databaseHelper.connectToDatabase();
 	        databaseHelper1.connectToDatabase();
+	        databaseHelper2.connectToDatabase();
 
 	        primaryStage.setTitle("Help System");
 
@@ -3352,6 +3357,13 @@ public class helpSystemStart extends Application {
 					fileNameText.setStyle("-fx-border-color: black; -fx-border-width: 2;");
 					
 					// TODO Create function to create group
+					try {
+						databaseHelper2.addArticleGroup(fileNameText.getText());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		
 				}
 
 			}
