@@ -2,12 +2,15 @@ package helpSystem;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import Encryption.EncryptionHelper;
 import Encryption.EncryptionUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -61,7 +64,7 @@ public class DatabaseHelperArticleGroups {
     private void createTables() throws SQLException {
         String articleGroupTable = "CREATE TABLE IF NOT EXISTS cse360ArticleGroups (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "groupName VARCHAR(255) UNIQUE)";
+                "groupName VARCHAR(255))";
         statement.execute(articleGroupTable);
     }
 
@@ -168,61 +171,67 @@ public class DatabaseHelperArticleGroups {
 		} 
 	}
     
-    public void backupArticleGroups(String fileName) throws SQLException, IOException {
-        closeConnection(); // Close the current database connection
+    public void backupArticleGroupsToFile(String fileName, String groupName) throws SQLException, IOException {
+        String query = "SELECT * FROM cse360ArticleGroups WHERE groupName = ?";  // Filter by groupName
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, groupName);  // Set the group name dynamically
+            
+            try (ResultSet rs = pstmt.executeQuery(); FileWriter fileWriter = new FileWriter(fileName)) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String group = rs.getString("groupName");
 
-        fileName += ".mv.db"; // Ensure the file has .mv.db extension
-
-        // Define paths for the original and backup database files
-        String originalDBPath = Paths.get(System.getProperty("user.home"), "articleDatabase.mv.db").toString();
-        String backupFilePath = Paths.get(System.getProperty("user.home"), fileName).toString();
-
-        try {
-            Files.copy(Paths.get(originalDBPath), Paths.get(backupFilePath), StandardCopyOption.REPLACE_EXISTING); // Copy the entire database file
-            System.out.println("Backup successful!");
+                    // Writing SQL insert statements into the backup file
+                    String sqlInsert = String.format(
+                            "INSERT INTO cse360ArticleGroups (id, groupName) "
+                                    + "VALUES (%d, '%s');\n", id, group);
+                    fileWriter.write(sqlInsert);
+                }
+                System.out.println("Backup completed successfully to file: " + fileName);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error writing to file: " + e.getMessage());
         }
-
-        connectToDatabase(); // Reconnect to the database
     }
+
+
+
+
     
-    public boolean restoreArticleGroups(String fileName) throws Exception {
+    public void restoreArticleGroupsFromFile(String fileName) throws Exception {
+        // Step 1: Load the backup SQL statements from the file
+    	
     	databaseHelper = new DatabaseHelperUser();
         databaseHelper.connectToDatabase();
-    	
-    	closeConnection(); // Close the current database connection
+        
+        try (Scanner scanner = new Scanner(new FileReader(fileName))) {
+            while (scanner.hasNextLine()) {
+                String sql = scanner.nextLine().trim();  // Trim whitespace to avoid empty or malformed lines
 
-        fileName += ".mv.db"; // Ensure the file has .mv.db extension
+                // Skip empty lines or comments
+                if (sql.isEmpty() || sql.startsWith("--")) {
+                    continue;
+                }
 
-        // Define paths for the backup and original database files
-        String backupFilePath = Paths.get(System.getProperty("user.home"), fileName).toString();
-        String originalPath = Paths.get(System.getProperty("user.home"), "articleDatabase.mv.db").toString();
+                // Check if the SQL statement is for inserting into cse360ArticleGroups
+                if (sql.toLowerCase().contains("insert into cse360articlegroups")) {
+                    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                        pstmt.executeUpdate(); // Execute the insert statement to restore the group
+                    }
+                }
+            }
 
-        // Check if the backup file exists
-        if (!Files.exists(Paths.get(backupFilePath))) {
-            System.out.println("Could not find backup file.");
-            return false;
-        }
-
-        try {
-            // Delete the old database file if it exists
-            Files.deleteIfExists(Paths.get(originalPath));
-
-            // Copy the backup file to replace the original database file
-            Files.copy(Paths.get(backupFilePath), Paths.get(originalPath), StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("Restore successful!");
-            
-            // Reconnect to the database
-            connectToDatabase();
-            //databaseHelper.restoreAdminAccessToAllGroups();
-            return true;
+            // Optional step: Restore articles associated with the groups
+            //restoreArticlesForGroups();
+            databaseHelper.restoreAdminAccessToAllGroups();
+            System.out.println("Restore completed successfully from file: " + fileName);
         } catch (IOException e) {
-            e.printStackTrace();
-            connectToDatabase(); // Reconnect even on failure
-            return false;
+            System.out.println("Error reading from file: " + e.getMessage());
         }
     }
+
+  
+    
 
 
 }

@@ -162,6 +162,7 @@ public class DatabaseHelperUser {
 	        pstmt.executeUpdate();
 	    }
 	}
+	
 
 	public void removeStudentRole(String username) throws Exception {
 	    String updateStudentSql = "UPDATE cse360users SET isStudent = false WHERE username = ?";
@@ -173,7 +174,35 @@ public class DatabaseHelperUser {
 	}
 
 	public void removeInstructorRole(String username) throws Exception {
-	    String updateInstructorSql = "UPDATE cse360users SET isInstructor = false WHERE username = ?";
+	    String updateInstructorSql = "UPDATE cse360users SET isInstructor = true WHERE username = ?";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateInstructorSql)) {
+	        pstmt.setString(1, username);
+	        pstmt.executeUpdate();
+	    }
+	}
+	
+	public void addAdminRole(String username) throws Exception {
+	    String updateAdminSql = "UPDATE cse360users SET isAdmin = true WHERE username = ?";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateAdminSql)) {
+	        pstmt.setString(1, username);
+	        pstmt.executeUpdate();
+	    }
+	}
+	
+
+	public void addStudentRole(String username) throws Exception {
+	    String updateStudentSql = "UPDATE cse360users SET isStudent = true WHERE username = ?";
+	    
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateStudentSql)) {
+	        pstmt.setString(1, username);
+	        pstmt.executeUpdate();
+	    }
+	}
+
+	public void addInstructorRole(String username) throws Exception {
+	    String updateInstructorSql = "UPDATE cse360users SET isInstructor = true WHERE username = ?";
 	    
 	    try (PreparedStatement pstmt = connection.prepareStatement(updateInstructorSql)) {
 	        pstmt.setString(1, username);

@@ -107,7 +107,7 @@ public class helpSystemStart extends Application {
 	            welcome.setFont(new Font("Montserrat", newFontSize)); // Apply the new font size
 	        });
 	        
-	        databaseHelper2.addArticleGroup("Default");
+	        
 	        // Line for header
 	        Line line = new Line();
 	        line.setId("lineDetails");
@@ -282,6 +282,7 @@ public class helpSystemStart extends Application {
 	                String password = passwordText.getText().trim();
 	                try {
 	                    databaseHelper.registerFirstUser(username, password);
+	                    databaseHelper2.addArticleGroup("Default");
 	                } catch (Exception e) {
 	                    e.printStackTrace();
 	                }
@@ -3862,7 +3863,7 @@ public class helpSystemStart extends Application {
 					
 					//TODO BackUp Group
 					try {
-						databaseHelper2.backupArticleGroups(fileNameText.getText().strip());
+						databaseHelper2.backupArticleGroupsToFile(fileNameText.getText().strip(),getGroup.getValue());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -4006,7 +4007,7 @@ public class helpSystemStart extends Application {
 					
 					//TODO Restore Group
 					try {
-						databaseHelper2.restoreArticleGroups(fileNameText.getText().strip());
+						databaseHelper2.restoreArticleGroupsFromFile(fileNameText.getText());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
