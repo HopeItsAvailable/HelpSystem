@@ -85,17 +85,20 @@ public class helpSystemStart extends Application {
 	        size++;
 	    }
 
+	    //creates database class
 	    databaseHelper = new DatabaseHelperUser();
 	    databaseHelper1 = new DatabaseHelperArticle();
 	    databaseHelper2 = new DatabaseHelperArticleGroups();
 	    
 
 	    try {
+	    	
+	    	//connects to all three databases
 	        databaseHelper.connectToDatabase();
 	        databaseHelper1.connectToDatabase();
 	        databaseHelper2.connectToDatabase();
 
-	        primaryStage.setTitle("Help System");
+	        primaryStage.setTitle("Help System"); //sets title
 
 	        // Label
 	        Label welcome = new Label("Welcome to our Help System");
@@ -114,25 +117,25 @@ public class helpSystemStart extends Application {
 	        line.setStartY(50); // Set a starting Y position for the line
 	        line.setEndY(50);   // Keep the line horizontal
 
-	        // Dynamically bind line's width to the width of the welcome label
-	        line.endXProperty().bind(welcome.widthProperty()); // Bind end X to the width of the label
-	        line.startXProperty().bind(welcome.layoutXProperty()); // Start X bound to label's layout X
+	        // binds size of page to line
+	        line.endXProperty().bind(welcome.widthProperty());
+	        line.startXProperty().bind(welcome.layoutXProperty());
 
 	        // Logo
 	        ImageView logoImageView = new ImageView();
 	        logoImageView.setImage(new Image(getClass().getResourceAsStream("img/logo.png")));
 
 	        // Dynamically resize logo based on stage width and height
-	        logoImageView.fitWidthProperty().bind(primaryStage.widthProperty().multiply(0.5)); // 20% of the window width
-	        logoImageView.fitHeightProperty().bind(primaryStage.heightProperty().multiply(0.6)); // 20% of the window height
+	        logoImageView.fitWidthProperty().bind(primaryStage.widthProperty().multiply(0.5));
+	        logoImageView.fitHeightProperty().bind(primaryStage.heightProperty().multiply(0.6)); 
 
 	        // Create the Start button
 	        Button startButton = new Button("Start");
 	        startButton.setId("buttonStart");  // Set the ID for styling
 
 	        // Dynamically resize button based on stage width and height
-	        startButton.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.2)); // 20% of the window width
-	        startButton.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.05)); // 10% of the window height
+	        startButton.prefWidthProperty().bind(primaryStage.widthProperty().multiply(0.2)); 
+	        startButton.prefHeightProperty().bind(primaryStage.heightProperty().multiply(0.05));
 
 	        // Set the action for when the login button is clicked
 	        startButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -185,11 +188,11 @@ public class helpSystemStart extends Application {
 
 	        // Ensure layout is recalculated after resizing
 	        primaryStage.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-	            starterScreen.requestLayout(); // Forces layout recalculation
+	            starterScreen.requestLayout();
 	        });
 
 	        primaryStage.heightProperty().addListener((obs, oldHeight, newHeight) -> {
-	            starterScreen.requestLayout(); // Forces layout recalculation
+	            starterScreen.requestLayout(); 
 	        });
 
 	        primaryStage.show();
@@ -202,7 +205,7 @@ public class helpSystemStart extends Application {
 
 	private void createAdmin(Stage primaryStage) {
 	    
-		// Labels and buttons
+		// GUI elements
 	    Label welcome = new Label("Create an Admin Account");
 
 	    Label invUserName = new Label("Username must be between 6-12 characters");
@@ -212,20 +215,19 @@ public class helpSystemStart extends Application {
 	    Button loginButton = new Button("Create Account");
 	    Button quitButton = new Button("Quit");
 
-	    // TextFields with prompt text (placeholders)
 	    TextField userNameText = new TextField();
 	    userNameText.setPromptText("Username");  // Set placeholder for username
 	    userNameText.setPrefWidth(300);  // Set the preferred width
 	    userNameText.setMaxWidth(300);   
 	    
 	    PasswordField passwordText = new PasswordField();  // PasswordField for security
-	    passwordText.setPromptText("Password");  // Set placeholder for password
-	    passwordText.setPrefWidth(300);  // Set the preferred width
+	    passwordText.setPromptText("Password"); 
+	    passwordText.setPrefWidth(300);
 	    passwordText.setMaxWidth(300);   
 	    
 	    PasswordField confPasswordText = new PasswordField();  // PasswordField for confirmation
-	    confPasswordText.setPromptText("Re-enter Password");  // Set placeholder for confirmation
-	    confPasswordText.setPrefWidth(300);  // Set the preferred width
+	    confPasswordText.setPromptText("Re-enter Password"); 
+	    confPasswordText.setPrefWidth(300);
 	    confPasswordText.setMaxWidth(300);   
 	    
 	    // Label design
@@ -551,7 +553,8 @@ public class helpSystemStart extends Application {
 				createUser(primaryStage);
 			}
 		});
-		
+			
+		//Layout for page
 		HBox topTop = new HBox(quitButton);
 		topTop.setAlignment(Pos.CENTER_RIGHT);
 		topTop.setPadding(new Insets(20, 20, 0, 0));
@@ -3013,22 +3016,37 @@ public class helpSystemStart extends Application {
 
 	}
 	
-	public void openArt(Stage primaryStage, String userName, String id) {
+	public void openArt(Stage primaryStage, String userName, String id) throws Exception {
+		
+		int idNum = Integer.parseInt(id);
 		
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Read Article");
+		Label artString = new Label();
+		artString.setText(databaseHelper1.getArticleByIdAndUserName(idNum, userName));
 		Label noAccess = new Label("Do not have access to article");
 		Label article = new Label("THE ARTICLE GOES HERE");
 
 		Button quitButton = new Button("Quit");
+		Button reqButton = new Button("Request Access");
+
 
 		// Label design
 		welcome.setFont(new Font("Montserrat", 36));
+		
+		artString.setFont(new Font("Montserrat", 20));
 
 		noAccess.setFont(new Font("Montserrat", 12));
+		noAccess.setStyle("-fx-text-fill: red;");
+		noAccess.setVisible(false);
+		
+		if(databaseHelper1.checkArticleByIdAndUserName(idNum, userName) == false) {
+			noAccess.setVisible(true);
+		}
 
 		// Button design
 		quitButton.setId("buttonDesign"); 
+		reqButton.setId("buttonDesign"); 
 
 
 		// Quit button action
@@ -3045,13 +3063,13 @@ public class helpSystemStart extends Application {
 		});
 
 		// Center the elements in the VBox
-	    VBox middleMiddlePane = new VBox(10, welcome, noAccess);
+	    VBox middleMiddlePane = new VBox(10, welcome, artString, noAccess);
 		middleMiddlePane.setAlignment(Pos.CENTER);
 		middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
 		VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
 		// Center the buttons in the HBox
-		HBox bottomPane = new HBox(20, quitButton);
+		HBox bottomPane = new HBox(20, reqButton, quitButton);
 		bottomPane.setAlignment(Pos.CENTER);
 
 		// Left side Pane (with background image)

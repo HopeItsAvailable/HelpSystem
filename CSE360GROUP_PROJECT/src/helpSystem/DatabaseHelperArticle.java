@@ -549,6 +549,88 @@ public class DatabaseHelperArticle {
 			return false;
 		}
 	}
+	
+	public String getArticleByIdAndUserName(int id, String userName) throws Exception {
+	    // Initialize the DatabaseHelperUser to fetch user groups
+	    DatabaseHelperUser userHelper = new DatabaseHelperUser();
+	    userHelper.connectToDatabase();
+
+	    // Fetch the user's groups
+	    ArrayList<String> userGroups = userHelper.getUserGroups(userName);
+
+	    // SQL query to get the article details
+	    String query = "SELECT * FROM cse360Articles WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, id);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                // Get the article's group
+	                String articleGroup = rs.getString("articleGroup");
+
+	                // Check if the user has access to this group
+	                if (userGroups.contains(articleGroup)) {
+	                    // Fetch article details
+	                    String title = rs.getString("title");
+	                    String author = rs.getString("author");
+	                    String paperAbstract = rs.getString("paper_abstract");
+	                    String keywords = rs.getString("keywords");
+	                    String references = rs.getString("references");
+	                    String level = rs.getString("level");
+	                    String group = rs.getString("articleGroup");
+
+	                    // Decrypt the body
+	                    String decryptedBody = decryptBody(id);
+
+	                    // Construct the article string
+	                    return "Article ID: " + id + "\n" +
+	                            "Title: " + title + "\n" +
+	                            "Author: " + author + "\n" +
+	                            "Abstract: " + paperAbstract + "\n" +
+	                            "Keywords: " + keywords + "\n" +
+	                            "Body: " + decryptedBody + "\n" +
+	                            "References: " + references + "\n" +
+	                            "Level: " + level + "\n" +
+	                            "Group: " + group;
+	                } else {
+	                    throw new IllegalAccessException("Access denied: You do not have access to this article.");
+	                }
+	            } else {
+	                throw new IllegalArgumentException("Article with ID " + id + " does not exist.");
+	            }
+	        }
+	    }
+	}
+	
+	public Boolean checkArticleByIdAndUserName(int id, String userName) throws Exception {
+	    // Initialize the DatabaseHelperUser to fetch user groups
+	    DatabaseHelperUser userHelper = new DatabaseHelperUser();
+	    userHelper.connectToDatabase();
+
+	    // Fetch the user's groups
+	    ArrayList<String> userGroups = userHelper.getUserGroups(userName);
+
+	    // SQL query to get the article details
+	    String query = "SELECT * FROM cse360Articles WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, id);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                // Get the article's group
+	                String articleGroup = rs.getString("articleGroup");
+
+	                // Check if the user has access to this group
+	                if (userGroups.contains(articleGroup)) {
+
+	                    return true;
+	                } else {
+	                	return false;
+	                }
+	            } else {
+	            	return false;
+	            }
+	        }
+	    }
+	}
 
 	public void closeConnection() {
 		try {
