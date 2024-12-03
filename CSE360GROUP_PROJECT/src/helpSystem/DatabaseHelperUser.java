@@ -652,6 +652,15 @@ public class DatabaseHelperUser {
 	    return new ArrayList<>();
 	}
 	
+	public boolean userHasAccessToGroup(String username, String groupName) throws SQLException {
+	    // Fetch the user's groups
+	    ArrayList<String> userGroups = getUserGroups(username);
+	    
+	    // Check if the specified group is in the user's groups
+	    return userGroups.contains(groupName);
+	}
+
+	
 
 
 	private void updateUserGroups(String username, ArrayList<String> userGroups) throws SQLException {
