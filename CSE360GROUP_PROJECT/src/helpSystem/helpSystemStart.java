@@ -1922,8 +1922,8 @@ public class helpSystemStart extends Application {
 
 		// all characters, will combine later
 		String capitalChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String smallChars = "abcdefghijklmnopqrstuvwxyz";
-		String numbers = "0123456789";
+		String smallChars = "abcdefghjkmnpqrstuvwxyz";
+		String numbers = "123456789";
 		String symbols = "!@#$%^&*_=+-/.?<>)";
 
 		// combine
