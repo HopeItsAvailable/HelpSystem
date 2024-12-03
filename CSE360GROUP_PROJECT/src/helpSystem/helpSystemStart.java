@@ -2281,11 +2281,12 @@ public class helpSystemStart extends Application {
 		Label welcome = new Label("Remove role");
 		Label user = new Label("Username: ");
 		Label noExist = new Label("Username does not exist");
-		Label noClick = new Label("Please choose roles to remove");
+		Label noClick = new Label("Please choose roles to add/remove");
 
 		TextField userText = new TextField();
 
 		Button removeButton = new Button("Remove");
+		Button addButton = new Button("Add");
 		Button quitButton = new Button("Quit");
 
 		CheckBox studentAccount = new CheckBox("Student");
@@ -2311,6 +2312,7 @@ public class helpSystemStart extends Application {
 
 		// Button design
 		removeButton.setId("buttonDesign"); 
+		addButton.setId("buttonDesign"); 
 		quitButton.setId("buttonDesign");
 
 		// Send button action
@@ -2349,6 +2351,44 @@ public class helpSystemStart extends Application {
 				}
 			}
 		});
+		
+		addButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+
+				if (databaseHelper.doesUserExist(userText.getText())) {
+					noExist.setVisible(false);
+				} else {
+					noExist.setVisible(true);
+				}
+				String usernameToAddFrom = userText.getText();
+				boolean[] roles = new boolean[3];
+				
+				if (!studentAccount.isSelected() && !teacherAccount.isSelected() && !adminAccount.isSelected()) {
+					noClick.setVisible(true);
+				} else {
+					noClick.setVisible(false);
+					
+					try {
+			            if (adminAccount.isSelected()) {
+			                databaseHelper.addAdminRole(usernameToAddFrom);
+			            }
+			            if (studentAccount.isSelected()) {
+			                databaseHelper.addStudentRole(usernameToAddFrom);
+			            }
+			            if (teacherAccount.isSelected()) {
+			                databaseHelper.addInstructorRole(usernameToAddFrom);
+			            }
+			            // Optionally provide feedback to the admin, e.g., show a success message
+			        } catch (Exception e) {
+			            e.printStackTrace(); // Handle exceptions appropriately
+			        }
+
+				}
+			}
+		});
+		
+		
 
 		// Quit button action
 		quitButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -2375,7 +2415,7 @@ public class helpSystemStart extends Application {
 	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
 	    // Center the buttons in the HBox
-	    HBox bottomPane = new HBox(20, removeButton, quitButton);
+	    HBox bottomPane = new HBox(20, addButton,removeButton, quitButton);
 	    bottomPane.setAlignment(Pos.CENTER);
 
 	    // Left side Pane (with background image)
