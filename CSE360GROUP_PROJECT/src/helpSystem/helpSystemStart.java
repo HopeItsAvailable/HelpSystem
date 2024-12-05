@@ -2944,7 +2944,7 @@ public class helpSystemStart extends Application {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					try {
+					/*try {
 						if(databaseHelper.userHasAccessToGroup(userName,articleGroup)) {
 							openArt(primaryStage, userName, idArt.getText().trim());
 						}else {
@@ -2954,7 +2954,7 @@ public class helpSystemStart extends Application {
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 				}
 			}
 		});
