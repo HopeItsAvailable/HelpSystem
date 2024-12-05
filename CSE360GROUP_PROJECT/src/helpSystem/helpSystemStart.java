@@ -2869,7 +2869,7 @@ public class helpSystemStart extends Application {
 		ChoiceBox<String> level = new ChoiceBox<>();
 		ChoiceBox<String> getGroup = new ChoiceBox<>();
 		
-		ArrayList<String> userGroups = null;
+		ArrayList<String> userGroups = null ;
 		try {
 			userGroups = databaseHelper.getUserGroups(userName);
 		} catch (SQLException e) {
@@ -2934,9 +2934,24 @@ public class helpSystemStart extends Application {
 			public void handle(ActionEvent event) {
 				
 				if(!idArt.getText().trim().isEmpty()) {
+					
+					int ID = Integer.parseInt(idArt.getText().trim());
+					
+					String articleGroup = null;
 					try {
-						openArt(primaryStage, userName, idArt.getText().trim());
-					} catch (Exception e) {
+						articleGroup = databaseHelper1.getArticleGroupByID(ID);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					try {
+						if(databaseHelper.userHasAccessToGroup(userName,articleGroup)) {
+							openArt(primaryStage, userName, idArt.getText().trim());
+						}else {
+							//@TODO
+							//MAKE ALERT BOX SAYING NO ACCESS
+						}
+					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
