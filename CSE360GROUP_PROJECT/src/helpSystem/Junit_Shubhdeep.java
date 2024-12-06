@@ -226,4 +226,89 @@ public class Junit_Shubhdeep {
             return null;
         }
     }
+    @Test
+    public void testSearchArticlesByGroup() throws SQLException {
+        // Search for articles in "Group1"
+        String searchQuery = "SELECT * FROM cse360Articles WHERE articleGroup LIKE ?";
+        String searchGroup = "Group1";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(searchQuery)) {
+            pstmt.setString(1, "%" + searchGroup + "%");
+            ResultSet rs = pstmt.executeQuery();
+
+            assertTrue(rs.next(), "Article should be found by group");
+            assertEquals("Group1", rs.getString("articleGroup"), "Group should match search term");
+            System.out.println("Found article with title: " + rs.getString("title") + " in group: " + rs.getString("articleGroup"));
+        }
+    }
+
+    @Test
+    public void testSearchArticlesByContentLevel() throws SQLException {
+        // Search for articles with "Intermediate" content level
+        String searchQuery = "SELECT * FROM cse360Articles WHERE level LIKE ?";
+        String searchLevel = "Intermediate";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(searchQuery)) {
+            pstmt.setString(1, "%" + searchLevel + "%");
+            ResultSet rs = pstmt.executeQuery();
+
+            assertTrue(rs.next(), "Article should be found by content level");
+            assertEquals("Intermediate", rs.getString("level"), "Content level should match search term");
+            System.out.println("Found article with title: " + rs.getString("title") + " at content level: " + rs.getString("level"));
+        }
+    }
+
+    @Test
+    public void testSearchArticlesByGroupAndContentLevel() throws SQLException {
+        // Search for articles in "Group1" with "Intermediate" content level
+        String searchQuery = "SELECT * FROM cse360Articles WHERE articleGroup LIKE ? AND level LIKE ?";
+        String searchGroup = "Group1";
+        String searchLevel = "Intermediate";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(searchQuery)) {
+            pstmt.setString(1, "%" + searchGroup + "%");
+            pstmt.setString(2, "%" + searchLevel + "%");
+            ResultSet rs = pstmt.executeQuery();
+
+            assertTrue(rs.next(), "Article should be found by group and content level");
+            assertEquals("Group1", rs.getString("articleGroup"), "Group should match search term");
+            assertEquals("Intermediate", rs.getString("level"), "Content level should match search term");
+            System.out.println("Found article with title: " + rs.getString("title") + " in group: " + rs.getString("articleGroup") + " at content level: " + rs.getString("level"));
+        }
+    }
+    @Test
+    public void testDisplaySearchResultsSummary() throws SQLException {
+        // Search query to get all articles (for simplicity)
+        String searchQuery = "SELECT id, title, author, paper_abstract FROM cse360Articles ORDER BY id";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(searchQuery)) {
+            ResultSet rs = pstmt.executeQuery();
+
+            int sequenceNumber = 1; // To keep track of the sequence number
+            System.out.println("Search Results Summary:");
+            System.out.println("Seq. | Title                  | Author      | Abstract");
+            System.out.println("------------------------------------------------------");
+
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String author = rs.getString("author");
+                String paperAbstract = rs.getString("paper_abstract");
+
+                // Print summary to console
+                System.out.printf("%-5d| %-22s| %-12s| %s%n", 
+                                  sequenceNumber, 
+                                  title, 
+                                  author, 
+                                  paperAbstract);
+
+                // Assert to validate fields
+                assertNotNull(title, "Title should not be null");
+                assertNotNull(author, "Author should not be null");
+                assertNotNull(paperAbstract, "Abstract should not be null");
+
+                sequenceNumber++;
+            }
+        }
+    }
+
 }
