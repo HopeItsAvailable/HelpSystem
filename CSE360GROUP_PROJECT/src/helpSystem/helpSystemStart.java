@@ -4019,7 +4019,7 @@ public class helpSystemStart extends Application {
 					
 					//TODO BackUp Group
 					try {
-						databaseHelper2.backupArticleGroupsToFile(fileNameText.getText().strip(),getGroup.getValue());
+						databaseHelper2.backupArticleGroupsToFile(fileNameText.getText().strip(),userName);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -4163,7 +4163,7 @@ public class helpSystemStart extends Application {
 					
 					//TODO Restore Group
 					try {
-						databaseHelper2.restoreArticleGroupsFromFile(fileNameText.getText());
+						databaseHelper2.restoreArticleGroupsFromFile(fileNameText.getText().strip());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
