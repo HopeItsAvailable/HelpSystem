@@ -130,6 +130,7 @@ public class DatabaseHelperArticleGroups {
     private void createTables() throws SQLException {
         String articleGroupTable = "CREATE TABLE IF NOT EXISTS cse360ArticleGroups (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                "groupName VARCHAR(255), " +
                 "leader VARCHAR(255), " +
                 "admin VARCHAR(255))";
         statement.execute(articleGroupTable);

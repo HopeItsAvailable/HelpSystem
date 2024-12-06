@@ -3750,7 +3750,7 @@ public class helpSystemStart extends Application {
 					try {
 						databaseHelper2.addArticleGroup(fileNameText.getText());
 						String adminUsername = databaseHelper.getFirstAdminUsername();
-						databaseHelper2.updateAdmin(adminUsername, adminUsername);
+						databaseHelper2.updateAdmin(fileNameText.getText(), adminUsername);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
