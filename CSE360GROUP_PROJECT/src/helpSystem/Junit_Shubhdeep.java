@@ -17,16 +17,17 @@ public class Junit_Shubhdeep {
 
     @BeforeAll
     public static void connectToDatabase() throws Exception {
+        System.out.println("Connecting to database...");
         Class.forName(JDBC_DRIVER);
         connection = DriverManager.getConnection(DB_URL, USER, PASS);
         databaseHelperArticle = new DatabaseHelperArticle();
         databaseHelperArticle.connectToDatabase();
 
-        // Create the necessary tables for testing
+        System.out.println("Creating tables for testing...");
         createTables();
+        System.out.println("Database setup completed.");
     }
 
-    // Helper method to create tables
     private static void createTables() throws SQLException {
         String articleTable = """
             CREATE TABLE IF NOT EXISTS cse360Articles (
@@ -41,7 +42,7 @@ public class Junit_Shubhdeep {
                 articleGroup VARCHAR(255)
             );
         """;
-        
+
         String userTable = """
             CREATE TABLE IF NOT EXISTS cse360Users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,19 +55,19 @@ public class Junit_Shubhdeep {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(articleTable);
             stmt.execute(userTable);
+            System.out.println("Tables created successfully.");
         }
     }
 
     @BeforeEach
     public void setupArticlesAndUsers() throws SQLException {
-        // Insert mock articles for search testing
+        System.out.println("Inserting mock articles and users...");
         String insertArticle = """
             INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level, articleGroup)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?);
         """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
-            // Inserting first article
             pstmt.setString(1, "Test Article 1");
             pstmt.setString(2, "Author1");
             pstmt.setString(3, "Abstract 1");
@@ -77,7 +78,6 @@ public class Junit_Shubhdeep {
             pstmt.setString(8, "Group1");
             pstmt.executeUpdate();
 
-            // Inserting second article
             pstmt.setString(1, "Test Article 2");
             pstmt.setString(2, "Author2");
             pstmt.setString(3, "Abstract 2");
@@ -89,12 +89,11 @@ public class Junit_Shubhdeep {
             pstmt.executeUpdate();
         }
 
-        // Insert mock users for role-based testing
         String insertUser = """
             INSERT INTO cse360Users (username, password, user_role)
             VALUES (?, ?, ?);
         """;
-        
+
         try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
             pstmt.setString(1, "studentUser");
             pstmt.setString(2, "password1");
@@ -111,29 +110,35 @@ public class Junit_Shubhdeep {
             pstmt.setString(3, "Admin");
             pstmt.executeUpdate();
         }
+
+        System.out.println("Mock data inserted successfully.");
     }
 
     @AfterEach
     public void cleanupData() throws SQLException {
-        // Clean up articles and users after each test
+        System.out.println("Cleaning up data after test...");
         String deleteArticles = "DELETE FROM cse360Articles";
         String deleteUsers = "DELETE FROM cse360Users";
-        
+
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(deleteArticles);
             stmt.execute(deleteUsers);
         }
+        System.out.println("Data cleanup completed.");
     }
 
     @AfterAll
     public static void tearDownDatabase() throws SQLException {
+        System.out.println("Closing database connection...");
         if (connection != null && !connection.isClosed()) {
             connection.close();
         }
+        System.out.println("Database connection closed.");
     }
 
     @Test
     public void testSearchArticlesByTitle() throws SQLException {
+        System.out.println("Testing search by title...");
         String searchQuery = "SELECT * FROM cse360Articles WHERE title LIKE ?";
         String searchTerm = "Test Article 1";
 
@@ -142,12 +147,14 @@ public class Junit_Shubhdeep {
             ResultSet rs = pstmt.executeQuery();
 
             assertTrue(rs.next(), "Article should be found by title");
+            System.out.println("Article found: " + rs.getString("title"));
             assertEquals("Test Article 1", rs.getString("title"), "Title should match search term");
         }
     }
 
     @Test
     public void testSearchArticlesByAuthor() throws SQLException {
+        System.out.println("Testing search by author...");
         String searchQuery = "SELECT * FROM cse360Articles WHERE author LIKE ?";
         String searchTerm = "Author2";
 
@@ -156,14 +163,16 @@ public class Junit_Shubhdeep {
             ResultSet rs = pstmt.executeQuery();
 
             assertTrue(rs.next(), "Article should be found by author");
+            System.out.println("Article author found: " + rs.getString("author"));
             assertEquals("Author2", rs.getString("author"), "Author should match search term");
         }
     }
 
     @Test
     public void testViewArticleDetailsByInstructor() throws SQLException {
-        // Simulate instructor role by querying the database for user role
+        System.out.println("Testing view article details by instructor...");
         String userRole = getUserRole("instructorUser");
+        System.out.println("Role of instructorUser: " + userRole);
         if ("Instructor".equals(userRole)) {
             String searchQuery = "SELECT * FROM cse360Articles WHERE title LIKE ?";
             String searchTerm = "Test Article 1";
@@ -173,6 +182,7 @@ public class Junit_Shubhdeep {
                 ResultSet rs = pstmt.executeQuery();
 
                 assertTrue(rs.next(), "Article should be found by title");
+                System.out.println("Instructor viewing article: " + rs.getString("title"));
                 assertEquals("Test Article 1", rs.getString("title"), "Title should match search term");
                 assertEquals("Body of article 1", rs.getString("body"), "Body should match expected");
             }
@@ -183,8 +193,9 @@ public class Junit_Shubhdeep {
 
     @Test
     public void testViewArticleDetailsByStudent() throws SQLException {
-        // Simulate student role by querying the database for user role
+        System.out.println("Testing view article details by student...");
         String userRole = getUserRole("studentUser");
+        System.out.println("Role of studentUser: " + userRole);
         if ("Student".equals(userRole)) {
             String searchQuery = "SELECT * FROM cse360Articles WHERE title LIKE ?";
             String searchTerm = "Test Article 1";
@@ -194,6 +205,7 @@ public class Junit_Shubhdeep {
                 ResultSet rs = pstmt.executeQuery();
 
                 assertTrue(rs.next(), "Article should be found by title");
+                System.out.println("Student viewing article: " + rs.getString("title"));
                 assertEquals("Test Article 1", rs.getString("title"), "Title should match search term");
                 assertEquals("Body of article 1", rs.getString("body"), "Body should match expected");
             }
@@ -202,9 +214,8 @@ public class Junit_Shubhdeep {
         }
     }
 
-
-    // Helper method to get user role
     private String getUserRole(String username) throws SQLException {
+        System.out.println("Getting role for user: " + username);
         String roleQuery = "SELECT user_role FROM cse360Users WHERE username = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(roleQuery)) {
             pstmt.setString(1, username);
