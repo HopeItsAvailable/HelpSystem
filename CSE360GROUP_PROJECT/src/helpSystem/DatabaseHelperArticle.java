@@ -28,6 +28,7 @@ public class DatabaseHelperArticle {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "org.h2.Driver";
 	static final String DB_URL = "jdbc:h2:~/articleDatabase";
+	static final String IV = "Apple2182139";
 
 	// Database credentials
 	static final String USER = "sa";
@@ -222,13 +223,10 @@ public class DatabaseHelperArticle {
 		String articleGroup = new String(group);
 
 		// Initialize encryption helper
-		EncryptionHelper encryptionHelper = new EncryptionHelper();
+		String encryptedBody = Base64.getEncoder().encodeToString(
+				encryptionHelper.encrypt(bodyStr.getBytes(), EncryptionUtils.getInitializationVector(IV.toCharArray())));
 
-		// Use a fixed initialization vector for simplicity (not recommended for real-world applications)
-		byte[] iv = new byte[16]; // 16 bytes for AES (128-bit block size)
-
-		// Encrypt only the body
-		byte[] encryptedBody = encryptionHelper.encrypt(bodyStr.getBytes(), iv);
+		
 
 		String insertArticle = "INSERT INTO cse360Articles (title, author, paper_abstract, keywords, body, references, level, articleGroup) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) 
@@ -238,7 +236,7 @@ public class DatabaseHelperArticle {
 			pstmt.setString(3, abstractStr);
 			pstmt.setString(4, keywordsStr);
 			//encrypted body
-			pstmt.setBytes(5, encryptedBody);
+			pstmt.setString(5, encryptedBody);
 			pstmt.setString(6, referencesStr);
 			pstmt.setString(7, levelStr);
 			pstmt.setString(8, articleGroup);
@@ -601,6 +599,7 @@ public class DatabaseHelperArticle {
 	    }
 	}
 	
+	
 	public Boolean checkArticleByIdAndUserName(int id, String userName) throws Exception {
 	    // Initialize the DatabaseHelperUser to fetch user groups
 	    DatabaseHelperUser userHelper = new DatabaseHelperUser();
@@ -646,5 +645,60 @@ public class DatabaseHelperArticle {
 			se.printStackTrace();
 		}
 	}
+
+	public String getArticleById(int idNum) throws Exception {
+	    // SQL query to get the article details
+	    String query = "SELECT id, title, author, paper_abstract, keywords, body, references, level, articleGroup " +
+	                   "FROM cse360Articles WHERE id = ?";
+	    StringBuilder result = new StringBuilder();
+
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, idNum);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            if (rs.next()) {
+	                // Retrieve the article's details
+	                String title = rs.getString("title");
+	                String author = rs.getString("author");
+	                String articleAbstract = rs.getString("paper_abstract");
+	                String keywords = rs.getString("keywords");
+	                String encryptedBody = rs.getString("body");
+	                String references = rs.getString("references");
+	                String level = rs.getString("level");
+	                String articleGroup = rs.getString("articleGroup");
+
+	                // Decrypt the body
+	                char[] decryptedBody = EncryptionUtils
+							.toCharArray(encryptionHelper.decrypt(Base64.getDecoder().decode(encryptedBody),
+									EncryptionUtils.getInitializationVector(IV.toCharArray())));
+
+	                // Format the article details
+	                result.append("Article Details:\n")
+	                      .append("ID: ").append(idNum).append("\n")
+	                      .append("Title: ").append(title).append("\n")
+	                      .append("Author: ").append(author).append("\n")
+	                      .append("Abstract: ").append(articleAbstract).append("\n")
+	                      .append("Keywords: ").append(keywords).append("\n")
+	                      .append("Body:\n").append(new String(decryptedBody)).append("\n")
+	                      .append("References: ").append(references).append("\n")
+	                      .append("Level: ").append(level).append("\n")
+	                      .append("Article Group: ").append(articleGroup).append("\n");
+
+	                // Clear the decrypted body for security
+	                clearArray(decryptedBody);
+	            } else {
+	                return "Article not found with ID: " + idNum;
+	            }
+	        }
+	    }
+
+	    return result.toString().trim(); // Return the formatted string
+	}
+
+
+	
+	private void clearArray(char[] array) {
+		Arrays.fill(array, ' '); // Overwrite char array with blanks
+	}
+
 
 }

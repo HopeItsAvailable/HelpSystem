@@ -20,7 +20,7 @@ public class Junit{
                 "AI, Healthcare, Future, Technology",
                 "The body of the article would contain detailed content about the future of AI in healthcare.",
                 "Doe, J. (2023). The Future of AI. Journal of AI Research.",
-                "Advanced"
+                "Advanced", null
         );
     }
 

@@ -343,6 +343,7 @@ public class DatabaseHelperUser {
 				pstmt.executeUpdate();
 			}
 		}
+		addUserToGroup(username, "Default");
 	}
 
 	public void printAllUsers() {
@@ -401,7 +402,8 @@ public class DatabaseHelperUser {
 
 	public boolean login(String username, String password, String role) throws Exception {
 		String encryptedPassword = Base64.getEncoder().encodeToString(
-				encryptionHelper.encrypt(password.getBytes(), EncryptionUtils.getInitializationVector(username.toCharArray()))
+				encryptionHelper.encrypt(password.getBytes(), 
+						EncryptionUtils.getInitializationVector(username.toCharArray()))
 		);	
 		
 		String query = "SELECT * FROM cse360users WHERE username = ? AND password = ? AND role = ?";
@@ -665,6 +667,15 @@ public class DatabaseHelperUser {
 	    }
 	    return new ArrayList<>();
 	}
+	
+	public boolean userHasAccessToGroup(String username, String groupName) throws SQLException {
+	    // Fetch the user's groups
+	    ArrayList<String> userGroups = getUserGroups(username);
+	    
+	    // Check if the specified group is in the user's groups
+	    return userGroups.contains(groupName);
+	}
+
 	
 
 
