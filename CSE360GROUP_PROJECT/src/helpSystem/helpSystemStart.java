@@ -772,7 +772,7 @@ public class helpSystemStart extends Application {
 		Label welcome = new Label("Finish Account Setup");
 		Label email = new Label("Email Address: ");
 		Label firstName = new Label("First Name: ");
-		Label confFirstName = new Label("Perferred First Name: ");
+		Label confFirstName = new Label("Preferred First Name: ");
 		Label middleName = new Label("Middle Name: ");
 		Label lastName = new Label("Last Name: ");
 
