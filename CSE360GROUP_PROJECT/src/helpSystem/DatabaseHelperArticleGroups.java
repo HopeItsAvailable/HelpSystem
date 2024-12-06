@@ -58,13 +58,80 @@ public class DatabaseHelperArticleGroups {
         }
     }
     
+    public void updateGroupLeader(String groupName, String newLeader) throws SQLException {
+        // Check if the group exists
+        if (!doesGroupExist(groupName)) {
+            System.out.println("Group '" + groupName + "' does not exist. Cannot update leader.");
+            return;
+        }
+
+        String updateQuery = "UPDATE cse360ArticleGroups SET leader = ? WHERE groupName = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+            pstmt.setString(1, newLeader); 
+            pstmt.setString(2, groupName); 
+            pstmt.executeUpdate(); 
+            
+        }
+            
+    }
+    
+    public boolean doesGroupHaveLeader(String groupName) throws SQLException {
+        String query = "SELECT leader FROM cse360ArticleGroups WHERE groupName = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, groupName); // Specify the group name
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String leader = rs.getString("leader");
+                    if (leader != null && !leader.isEmpty()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public void updateAdmin(String groupName, String admin) throws SQLException {
+        // Check if the group exists
+        if (!doesGroupExist(groupName)) {
+            return;
+        }
+
+        String query = "UPDATE cse360ArticleGroups SET admin = ? WHERE groupName = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, admin);
+            pstmt.setString(2, groupName); 
+            pstmt.executeUpdate();
+
+        }
+    }
+    
+    public boolean doesGroupHaveAdmin(String groupName) throws SQLException {
+        // Check if the group exists
+        if (!doesGroupExist(groupName)) {
+            return false;
+        }
+
+        String query = "SELECT admin FROM cse360ArticleGroups WHERE groupName = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, groupName); 
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String admin = rs.getString("admin"); 
+                    return admin != null && !admin.isEmpty();
+                }
+            }
+        }
+        return false; // Return false if no admin is assigned
+    }
     
 
     // Method to create the table for storing article groups
     private void createTables() throws SQLException {
         String articleGroupTable = "CREATE TABLE IF NOT EXISTS cse360ArticleGroups (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "groupName VARCHAR(255))";
+                "leader VARCHAR(255), " +
+                "admin VARCHAR(255))";
         statement.execute(articleGroupTable);
     }
 
@@ -126,6 +193,21 @@ public class DatabaseHelperArticleGroups {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public ArrayList<String> getUserGroupsWhereLeaderOrAdmin(String userName) throws SQLException {
+        ArrayList<String> groups = new ArrayList<>();
+        String query = "SELECT groupName FROM cse360ArticleGroups WHERE leader = ? OR admin = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, userName);
+            pstmt.setString(2, userName);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    groups.add(rs.getString("groupName"));
+                }
+            }
+        }
+        return groups;
     }
     
     // Method to get all groups from the cse360ArticleGroups table
@@ -193,10 +275,6 @@ public class DatabaseHelperArticleGroups {
             System.out.println("Error writing to file: " + e.getMessage());
         }
     }
-
-
-
-
     
     public void restoreArticleGroupsFromFile(String fileName) throws Exception {
         // Step 1: Load the backup SQL statements from the file

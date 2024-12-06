@@ -380,8 +380,22 @@ public class DatabaseHelperUser {
 
 
 	
-	public void changeUserPassword(String username, String newPassword) {
-		
+	public void changeUserPassword(String username, String newPassword) throws Exception {
+	    // Encrypt the new password
+	    String encryptedPassword = Base64.getEncoder().encodeToString(
+	            encryptionHelper.encrypt(newPassword.getBytes(), EncryptionUtils.getInitializationVector(username.toCharArray()))
+	    );
+
+	    // SQL query to update the password
+	    String updatePasswordSQL = "UPDATE cse360users SET password = ? WHERE username = ?";
+
+	    // Use a prepared statement to prevent SQL injection
+	    try (PreparedStatement pstmt = connection.prepareStatement(updatePasswordSQL)) {
+	        pstmt.setString(1, encryptedPassword);
+	        pstmt.setString(2, username);
+
+	        pstmt.executeUpdate();
+	    }
 	}
 
 

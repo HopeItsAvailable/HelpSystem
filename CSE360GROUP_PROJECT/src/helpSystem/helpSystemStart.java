@@ -2465,34 +2465,36 @@ public class helpSystemStart extends Application {
 
 		// Labels and buttons
 		Label welcome = new Label("Reset Password");
-		Label userName = new Label("Enter Username: ");
-		Label password = new Label("Enter Code: ");
 
 		Label invUserName = new Label("Username not found");
 		Label invPassword = new Label("Code incorrect");
 
-		Button loginButton = new Button("Create Account");
+		Button loginButton = new Button("Change Password");
 		Button quitButton = new Button("Quit");
 
 		TextField userNameText = new TextField();
+		userNameText.setPromptText("Username");  // Set placeholder for username
+		userNameText.setPrefWidth(300);  // Set the preferred width
+		userNameText.setMaxWidth(300);
 		TextField passwordText = new TextField();
+		passwordText.setPromptText("Code");  // Set placeholder for username
+		passwordText.setPrefWidth(300);  // Set the preferred width
+		passwordText.setMaxWidth(300);
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		userName.setFont(new Font("Arial", 20));
-		password.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
 
-		invUserName.setFont(new Font("Arial", 20));
+		invUserName.setFont(new Font("Montserrat", 12));
 		invUserName.setStyle("-fx-text-fill: red;");
 		invUserName.setVisible(false);
 
-		invPassword.setFont(new Font("Arial", 20));
+		invPassword.setFont(new Font("Montserrat", 12));
 		invPassword.setStyle("-fx-text-fill: red;");
 		invPassword.setVisible(false);
 
 		// Button design
-		loginButton.setStyle("-fx-font-size: 2em;");
-		quitButton.setStyle("-fx-font-size: 1.5em;");
+		loginButton.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign"); 
 
 		// Login button action
 		loginButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -2512,9 +2514,9 @@ public class helpSystemStart extends Application {
 				System.out.println(validPassword);
 
 				if (validPassword == true) {
-					password.setVisible(false); // valid
+					invPassword.setVisible(false); // valid
 				} else {
-					password.setVisible(true); // OTP is invalid
+					invPassword.setVisible(true); // OTP is invalid
 				}
 
 				if (validPassword && databaseHelper.doesUserExist(userNameText.getText().strip())) {
@@ -2539,55 +2541,67 @@ public class helpSystemStart extends Application {
 			}
 		});
 
-		// Layout setup
-
-		// Middle VBoxs
-		VBox middleLeftPane = new VBox(userName, password);
-		VBox.setMargin(userName, new Insets(50, 20, 20, 40));
-		VBox.setMargin(password, new Insets(20, 20, 20, 40));
-
-		VBox middleMiddlePane = new VBox(userNameText, passwordText);
-		VBox.setMargin(userNameText, new Insets(50, 20, 20, 20));
-		VBox.setMargin(passwordText, new Insets(20, 20, 20, 20));
-
-		VBox middleRightPane = new VBox(invUserName, invPassword);
-		VBox.setMargin(invUserName, new Insets(50, 20, 20, 20));
-		VBox.setMargin(invPassword, new Insets(20, 20, 20, 20));
-
-		// Combine the middle VBoxs
-		HBox middlePane = new HBox(middleLeftPane, middleMiddlePane, middleRightPane);
-		middlePane.setAlignment(Pos.CENTER_LEFT);
-
-		// Bottom pane for login button
-		HBox bottomPane = new HBox(loginButton, quitButton);
-		bottomPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(loginButton, new Insets(0, 220, 80, 280));
-		HBox.setMargin(quitButton, new Insets(0, 0, 80, 0));
-
 		// Top pane for welcome label
 		HBox topPane = new HBox(welcome);
-		topPane.setAlignment(Pos.CENTER);
-		HBox.setMargin(welcome, new Insets(50, 0, 20, 0));
+	
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, userNameText, invUserName, passwordText, invPassword);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		// BorderPane layout
-		BorderPane adminCreateScreen = new BorderPane();
-		adminCreateScreen.setTop(topPane);
-		adminCreateScreen.setCenter(middlePane);
-		adminCreateScreen.setBottom(bottomPane);
-		adminCreateScreen.setStyle("-fx-background-color: lightblue;");
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, loginButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
 
-		// Set the scene
-		Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
-		primaryStage.setScene(welcomeScene);
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
+
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
+
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 
 	}
 
 	public void resetPasswordPage(Stage primaryStage, String username) {
 		// Labels and buttons
 		Label welcome = new Label("Create a New Password");
-		Label newPassword = new Label("New Password: ");
-		Label confirmPassword = new Label("Confirm Password: ");
 		Label mismatchPassword = new Label("Passwords do not match!");
+		Label passwordSpec = new Label("Passowed must be longer than 6 characters");
 
 		TextField newPasswordText = new TextField();
 		TextField confirmPasswordText = new TextField();
@@ -2596,46 +2610,106 @@ public class helpSystemStart extends Application {
 		Button quitButton = new Button("Quit");
 
 		// Label design
-		welcome.setFont(new Font("Arial", 36));
-		newPassword.setFont(new Font("Arial", 20));
-		confirmPassword.setFont(new Font("Arial", 20));
+		welcome.setFont(new Font("Montserrat", 36));
 
-		mismatchPassword.setFont(new Font("Arial", 20));
+		mismatchPassword.setFont(new Font("Montserrat", 12));
 		mismatchPassword.setStyle("-fx-text-fill: red;");
 		mismatchPassword.setVisible(false);
+		
+		passwordSpec.setFont(new Font("Montserrat", 12));
+		passwordSpec.setStyle("-fx-text-fill: red;");
+		passwordSpec.setVisible(false);
 
 		// Button design
-		resetButton.setStyle("-fx-font-size: 2em;");
-		quitButton.setStyle("-fx-font-size: 1.5em;");
+		resetButton.setId("buttonDesign"); 
+		quitButton.setId("buttonDesign"); 
 
 		// Reset button action
 		resetButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				
+				if(newPasswordText.getText().length() < 6)
+				{
+					passwordSpec.setVisible(true);
+				}
+				
+				if(!newPasswordText.getText().equals(confirmPasswordText.getText()))
+				{
+					mismatchPassword.setVisible(true);
+				}
+				
 				// Check if both passwords match
-				if (newPasswordText.getText().equals(confirmPasswordText.getText())) {
+				if (newPasswordText.getText().equals(confirmPasswordText.getText()) && newPasswordText.getText().length() >= 6) {
 					mismatchPassword.setVisible(false);
 					// Save the new password in the system for the user
 
-					// databaseHelper.resetPassword();
-					// databaseHelper.changeUserPassword();
+					try {
+						databaseHelper.changeUserPassword(username,newPasswordText.getText().strip());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 					// After successful reset, return to the login page
 					login(primaryStage);
-				} else {
-					mismatchPassword.setVisible(true);
-				}
+				} 
 			}
 		});
 
-		// Layout for the reset password scene
-		VBox resetLayout = new VBox(10, welcome, newPassword, newPasswordText, confirmPassword, confirmPasswordText,
-				mismatchPassword, resetButton, quitButton);
-		resetLayout.setAlignment(Pos.CENTER);
+		// Top pane for welcome label
+		HBox topPane = new HBox(welcome);
+	
+		// Center the elements in the VBox
+	    VBox middleMiddlePane = new VBox(10, welcome, newPasswordText, passwordSpec, confirmPasswordText, mismatchPassword);
+	    middleMiddlePane.setAlignment(Pos.CENTER);
+	    middleMiddlePane.setPadding(new Insets(50, 20, 20, 20));  // Padding around the VBox
+	    VBox.setMargin(welcome, new Insets(70, 0, 50, 0));
 
-		Scene resetScene = new Scene(resetLayout, 400, 400);
-		primaryStage.setScene(resetScene);
-		primaryStage.show();
+	    // Center the buttons in the HBox
+	    HBox bottomPane = new HBox(20, resetButton, quitButton);
+	    bottomPane.setAlignment(Pos.CENTER);
+
+	    // Left side Pane (with background image)
+	    StackPane leftPane = new StackPane();
+
+	    // Background image
+	    Image backgroundImage = new Image("/helpSystem/img/startBackground.png");
+	    ImageView backgroundImageView = new ImageView(backgroundImage);
+	    backgroundImageView.setFitWidth(450);
+	    backgroundImageView.setFitHeight(600);
+
+	    // Logo image
+	    Image logoImage = new Image("/helpSystem/img/logo.png");
+	    ImageView logoImageView = new ImageView(logoImage);
+	    logoImageView.setFitWidth(350); // Adjust the width of the logo
+	    logoImageView.setFitHeight(350); // Adjust the height of the logo
+	    logoImageView.setPreserveRatio(true);
+
+	    // Add both images to the StackPane
+	    leftPane.getChildren().addAll(backgroundImageView, logoImageView);
+
+	    // Position the logo in the center of the left pane
+	    StackPane.setAlignment(logoImageView, Pos.CENTER);
+
+	    // Right side Pane (with white background and login form)
+	    VBox rightPane = new VBox(middleMiddlePane, bottomPane);
+	    rightPane.setStyle("-fx-background-color: white;");
+	    rightPane.setPrefWidth(450);  // Set to half of the total width
+
+	    // HBox for the left and right sides
+	    HBox leftRight = new HBox(leftPane, rightPane);
+	    leftRight.setFillHeight(true);
+
+	    // BorderPane layout
+	    BorderPane adminCreateScreen = new BorderPane();
+	    adminCreateScreen.setCenter(leftRight); // Center contains both left and right panes
+
+	    // Set the scene
+	    Scene welcomeScene = new Scene(adminCreateScreen, 900, 600);
+	    welcomeScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+	    primaryStage.setScene(welcomeScene);
 	}
 
 	private void createArticle(Stage primaryStage, String userName) {
@@ -3653,6 +3727,8 @@ public class helpSystemStart extends Application {
 					// TODO Create function to create group
 					try {
 						databaseHelper2.addArticleGroup(fileNameText.getText());
+						String adminUsername = databaseHelper.getFirstAdminUsername();
+						databaseHelper2.updateAdmin(adminUsername, adminUsername);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -4202,13 +4278,15 @@ public class helpSystemStart extends Application {
 		quitButton.setId("buttonDesign");	
 		
 		
-		ArrayList<String> userGroups = null;
-		try {
-			userGroups = databaseHelper.getUserGroups(userName);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // Get groups for user
+		ArrayList<String> userGroups = new ArrayList<>();
+	    try {
+	        userGroups = databaseHelper2.getUserGroupsWhereLeaderOrAdmin(userName);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		
+		
+		
         getGroup.getItems().addAll(userGroups); // Populate ChoiceBox with groups
 
         if (userGroups.isEmpty()) {
@@ -4246,6 +4324,12 @@ public class helpSystemStart extends Application {
 					//TODO Add Instruct into Group	
 					try {
 		                databaseHelper.addUserToGroup(fileNameText.getText(),getGroup.getValue());
+		                
+		                if(!databaseHelper2.doesGroupHaveLeader(getGroup.getValue()) && databaseHelper.doesUserExist(fileNameText.getText()))
+		                {
+		                	databaseHelper2.updateGroupLeader(getGroup.getValue(), fileNameText.getText());
+		                }
+		                
 		                Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		                alert.setTitle("Success");
 		                alert.setHeaderText(null);
