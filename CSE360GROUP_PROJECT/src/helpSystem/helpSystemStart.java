@@ -2944,17 +2944,23 @@ public class helpSystemStart extends Application {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					/*try {
+					try {
 						if(databaseHelper.userHasAccessToGroup(userName,articleGroup)) {
 							openArt(primaryStage, userName, idArt.getText().trim());
 						}else {
 							//@TODO
 							//MAKE ALERT BOX SAYING NO ACCESS
+							Alert alert = new Alert(AlertType.CONFIRMATION);
+							alert.setTitle("Access Denied");
+							 // Optional: No header text
+							alert.setContentText("You do not have access to this article ");
+
+							alert.showAndWait();
 						}
-					} catch (SQLException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}*/
+					}
 				}
 			}
 		});
@@ -3074,12 +3080,13 @@ public class helpSystemStart extends Application {
 	
 	public void openArt(Stage primaryStage, String userName, String id) throws Exception {
 		
-		int idNum = Integer.parseInt(id);
+		int idNum = Integer.parseInt(id); 
 		
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Read Article");
 		Label artString = new Label();
-		artString.setText(databaseHelper1.getArticleByIdAndUserName(idNum, userName));
+		String articleText = databaseHelper1.getArticleById(idNum); //CALL HERE
+		artString.setText(articleText); 
 		Label noAccess = new Label("Do not have access to article");
 		Label article = new Label("THE ARTICLE GOES HERE");
 
