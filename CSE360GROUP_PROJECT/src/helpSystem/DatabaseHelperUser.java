@@ -676,9 +676,6 @@ public class DatabaseHelperUser {
 	    return userGroups.contains(groupName);
 	}
 
-	
-
-
 	private void updateUserGroups(String username, ArrayList<String> userGroups) throws SQLException {
 	    String query = "UPDATE cse360users SET userGroups = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
