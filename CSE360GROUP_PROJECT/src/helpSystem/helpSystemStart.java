@@ -51,12 +51,14 @@ import java.util.Scanner;
 import helpSystem.DatabaseHelperUser;
 import helpSystem.DatabaseHelperArticle;
 import helpSystem.DatabaseHelperArticleGroups;
+import helpSystem.DatabaseHelperMes;
 
 public class helpSystemStart extends Application {
 
 	private static DatabaseHelperUser databaseHelper;
 	private static DatabaseHelperArticle databaseHelper1;
 	private static DatabaseHelperArticleGroups databaseHelper2;
+	private static DatabaseHelperMes databaseHelper3;
 
 
 	
@@ -89,6 +91,7 @@ public class helpSystemStart extends Application {
 	    databaseHelper = new DatabaseHelperUser();
 	    databaseHelper1 = new DatabaseHelperArticle();
 	    databaseHelper2 = new DatabaseHelperArticleGroups();
+	    databaseHelper3 = new DatabaseHelperMes();
 	    
 
 	    try {
@@ -97,6 +100,7 @@ public class helpSystemStart extends Application {
 	        databaseHelper.connectToDatabase();
 	        databaseHelper1.connectToDatabase();
 	        databaseHelper2.connectToDatabase();
+	        databaseHelper3.connectToDatabase();
 
 	        primaryStage.setTitle("Help System"); //sets title
 
@@ -1162,7 +1166,7 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				
-				sendMes(primaryStage);
+				sendMes(primaryStage, userName);
 				
 			}
 		});
@@ -4487,7 +4491,7 @@ public class helpSystemStart extends Application {
 
 	}
 
-	public void sendMes(Stage primaryStage) {
+	public void sendMes(Stage primaryStage, String userName) {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Send Message to Admin");
@@ -4525,7 +4529,13 @@ public class helpSystemStart extends Application {
 				}
 				else {
 					noExist.setVisible(false);
-
+					try {
+						databaseHelper3.addMessage(userName,usernameText.getText());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}
 				
 			}
@@ -4542,7 +4552,13 @@ public class helpSystemStart extends Application {
 				}
 				else {
 					noExist.setVisible(false);
-
+					try {
+						databaseHelper3.addMessage(userName,usernameText.getText());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 				}
 				
 			}
