@@ -2,6 +2,7 @@ package helpSystem;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import Encryption.EncryptionHelper;
@@ -9,6 +10,8 @@ import Encryption.EncryptionUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -130,11 +133,19 @@ public class DatabaseHelperArticleGroups {
     private void createTables() throws SQLException {
         String articleGroupTable = "CREATE TABLE IF NOT EXISTS cse360ArticleGroups (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
+<<<<<<< HEAD
                 "groupName VARCHAR(255), " +
                 "leader VARCHAR(255), " +
                 "admin VARCHAR(255))";
+=======
+                "leader VARCHAR(255), " + 
+                "groupName VARCHAR(255) NOT NULL UNIQUE, " + 
+                "admin VARCHAR(255)" +
+                ")";
+>>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem.git
         statement.execute(articleGroupTable);
     }
+
 
     // Method to insert a new group into the cse360ArticleGroups table
     public void addArticleGroup(String groupName) throws Exception {
@@ -278,7 +289,82 @@ public class DatabaseHelperArticleGroups {
     }
     
     public void restoreArticleGroupsFromFile(String fileName) throws Exception {
-        // Step 1: Load the backup SQL statements from the file
+        // Step 1: Ensure database connection is established
+        databaseHelper = new DatabaseHelperUser();
+        databaseHelper.connectToDatabase();
+
+        System.out.println("Connecting to database...");
+
+        File file = new File(fileName);
+        if (!file.exists()) {
+            System.err.println("Backup file not found: " + fileName);
+            return;
+        }
+        System.out.println("File found: " + fileName);
+
+        try (Scanner scanner = new Scanner(new FileReader(file))) {
+            while (scanner.hasNextLine()) {
+                String sql = scanner.nextLine().trim();
+
+                // Skip empty lines or comments
+                if (sql.isEmpty() || sql.startsWith("--")) {
+                    System.out.println("Skipping line: " + sql);
+                    continue;
+                }
+
+                System.out.println("Executing SQL: " + sql);
+
+                // Check if the SQL statement is for cse360ArticleGroups
+                if (sql.toLowerCase().contains("insert into cse360articlegroups")) {
+                    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                        pstmt.executeUpdate();
+                        String groupName = extractGroupNameFromSQL(sql);
+                        System.out.println("Restored group: " + (groupName != null ? groupName : "Unknown"));
+                    } catch (SQLException e) {
+                        System.err.println("Error executing SQL: " + sql);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("Backup file not found: " + fileName);
+            throw new Exception("Failed to restore groups. Backup file not found.", e);
+        } catch (IOException e) {
+            System.err.println("Error reading from file: " + fileName);
+            throw new Exception("Failed to restore groups. Error reading file.", e);
+        }
+    }
+
+       
+    	private String extractGroupNameFromSQL(String sql) {
+    	    // Check if the SQL string contains "VALUES"
+    	    if (!sql.toUpperCase().contains("VALUES")) {
+    	        return null;
+    	    }
+
+    	    try {
+    	        // Split the SQL by "VALUES"
+    	        String[] parts = sql.split("VALUES");
+
+    	        // Get the values part (after "VALUES")
+    	        String valuesPart = parts[1].trim();
+
+    	        // Remove enclosing parentheses
+    	        valuesPart = valuesPart.substring(1, valuesPart.length() - 1);
+
+    	        // Split the values by comma (assuming the first value is the groupName)
+    	        String[] values = valuesPart.split(",");
+
+    	        // Extract the first value, remove surrounding quotes, and return it
+    	        return values[0].trim().replaceAll("'", "");
+    	    } catch (Exception e) {
+    	        System.err.println("Error extracting groupName from SQL: " + sql);
+    	        e.printStackTrace();
+    	        return null;
+    	    }
+    	}
+
+       /* // Step 1: Load the backup SQL statements from the file
     	
     	databaseHelper = new DatabaseHelperUser();
         databaseHelper.connectToDatabase();
@@ -307,10 +393,93 @@ public class DatabaseHelperArticleGroups {
         } catch (IOException e) {
             System.out.println("Error reading from file: " + e.getMessage());
         }
-    }
-
-  
+        */
     
 
+    
+
+  /*
+    public void backupGroups(String fileName, boolean isAdmin, String username) throws SQLException, IOException {
+        closeConnection(); // Close the current database connection
+
+        fileName += (isAdmin ? "_Admin" : "_" + username + "_Instructor") + ".json"; // Role-based file naming
+
+        String query;
+        if (isAdmin) {
+            // Admins can back up all groups
+            query = "SELECT groupName FROM cse360ArticleGroups";
+        } else {
+            // Instructors back up only groups they are part of
+            query = "SELECT groupName FROM cse360ArticleGroups "
+                  + "WHERE groupName IN (SELECT groupName FROM cse360users WHERE username = ?)";
+        }
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            if (!isAdmin) {
+                pstmt.setString(1, username); // Filter by username for instructors
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                List<String> groups = new ArrayList<>();
+                while (rs.next()) {
+                    groups.add(rs.getString("groupName"));
+                }
+                String json = gson.toJson(groups);
+                Files.writeString(Paths.get(System.getProperty("user.home"), fileName), json);
+                System.out.println("Backup successful for " + (isAdmin ? "Admin" : "Instructor: " + username));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            connectToDatabase(); // Reconnect to the database
+        }
+    }
+    
+    public boolean restoreGroups(String fileName, boolean isAdmin, String username) throws SQLException, IOException {
+        closeConnection(); // Close the current database connection
+
+        fileName += (isAdmin ? "_Admin" : "_" + username + "_Instructor") + ".json"; // Role-based file naming
+
+        String backupFilePath = Paths.get(System.getProperty("user.home"), fileName).toString();
+        if (!Files.exists(Paths.get(backupFilePath))) {
+            System.out.println("Backup file not found for " + (isAdmin ? "Admin" : "Instructor: " + username));
+            return false;
+        }
+
+        String json = Files.readString(Paths.get(backupFilePath));
+        List<String> groups = gson.fromJson(json, new TypeToken<List<String>>() {}.getType());
+
+        String insertQuery = "INSERT INTO cse360ArticleGroups (groupName) VALUES (?) ON DUPLICATE KEY UPDATE groupName = groupName";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(insertQuery)) {
+            for (String group : groups) {
+                pstmt.setString(1, group);
+                pstmt.executeUpdate();
+            }
+
+            // If the user is an instructor, ensure they are only restoring their groups
+            if (!isAdmin) {
+                for (String group : groups) {
+                    // Add restored group to the instructor's userGroups field
+                    String updateUserGroups = "UPDATE cse360users SET userGroups = CONCAT(userGroups, ',', ?) WHERE username = ?";
+                    try (PreparedStatement updateStmt = connection.prepareStatement(updateUserGroups)) {
+                        updateStmt.setString(1, group);
+                        updateStmt.setString(2, username);
+                        updateStmt.executeUpdate();
+                    }
+                }
+            }
+
+            System.out.println("Restore successful for " + (isAdmin ? "Admin" : "Instructor: " + username));
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            connectToDatabase(); // Reconnect to the database
+        }
+    }
+    
+*/
 
 }

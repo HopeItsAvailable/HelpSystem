@@ -772,7 +772,7 @@ public class helpSystemStart extends Application {
 		Label welcome = new Label("Finish Account Setup");
 		Label email = new Label("Email Address: ");
 		Label firstName = new Label("First Name: ");
-		Label confFirstName = new Label("Perferred First Name: ");
+		Label confFirstName = new Label("Preferred First Name: ");
 		Label middleName = new Label("Middle Name: ");
 		Label lastName = new Label("Last Name: ");
 
@@ -4019,7 +4019,7 @@ public class helpSystemStart extends Application {
 					
 					//TODO BackUp Group
 					try {
-						databaseHelper2.backupArticleGroupsToFile(fileNameText.getText().strip(),getGroup.getValue());
+						databaseHelper2.backupArticleGroupsToFile(fileNameText.getText().strip(),userName);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -4163,7 +4163,7 @@ public class helpSystemStart extends Application {
 					
 					//TODO Restore Group
 					try {
-						databaseHelper2.restoreArticleGroupsFromFile(fileNameText.getText());
+						databaseHelper2.restoreArticleGroupsFromFile(fileNameText.getText().strip());
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
