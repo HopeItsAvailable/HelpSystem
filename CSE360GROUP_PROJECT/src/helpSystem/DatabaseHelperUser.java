@@ -655,24 +655,18 @@ public class DatabaseHelperUser {
 	}
 
 	public ArrayList<String> getUserGroups(String username) throws SQLException {
-	    String query = 
-	        "SELECT g.groupName " + 
-	        "FROM cse360users u " +
-	        "JOIN cse360ArticleGroups g ON JSON_CONTAINS(u.userGroups, CONCAT('\"', g.groupName, '\"')) " +
-	        "WHERE u.username = ? AND g.display = TRUE"; // Filter groups where display is TRUE
-
-	    ArrayList<String> userGroups = new ArrayList<>();
+	    String query = "SELECT userGroups FROM cse360users WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        pstmt.setString(1, username);
 	        try (ResultSet rs = pstmt.executeQuery()) {
-	            while (rs.next()) {
-	                userGroups.add(rs.getString("groupName"));
+	            if (rs.next()) {
+	                String jsonGroups = rs.getString("userGroups");
+	                return (jsonGroups != null) ? deserializeUserGroups(jsonGroups) : new ArrayList<>();
 	            }
 	        }
 	    }
-	    return userGroups;
+	    return new ArrayList<>();
 	}
-
 	
 	public boolean userHasAccessToGroup(String username, String groupName) throws SQLException {
 	    // Fetch the user's groups

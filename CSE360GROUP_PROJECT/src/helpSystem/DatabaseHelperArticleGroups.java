@@ -37,6 +37,8 @@ public class DatabaseHelperArticleGroups {
     // Database credentials
     static final String USER = "sa";
     static final String PASS = "";
+    
+    public static String groupNameToBeDeleted = "";
 
     private Connection connection = null;
     private Statement statement = null;
@@ -192,7 +194,9 @@ public class DatabaseHelperArticleGroups {
             pstmt.setString(1, groupName); // Set the group name to the prepared statement
             int rowsAffected = pstmt.executeUpdate(); // Execute the delete statement
             databaseHelper.removeGroupFromAllUsers(groupName);
-            databaseHelper1.setDisplayFalseForGroup(groupName);
+            groupNameToBeDeleted = groupName;
+            databaseHelper1.setDisplayFalseForGroup(groupNameToBeDeleted);
+            
 
             if (rowsAffected > 0) {
                 System.out.println("Group '" + groupName + "' deleted successfully.");
@@ -290,12 +294,19 @@ public class DatabaseHelperArticleGroups {
     public void restoreArticleGroupsFromFile(String fileName) throws Exception {
         databaseHelper = new DatabaseHelperUser();
         databaseHelper.connectToDatabase();
+        
+        databaseHelper1 = new DatabaseHelperArticle();
+        databaseHelper1.connectToDatabase();
 
         File file = new File(fileName);
         if (!file.exists()) {
             System.err.println("Backup file not found: " + fileName);
             return;
         }
+        
+        databaseHelper1.setDisplayTrueForGroup(groupNameToBeDeleted);
+        String adminOne = databaseHelper.getFirstAdminUsername();
+        databaseHelper.addUserToGroup(adminOne, groupNameToBeDeleted);
 
         try (Scanner scanner = new Scanner(new FileReader(file))) {
             while (scanner.hasNextLine()) {
@@ -320,6 +331,7 @@ public class DatabaseHelperArticleGroups {
         } catch (IOException e) {
             throw new Exception("Failed to restore groups. Error reading file.", e);
         }
+        
     }
 
 
