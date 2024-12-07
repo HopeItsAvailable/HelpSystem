@@ -79,17 +79,21 @@ public class DatabaseHelperMes {
 	        }
 	    }
 
-	    public String getMessages() throws SQLException {
+	    public String getMessages(String userName) throws SQLException {
 	        StringBuilder messages = new StringBuilder();
-	        String sql = "SELECT userName, message FROM Messages";
-	        try (ResultSet resultSet = statement.executeQuery(sql)) {
-	            while (resultSet.next()) {
-	                String userName = resultSet.getString("userName");
-	                String message = resultSet.getString("message");
-	                messages.append(userName).append(": ").append(message).append("\n\n");
+	        String sql = "SELECT userName, message FROM Messages WHERE userName = ?";
+	        
+	        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+	            preparedStatement.setString(1, userName); // Set the username in the query
+	            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	                while (resultSet.next()) {
+	                    String message = resultSet.getString("message");
+	                    messages.append(userName).append("\t").append(message).append("\n"); // Tab and new line
+	                }
 	            }
 	        }
-	        return messages.toString().trim(); 
+	        
+	        return messages.toString(); // Return the messages, with each on a new line
 	    }
 
 }

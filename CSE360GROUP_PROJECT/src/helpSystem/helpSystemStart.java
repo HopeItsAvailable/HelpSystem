@@ -1176,7 +1176,12 @@ public class helpSystemStart extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				
-				reviewMes(primaryStage);
+				try {
+					reviewMes(primaryStage, userName);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			}
 		});
@@ -4630,12 +4635,12 @@ public class helpSystemStart extends Application {
 
 	}
 	
-	public void reviewMes(Stage primaryStage) {
+	public void reviewMes(Stage primaryStage, String userName) throws SQLException {
 
 		// Labels, buttons, textfield, alert, and checkBox
 		Label welcome = new Label("Review Messages");
 		
-		Label mess = new Label("ALL MESSAGVES GO HERE");
+		Label mess = new Label(databaseHelper3.getMessages(userName));
 
 		Button quitButton = new Button("Quit");
 

@@ -7,58 +7,49 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 
-
-
 public class Junit_Tony {
-	
-	private DatabaseHelperArticleGroups dbHelper;
+
+    private DatabaseHelperArticleGroups dbHelper;
 
     @BeforeEach
     public void setUp() throws Exception {
-    	
         dbHelper = new DatabaseHelperArticleGroups();
         dbHelper.connectToDatabase();
 
+        // Create new article groups
         dbHelper.addArticleGroup("Tech Group");
         dbHelper.addArticleGroup("Science Group");
         dbHelper.addArticleGroup("Health Group");
+        dbHelper.addArticleGroup("Education Group");
     }
 
     @AfterEach
     public void tearDown() throws Exception {
+        // Clean up by deleting groups
         dbHelper.deleteArticleGroup("Tech Group");
         dbHelper.deleteArticleGroup("Science Group");
         dbHelper.deleteArticleGroup("Health Group");
+        dbHelper.deleteArticleGroup("Education Group");
 
         dbHelper.closeConnection();
     }
 
     @Test
-    public void testGetNumberOfGroups() throws SQLException {
-        int numberOfGroups = dbHelper.getNumberOfGroups();
+    public void testBackupAndRestoreGroup() throws SQLException {
+        // Backup the "Education Group" before deletion
+        dbHelper.backupArticleGroupsToFile("Education Group");
 
-        assertEquals(3, numberOfGroups);
-    }
-    
-    @Test
-    public void testDeleteGroupAndCheckCount() throws Exception {
-        dbHelper.deleteArticleGroup("Tech Group");
-        dbHelper.deleteArticleGroup("Science Group");
-        dbHelper.deleteArticleGroup("Health Group");
+        // Delete "Education Group"
+        dbHelper.deleteArticleGroup("Education Group");
 
-        int numberOfGroups = dbHelper.getNumberOfGroups();
-        
-        assertEquals(0, numberOfGroups);
-    }
-    
-    @Test
-    public void testDoesGroupExist() throws SQLException {
-    	
-        boolean doesTechGroupExist = dbHelper.doesGroupExist("Tech Group");
-                assertTrue(doesTechGroupExist);
+        // Check that "Education Group" was deleted
+        boolean doesGroupExistBeforeRestore = dbHelper.doesGroupExist("Education Group");
+        assertFalse(doesGroupExistBeforeRestore);
 
-        boolean doesNonExistentGroupExist = dbHelper.doesGroupExist("Gamer Group");
-        assertFalse(doesNonExistentGroupExist);
+        // Restore the "Education Group" from backup
+        dbHelper.restoreArticleGroupsFromFile("Education Group");
+
+        // Check if the "Education Group" is restored
+        boolean doesGroupExistAfterRestore = dbHelper.doesGroupExist("Education Group");
+        assertTrue(doesGroupExistAfterRestore);
     }
-    
-}
