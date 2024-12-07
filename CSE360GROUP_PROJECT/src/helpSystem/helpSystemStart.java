@@ -4019,7 +4019,7 @@ public class helpSystemStart extends Application {
 					
 					//TODO BackUp Group
 					try {
-						databaseHelper2.backupArticleGroupsToFile(fileNameText.getText().strip(),userName);
+						databaseHelper2.backupArticleGroupsToFile(fileNameText.getText().strip(),getGroup.getValue());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
