@@ -178,7 +178,7 @@ public class DatabaseHelperArticleGroups {
         databaseHelper.connectToDatabase();
         
         databaseHelper1 = new DatabaseHelperArticle();
-        databaseHelper.connectToDatabase();
+        databaseHelper1.connectToDatabase();
     	
     	// Check if the group exists before attempting to delete it
         if (!doesGroupExist(groupName)) {
