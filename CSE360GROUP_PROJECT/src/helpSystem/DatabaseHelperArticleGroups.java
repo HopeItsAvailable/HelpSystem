@@ -134,9 +134,10 @@ public class DatabaseHelperArticleGroups {
     private void createTables() throws SQLException {
         String articleGroupTable = "CREATE TABLE IF NOT EXISTS cse360ArticleGroups (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
-                "leader VARCHAR(255), " + 
-                "groupName VARCHAR(255) NOT NULL UNIQUE, " + 
-                "admin VARCHAR(255)" +
+                "leader VARCHAR(255), " +
+                "groupName VARCHAR(255) NOT NULL UNIQUE, " +
+                "admin VARCHAR(255), " +
+                "display BOOLEAN DEFAULT TRUE" + // New boolean column with default value TRUE
                 ")";
         statement.execute(articleGroupTable);
     }
@@ -265,19 +266,17 @@ public class DatabaseHelperArticleGroups {
 	}
     
     public void backupArticleGroupsToFile(String fileName, String groupName) throws SQLException, IOException {
-        String query = "SELECT * FROM cse360ArticleGroups WHERE groupName = ?";  // Filter by groupName
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, groupName);  // Set the group name dynamically
-            
-            try (ResultSet rs = pstmt.executeQuery(); FileWriter fileWriter = new FileWriter(fileName)) {
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String group = rs.getString("groupName");
+        String query = "SELECT * FROM cse360ArticleGroups WHERE groupName = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query);
+             FileWriter fileWriter = new FileWriter(fileName)) {
 
-                    // Writing SQL insert statements into the backup file
+            pstmt.setString(1, groupName);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
                     String sqlInsert = String.format(
-                            "INSERT INTO cse360ArticleGroups (id, groupName) "
-                                    + "VALUES (%d, '%s');\n", id, group);
+                            "INSERT INTO cse360ArticleGroups (id, leader, groupName, admin) "
+                                    + "VALUES (%d, '%s', '%s', '%s');\n",
+                            rs.getInt("id"), rs.getString("leader"), rs.getString("groupName"), rs.getString("admin"));
                     fileWriter.write(sqlInsert);
                 }
                 System.out.println("Backup completed successfully to file: " + fileName);
@@ -286,53 +285,43 @@ public class DatabaseHelperArticleGroups {
             System.out.println("Error writing to file: " + e.getMessage());
         }
     }
+
     
     public void restoreArticleGroupsFromFile(String fileName) throws Exception {
-        // Step 1: Ensure database connection is established
         databaseHelper = new DatabaseHelperUser();
         databaseHelper.connectToDatabase();
-
-        System.out.println("Connecting to database...");
 
         File file = new File(fileName);
         if (!file.exists()) {
             System.err.println("Backup file not found: " + fileName);
             return;
         }
-        System.out.println("File found: " + fileName);
 
         try (Scanner scanner = new Scanner(new FileReader(file))) {
             while (scanner.hasNextLine()) {
                 String sql = scanner.nextLine().trim();
 
-                // Skip empty lines or comments
                 if (sql.isEmpty() || sql.startsWith("--")) {
                     System.out.println("Skipping line: " + sql);
                     continue;
                 }
 
-                System.out.println("Executing SQL: " + sql);
-
-                // Check if the SQL statement is for cse360ArticleGroups
-                if (sql.toLowerCase().contains("insert into cse360articlegroups")) {
-                    try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-                        pstmt.executeUpdate();
-                        String groupName = extractGroupNameFromSQL(sql);
-                        System.out.println("Restored group: " + (groupName != null ? groupName : "Unknown"));
-                    } catch (SQLException e) {
-                        System.err.println("Error executing SQL: " + sql);
-                        e.printStackTrace();
-                    }
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate(sql);
+                    String groupName = extractGroupNameFromSQL(sql);
+                    System.out.println("Restored group: " + (groupName != null ? groupName : "Unknown"));
+                } catch (SQLException e) {
+                    System.err.println("Error executing SQL: " + sql);
+                    e.printStackTrace();
                 }
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Backup file not found: " + fileName);
             throw new Exception("Failed to restore groups. Backup file not found.", e);
         } catch (IOException e) {
-            System.err.println("Error reading from file: " + fileName);
             throw new Exception("Failed to restore groups. Error reading file.", e);
         }
     }
+
 
        
     	private String extractGroupNameFromSQL(String sql) {
