@@ -133,16 +133,10 @@ public class DatabaseHelperArticleGroups {
     private void createTables() throws SQLException {
         String articleGroupTable = "CREATE TABLE IF NOT EXISTS cse360ArticleGroups (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
-<<<<<<< HEAD
-                "groupName VARCHAR(255), " +
-                "leader VARCHAR(255), " +
-                "admin VARCHAR(255))";
-=======
                 "leader VARCHAR(255), " + 
                 "groupName VARCHAR(255) NOT NULL UNIQUE, " + 
                 "admin VARCHAR(255)" +
                 ")";
->>>>>>> branch 'main' of https://github.com/HopeItsAvailable/HelpSystem.git
         statement.execute(articleGroupTable);
     }
 
