@@ -57,12 +57,21 @@ public class DatabaseHelperArticle {
 	}
 
 	private void createTables() throws SQLException {
-		String userTable = "CREATE TABLE IF NOT EXISTS cse360Articles (" + "id INT AUTO_INCREMENT PRIMARY KEY, "
-				+ "title VARCHAR(255), " + "author VARCHAR(255), " + "paper_abstract VARCHAR(255),"
-				+ "keywords VARCHAR(255)," + "body VARCHAR(255)," + "references VARCHAR(255)," + "level VARCHAR(255),"
-				+ "articleGroup VARCHAR(255))";
-		statement.execute(userTable);
+	    String userTable = "CREATE TABLE IF NOT EXISTS cse360Articles (" +
+	            "id INT AUTO_INCREMENT PRIMARY KEY, " +
+	            "title VARCHAR(255), " +
+	            "author VARCHAR(255), " +
+	            "paper_abstract VARCHAR(255), " +
+	            "keywords VARCHAR(255), " +
+	            "body VARCHAR(255), " +
+	            "references VARCHAR(255), " +
+	            "level VARCHAR(255), " +
+	            "articleGroup VARCHAR(255), " +
+	            "display BOOLEAN DEFAULT TRUE" +
+	            ")";
+	    statement.execute(userTable);
 	}
+
 	
 	public int getNumberOfArticles() throws SQLException {
 	    String query = "SELECT COUNT(*) AS rowCount FROM cse360Articles";
@@ -75,6 +84,25 @@ public class DatabaseHelperArticle {
 	        }
 	    }
 	}
+	
+	public void setDisplayFalseForGroup(String groupName) throws SQLException {
+	    String updateQuery = "UPDATE cse360Articles SET display = FALSE WHERE articleGroup = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+	        pstmt.setString(1, groupName);
+	        int rowsUpdated = pstmt.executeUpdate();
+	        System.out.println(rowsUpdated + " articles set to display = FALSE for group: " + groupName);
+	    }
+	}
+	
+	public void setDisplayTrueForGroup(String groupName) throws SQLException {
+	    String updateQuery = "UPDATE cse360Articles SET display = TRUE WHERE articleGroup = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(updateQuery)) {
+	        pstmt.setString(1, groupName);
+	        int rowsUpdated = pstmt.executeUpdate();
+	        System.out.println(rowsUpdated + " articles set to display = TRUE for group: " + groupName);
+	    }
+	}
+
 	
 	//METHODS TO MAKE:
 	//print all (unencrypted and encrypted)
@@ -325,7 +353,7 @@ public class DatabaseHelperArticle {
 	}*/
 	
 	public ObservableList<Article> displayArticles() throws SQLException {
-	    String sql = "SELECT * FROM cse360Articles";
+	    String sql = "SELECT * FROM cse360Articles WHERE display = TRUE"; // Only fetch articles with display = TRUE
 	    Statement stmt = connection.createStatement();
 	    ResultSet rs = stmt.executeQuery(sql);
 
@@ -347,6 +375,7 @@ public class DatabaseHelperArticle {
 
 	    return articles;
 	}
+
 
 	public String displayGroupedArticles(String group) throws Exception {
 		String sql = "SELECT * FROM cse360Articles WHERE level = ?";

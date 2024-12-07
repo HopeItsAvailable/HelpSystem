@@ -30,6 +30,7 @@ public class DatabaseHelperArticleGroups {
     // JDBC driver name and database URL
 	
 	private static DatabaseHelperUser databaseHelper;
+	private static DatabaseHelperArticle databaseHelper1;
     static final String JDBC_DRIVER = "org.h2.Driver";
     static final String DB_URL = "jdbc:h2:~/articleDatabase";
 
@@ -175,6 +176,9 @@ public class DatabaseHelperArticleGroups {
     public boolean deleteArticleGroup(String groupName) throws Exception {
     	databaseHelper = new DatabaseHelperUser();
         databaseHelper.connectToDatabase();
+        
+        databaseHelper1 = new DatabaseHelperArticle();
+        databaseHelper.connectToDatabase();
     	
     	// Check if the group exists before attempting to delete it
         if (!doesGroupExist(groupName)) {
@@ -187,6 +191,7 @@ public class DatabaseHelperArticleGroups {
             pstmt.setString(1, groupName); // Set the group name to the prepared statement
             int rowsAffected = pstmt.executeUpdate(); // Execute the delete statement
             databaseHelper.removeGroupFromAllUsers(groupName);
+            databaseHelper1.setDisplayFalseForGroup(groupName);
 
             if (rowsAffected > 0) {
                 System.out.println("Group '" + groupName + "' deleted successfully.");
